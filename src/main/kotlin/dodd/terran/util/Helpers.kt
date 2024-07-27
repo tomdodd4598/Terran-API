@@ -51,7 +51,7 @@ object Helpers {
 
     val Matrix.node get() = MatrixNode(this)
 
-    val Faction.node get() = this.id.node
+    val Faction.node get() = ordinal.node
 
-    val Formation.node get() = this.id.node
+    val Formation.node get() = ordinal.node
 }

@@ -8,29 +8,11 @@ import dodd.terran.value.Faction
 import dodd.terran.value.Formation
 import dodd.terran.value.Vector
 
-fun main() {
-    val game = Game("C:/Program Files (x86)/Steam/steamapps/common/Treasure Planet Battle at Procyon", "English")
+val game = Game("C:/Program Files (x86)/Steam/steamapps/common/Treasure Planet Battle at Procyon", "English")
 
-    val zemyatin = World(game, "Zemyatin")
-
-    val worldInfo = zemyatin.root.get<NestedNode>("WorldInfo")!!
-    val players = worldInfo.get<FlatNode>("Players")!!
-
-    val gameNode = zemyatin.root.get<NestedNode>("Game")!!
-    val time = gameNode.get<NestedNode>("Time")!!
-
-    val worldNode = zemyatin.root.get<NestedNode>("World")!!
-    val playerList = worldNode.get<PlayerListNode>("PlayerList")!!
-    val worldObjects = worldNode.get<WorldObjectsListNode>("WorldObjects")!!
-
-    val gameSpecific = worldNode.get<NestedNode>("GameSpecific")!!
-    val groups = gameSpecific.get<GroupsListNode>("Num Groups")!!
-    val worldRules = gameSpecific.get<NestedNode>("World Rules")!!
-    val ruleList = worldRules.get<RuleListNode>("Rule List")!!
-
-    val gameImpl = zemyatin.root.get<NestedNode>("GameImpl")!!
-
-    val world = World.create(game,
+fun zemyatin() {
+    val world = World.create(
+        game,
         "Zemyatin",
         "IDGS_TPWORLDNAMES_MP_ARENA_SMALL",
         "IDGS_TPWORLDDESCRIPTION_MP_ARENA_SMALL",
@@ -89,4 +71,30 @@ fun main() {
     world.addMapText(World.createMapText("Black Hole", "IDGS_TPMAPTEXTITEMS_MP_ARENA_SMALL", Vector(1.299599f, 4.263611f, 0f)))
 
     println(world.build())
+}
+
+fun test() {
+    val world = World(game, "Zemyatin")
+
+    val worldInfo = world.root.get<NestedNode>("WorldInfo")!!
+    val players = worldInfo.get<FlatNode>("Players")!!
+
+    val gameNode = world.root.get<NestedNode>("Game")!!
+    val time = gameNode.get<NestedNode>("Time")!!
+
+    val worldNode = world.root.get<NestedNode>("World")!!
+    val playerList = worldNode.get<PlayerListNode>("PlayerList")!!
+    val worldObjects = worldNode.get<WorldObjectsListNode>("WorldObjects")!!
+
+    val gameSpecific = worldNode.get<NestedNode>("GameSpecific")!!
+    val groups = gameSpecific.get<GroupsListNode>("Num Groups")!!
+    val worldRules = gameSpecific.get<NestedNode>("World Rules")!!
+    val ruleList = worldRules.get<RuleListNode>("Rule List")!!
+
+    val gameImpl = world.root.get<NestedNode>("GameImpl")!!
+}
+
+fun main() {
+    //zemyatin()
+    test()
 }

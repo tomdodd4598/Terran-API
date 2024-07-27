@@ -203,7 +203,7 @@ class World(private val game: Game, val root: RootNode) {
         }
 
         fun createFakeFleetElement(name: String, color: Color, start: Vector): NestedNode {
-            return createPlayerListElement(name, -1, color, false, start, Vector.EAST, Faction.ANY, Formation.SCATTERED)
+            return createPlayerListElement(name, -1, color, false, start, Vector.EAST, Faction.ANY, Formation.NONE)
         }
 
         fun createFleetAI(formationType: String = "None", holdingFire: Boolean = false) = NestedNode(

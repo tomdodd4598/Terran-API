@@ -1,8 +1,13 @@
 package dodd.terran.value
 
-enum class Formation(val id: Int) {
-    SCATTERED(0),
-    LINE(0),
-    SIDE_BY_SIDE(2),
-    V(6),
+enum class Formation {
+    NONE,
+    SINGLE,
+    SIDE_BY_SIDE,
+    DIAGONAL_RIGHT,
+    DIAGONAL_LEFT,
+    LINE,
+    DIAGONAL_V,
+    DIAGONAL_V_ALT,
+    OVERLAP,
 }
