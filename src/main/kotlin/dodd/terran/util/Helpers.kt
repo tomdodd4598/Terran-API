@@ -2,11 +2,13 @@ package dodd.terran.util
 
 import dodd.terran.Global
 import dodd.terran.translation.*
+import dodd.terran.util.Helpers.node
 import dodd.terran.value.*
 import dodd.terran.value.Vector
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayDeque
+import kotlin.math.PI
 
 object Helpers {
     fun <T> ArrayDeque<T>.push(elem: T) = addLast(elem)
@@ -33,6 +35,8 @@ object Helpers {
 
     fun Double.definitionString() = places(6)
 
+    fun Float.toRadians() = (PI * this / 180.0).toFloat()
+
     val String.node get() = StringNode(this)
 
     val Boolean.node get() = BoolNode(this)
@@ -54,4 +58,8 @@ object Helpers {
     val Faction.node get() = ordinal.node
 
     val Formation.node get() = ordinal.node
+
+    val FollowMode.node get() = string.node
+
+    fun Boolean.stringNode() = toString().uppercase().node
 }

@@ -1,13 +1,16 @@
 package dodd.terran
 
 import dodd.terran.translation.*
-import dodd.terran.util.Helpers.capitalize
 import dodd.terran.util.Helpers.node
+import dodd.terran.util.Helpers.stringNode
 import dodd.terran.value.*
 
 class World(private val game: Game, val root: RootNode) {
 
     companion object {
+
+        private fun getFile(game: Game, location: String) = game.resource("$location.twt")
+
         fun create(
             game: Game,
             worldName: String,
@@ -177,13 +180,13 @@ class World(private val game: Game, val root: RootNode) {
             return world
         }
 
-        fun createPlayerInfoTuple(name: String, team: Int) = TupleNode(
-            "PlayerInfo - Player Name" to name.node,
-            "PlayerInfo - TeamIndex" to team.node,
+        fun createPlayerInfoTuple(playerName: String, teamIndex: Int) = TupleNode(
+            "PlayerInfo - Player Name" to playerName.node,
+            "PlayerInfo - TeamIndex" to teamIndex.node,
         )
 
-        fun createPlayerListElement(name: String, team: Int, color: Color, isPlayable: Boolean, start: Vector, direction: Vector, faction: Faction, formation: Formation) = NestedNode(
-            "Name" to name.node,
+        fun createPlayerListElement(playerName: String, teamIndex: Int, color: Color, isPlayable: Boolean, start: Vector, direction: Vector, faction: Faction, formation: Formation) = NestedNode(
+            "Name" to playerName.node,
             "Color" to color.node,
             "IsPlayable" to isPlayable.node,
             "Is Used In Game" to false.node,
@@ -192,18 +195,18 @@ class World(private val game: Game, val root: RootNode) {
             "StartPointForwardVector" to direction.node,
             "Race" to faction.node,
             "Points" to 0f.node,
-            "TeamIndex" to team.node,
+            "TeamIndex" to teamIndex.node,
             "FormationType" to formation.node,
             "FleetAI" to createFleetAI(),
             "FlagIndex" to 0.node,
         )
 
-        fun createAIFleetElement(name: String, team: Int, color: Color, start: Vector, direction: Vector, formation: Formation): NestedNode {
-            return createPlayerListElement(name, team, color, false, start, direction, Faction.ANY, formation)
+        fun createAIFleetElement(playerName: String, teamIndex: Int, color: Color, start: Vector, direction: Vector, formation: Formation): NestedNode {
+            return createPlayerListElement(playerName, teamIndex, color, false, start, direction, Faction.ANY, formation)
         }
 
-        fun createFakeFleetElement(name: String, color: Color, start: Vector): NestedNode {
-            return createPlayerListElement(name, -1, color, false, start, Vector.EAST, Faction.ANY, Formation.NONE)
+        fun createFakeFleetElement(playerName: String, color: Color, start: Vector): NestedNode {
+            return createPlayerListElement(playerName, -1, color, false, start, Vector.EAST, Faction.ANY, Formation.NONE)
         }
 
         fun createFleetAI(formationType: String = "None", holdingFire: Boolean = false) = NestedNode(
@@ -224,14 +227,14 @@ class World(private val game: Game, val root: RootNode) {
             "AITYPE" to "AIFLEET".node,
         )
 
-        fun createWorldObject(id: Int, type: String, owner: Int, position: Vector, rotation: Matrix = Matrix.IDENTITY) = TupleNode(
-            "ID" to id.node,
-            "Type" to type.node,
+        fun createWorldObject(objectID: Int, typeID: String, ownerIndex: Int, position: Vector, rotation: Matrix = Matrix.IDENTITY) = TupleNode(
+            "ID" to objectID.node,
+            "Type" to typeID.node,
             "State" to NestedNode(
                 "HasState" to false.node,
                 "Position" to position.node,
                 "Orientation" to rotation.node,
-                "PlayerIndex" to owner.node,
+                "PlayerIndex" to ownerIndex.node,
                 RawNode("# AIEntity").entry,
                 "# AIEntityType" to TupleNode(
                     "Type" to "".node,
@@ -255,21 +258,26 @@ class World(private val game: Game, val root: RootNode) {
             ),
         )
 
-        fun createGroup(name: String, vararg ids: Int) = NestedNode(
-            "Name" to name.node,
-            "World Object IDs" to ArrayNode(ids.mapTo(mutableListOf()) { it.node }),
+        fun createWaypointPath(pathName: String, vararg pathPoints: Vector) = NestedNode(
+            "Waypoint Path Name" to pathName.node,
+            "Waypoint Path Points" to ArrayNode(pathPoints.mapTo(mutableListOf()) { it.node }),
         )
 
-        fun createWorldRule(name: String, runOnce: Boolean, isActive: Boolean, conditions: ConditionListNode, actions: ActionListNode) = TupleNode(
-            "Rule Name" to name.node,
+        fun createGroup(groupName: String, vararg objectIDs: Int) = NestedNode(
+            "Name" to groupName.node,
+            "World Object IDs" to ArrayNode(objectIDs.mapTo(mutableListOf()) { it.node }),
+        )
+
+        fun createWorldRule(ruleName: String, runOnce: Boolean, isActive: Boolean, conditions: ConditionListNode, actions: ActionListNode) = TupleNode(
+            "Rule Name" to ruleName.node,
             "Run Once" to runOnce.node,
             "Is Active" to isActive.node,
             "Conditions" to conditions,
             "Actions" to actions,
         )
 
-        fun createInitializationWorldRule(name: String, vararg actions: ActionNode) = createWorldRule(
-            "Init World $name",
+        fun createInitializationWorldRule(ruleName: String, vararg actions: ActionNode) = createWorldRule(
+            "Init World $ruleName",
             runOnce = true,
             isActive = true,
             ConditionListNode(
@@ -280,8 +288,8 @@ class World(private val game: Game, val root: RootNode) {
             ActionListNode(*actions)
         )
 
-        fun createSkirmishCompleteWorldRule(name: String) = createWorldRule(
-            name,
+        fun createSkirmishCompleteWorldRule(ruleName: String) = createWorldRule(
+            ruleName,
             runOnce = true,
             isActive = true,
             ConditionListNode(
@@ -294,42 +302,70 @@ class World(private val game: Game, val root: RootNode) {
             )
         )
 
-        fun createSetOwnerAction(name: String, owner: String) = ActionNode(
+        fun createSetupEtheriumCurrentAction(pathName: String, objectID: Int) = ActionNode(
+            "Type" to "*State Init* Setup Etherium Current".node,
+            "World Object ID" to objectID.node,
+            "Etherium Name" to "New $pathName".node,
+            "Etherium Path" to pathName.node,
+        )
+
+        fun createSetupAsteroidBeltAction(
+            groupName: String,
+            pathName: String?,
+            followMode: FollowMode,
+            findClosestPath: Boolean,
+            minSpeed: Float,
+            maxSpeed: Float,
+            minAngularSpeed: Float,
+            maxAngularSpeed: Float
+        ) = ActionNode(
+            "Type" to "Setup Asteroid Belt".node,
+            "Group Name" to groupName.node,
+            "Path Name" to (pathName ?: "NO PATH").node,
+            "Follow Mode" to followMode.node,
+            "Find Closest Point" to findClosestPath.stringNode(),
+            "Velocity Upper m/sec" to maxSpeed.node,
+            "Velocity Lower m/sec" to minSpeed.node,
+            "Tumble Upper Rads/sec" to maxAngularSpeed.node,
+            "Tumble Lower Rads/sec" to minAngularSpeed.node,
+        )
+
+        fun createSetOwnerAction(groupName: String, ownerName: String) = ActionNode(
             "Type" to "Set Group/Unit Owner".node,
-            "Group/Unit Name" to name.node,
-            "New Owner" to owner.node,
+            "Group/Unit Name" to groupName.node,
+            "New Owner" to ownerName.node,
         )
 
-        fun createObjectiveTaskStateAction(name: String, state: Boolean) = ActionNode(
+        fun createSetObjectiveTaskStateAction(taskName: String, state: Boolean) = ActionNode(
             "Type" to "Set Objective Task Active State".node,
-            "Objective Task" to name.node,
-            "Active State" to state.toString().uppercase().node,
+            "Objective Task" to taskName.node,
+            "Active State" to state.stringNode(),
         )
 
-        fun createPlayMusicAction(musicName: String, volume: Float, fadeInTime: Float = 0f, fadeOutTime: Float = 0f) = ActionNode(
+        fun createPlayMusicAction(musicID: String, volume: Float, fadeInTime: Float = 0f, fadeOutTime: Float = 0f) = ActionNode(
             "Type" to "Play Music Track".node,
-            "File Name" to musicName.node,
-            "Crossfade transition" to (fadeInTime > 0f || fadeOutTime > 0f).toString().uppercase().node,
+            "File Name" to musicID.node,
+            "Crossfade transition" to (fadeInTime > 0f || fadeOutTime > 0f).stringNode(),
             "Fade Out Time ( secs )" to fadeOutTime.node,
             "Fade In Time ( secs )" to fadeInTime.node,
             "New Volume ( 0 to 1 )" to volume.node,
         )
 
-        fun createEndGameAction(winMessage: String?, loseMessage: String?, showStats: Boolean) = ActionNode(
+        fun createEndGameAction(winMessageID: String?, loseMessageID: String?, showStats: Boolean) = ActionNode(
             "Type" to "End Game".node,
-            "Use Custom Message" to (winMessage != null || loseMessage != null).toString().uppercase().node,
-            "Winner - Custom Message String ID" to (winMessage ?: "GAME STRING").node,
-            "Loser - Custom Message String ID" to (loseMessage ?: "GAME STRING").node,
-            "Show Stats Screen" to showStats.toString().uppercase().node,
+            "Use Custom Message" to (winMessageID != null || loseMessageID != null).stringNode(),
+            "Winner - Custom Message String ID" to (winMessageID ?: "GAME STRING").node,
+            "Loser - Custom Message String ID" to (loseMessageID ?: "GAME STRING").node,
+            "Show Stats Screen" to showStats.stringNode(),
         )
 
-        fun createObjectivePoint(name: String, position: Vector) = NestedNode(
-            "Name" to name.node,
+        fun createObjectivePoint(pointName: String, position: Vector) = NestedNode(
+            "Name" to pointName.node,
             "Position" to position.node,
         )
 
-        fun createObjectiveTask(name: String, descriptionID: String, isActive: Boolean = false, isCompleted: Boolean = false, isFailed: Boolean = false) = NestedNode(
-            "Name" to name.node,
+        fun createObjectiveTask(taskName: String, descriptionID: String, isActive: Boolean = false, isCompleted: Boolean = false, isFailed: Boolean = false) = NestedNode(
+            "Name" to taskName.node,
             "TextStringID" to descriptionID.node,
             "Active" to isActive.node,
             "Completed" to isCompleted.node,
@@ -342,11 +378,9 @@ class World(private val game: Game, val root: RootNode) {
             "PictureTexture" to image.node,
         )
 
-        fun createDefaultJournalPage() = createJournalPage("IDGS_TPSPEECHEVENTSJOURNALS_J01JIM01", "J01JIM01", "Journal_Mission1_Shot1")
-
-        fun createMapText(name: String, textID: String, position: Vector, visible: Boolean = true) = NestedNode(
-            "Name" to name.node,
-            "DisplayedText" to textID.node,
+        fun createMapText(textName: String, stringID: String, position: Vector, visible: Boolean = true) = NestedNode(
+            "Name" to textName.node,
+            "DisplayedText" to stringID.node,
             "Position" to position.node,
             "Visible" to visible.node,
         )
@@ -638,8 +672,6 @@ class World(private val game: Game, val root: RootNode) {
             "Radar Active" to true.node,
             "Crew Speech Silent State" to false.node,
         )
-
-        private fun getFile(game: Game, location: String) = game.resource("$location.twt")
     }
 
     constructor(game: Game, name: String) : this(game, DefinitionParser(getFile(game, "World/$name")).result())
@@ -652,32 +684,42 @@ class World(private val game: Game, val root: RootNode) {
         root.get<NestedNode>("World")!!.get<PlayerListNode>("PlayerList")!!.add(playerListElement)
     }
 
-    fun addPlayer(name: String, team: Int, color: Color, start: Vector, direction: Vector, faction: Faction, formation: Formation) {
+    fun addPlayer(playerName: String, teamIndex: Int, color: Color, start: Vector, direction: Vector, faction: Faction, formation: Formation) {
         val worldInfo = root.get<NestedNode>("WorldInfo")!!
 
         worldInfo.get<IntNode>("Number of Players")!!.value += 1
-        worldInfo.get<FlatNode>("Players")!!.add(createPlayerInfoTuple(name, team))
+        worldInfo.get<FlatNode>("Players")!!.add(createPlayerInfoTuple(playerName, teamIndex))
 
-        addPlayerListElement(createPlayerListElement(name, team, color, true, start, direction, faction, formation))
+        addPlayerListElement(createPlayerListElement(playerName, teamIndex, color, true, start, direction, faction, formation))
     }
 
-    fun addWorldObject(type: String, owner: String?, group: String?, position: Vector, rotation: Matrix = Matrix.IDENTITY) {
+    fun addWorldObject(typeID: String, ownerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.IDENTITY): Int {
         val world = root.get<NestedNode>("World")!!
         val nextID = world.get<IntNode>("NextID")!!
-        val id = nextID.value
+        val objectID = nextID.value
 
         nextID.value += 1
         root.get<NestedNode>("WorldInfo")!!.get<IntNode>("Object Count")!!.value += 1
 
-        val ownerID = if (owner == null) -1 else world.get<PlayerListNode>("PlayerList")!!.indexOf { it is NestedNode && it.get<StringNode>("Name")?.value == owner }
-        world.get<WorldObjectsListNode>("WorldObjects")!!.add(createWorldObject(id, type, ownerID, position, rotation))
+        val ownerID = if (ownerName == null) -1 else world.get<PlayerListNode>("PlayerList")!!.indexOf { it is NestedNode && it.get<StringNode>("Name")?.value == ownerName }
+        world.get<WorldObjectsListNode>("WorldObjects")!!.add(createWorldObject(objectID, typeID, ownerID, position, rotation))
 
-        if (group != null) {
+        if (groupName != null) {
             val groupsList = world.get<NestedNode>("GameSpecific")!!.get<GroupsListNode>("Num Groups")!!
-            val predicate: (Node) -> Boolean = { it is NestedNode && it.get<StringNode>("Name")?.value == group }
-            groupsList.addIfAbsent(createGroup(group), predicate)
-            (groupsList.firstOf(predicate) as NestedNode).get<ArrayNode>("World Object IDs")!!.add(id.node)
+            val predicate: (Node) -> Boolean = { it is NestedNode && it.get<StringNode>("Name")?.value == groupName }
+            groupsList.addIfAbsent(createGroup(groupName), predicate)
+            (groupsList.firstOf(predicate) as NestedNode).get<ArrayNode>("World Object IDs")!!.add(objectID.node)
         }
+
+        return objectID
+    }
+
+    fun addWaypointPath(waypointPath: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Waypoint Path Info Vector")!!.add(waypointPath)
+    }
+
+    fun addGroup(group: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<GroupsListNode>("Num Groups")!!.add(group)
     }
 
     fun addWorldRule(worldRule: TupleNode) {

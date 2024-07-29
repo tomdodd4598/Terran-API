@@ -9,20 +9,20 @@ class Matrix(private val internal: Array<FloatArray>) {
     companion object {
         val IDENTITY = Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
 
-        fun rotationX(angle: Float) = (PI * angle / 180.0).toFloat().let { Matrix(1f, 0f, 0f, 0f, cos(it), -sin(it), 0f, sin(it), cos(it)) }
+        fun rotationX(angle: Float) = Matrix(1f, 0f, 0f, 0f, cos(angle), -sin(angle), 0f, sin(angle), cos(angle))
 
-        fun rotationY(angle: Float) = (PI * angle / 180.0).toFloat().let { Matrix(cos(it), 0f, sin(it), 0f, 1f, 0f, -sin(it), 0f, cos(it)) }
+        fun rotationY(angle: Float) = Matrix(cos(angle), 0f, sin(angle), 0f, 1f, 0f, -sin(angle), 0f, cos(angle))
 
-        fun rotationZ(angle: Float) = (PI * angle / 180.0).toFloat().let { Matrix(cos(it), -sin(it), 0f, sin(it), cos(it), 0f, 0f, 0f, 1f) }
+        fun rotationZ(angle: Float) = Matrix(cos(angle), -sin(angle), 0f, sin(angle), cos(angle), 0f, 0f, 0f, 1f)
 
         fun rotation(angle: Float, axis: Vector): Matrix {
             val n = axis.normalized()
             val x = n.x
             val y = n.y
             val z = n.z
-            val c = cos((PI * angle / 180.0).toFloat())
+            val c = cos(angle)
             val d = 1f - c
-            val s = sin((PI * angle / 180.0).toFloat())
+            val s = sin(angle)
             return Matrix(
                 c + x * x * d, x * y * d - z * s, x * z * d + y * s,
                 y * x * d + z * s, c + y * y * d, y * z * d - x * s,

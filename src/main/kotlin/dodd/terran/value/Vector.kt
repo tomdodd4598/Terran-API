@@ -13,10 +13,10 @@ class Vector(private val internal: FloatArray) {
         val UP = Vector(0f, 0f, 1f)
         val DOWN = Vector(0f, 0f, -1f)
 
-        fun dir(x: Float, y: Float, z: Float) = Vector(x, y, z).normalized()
+        fun dir(x: Float, y: Float, z: Float = 0f) = Vector(x, y, z).normalized()
     }
 
-    constructor(x: Float, y: Float, z: Float) : this(floatArrayOf(x, y, z))
+    constructor(x: Float, y: Float, z: Float = 0f) : this(floatArrayOf(x, y, z))
 
     val size get() = internal.size
 

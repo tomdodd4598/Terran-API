@@ -1,13 +1,13 @@
 package dodd.terran.value
 
-data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float) {
+data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float = 1f) {
 
     companion object {
         val BLACK = Color(0f, 0f, 0f, 0f)
-        val WHITE = Color(1f, 1f, 1f, 1f)
-        val RED = Color(1f, 0f, 0f, 1f)
-        val GREEN = Color(0f, 1f, 0f, 1f)
-        val BLUE = Color(0f, 0f, 1f, 1f)
+        val WHITE = Color(1f, 1f, 1f)
+        val RED = Color(1f, 0f, 0f)
+        val GREEN = Color(0f, 1f, 0f)
+        val BLUE = Color(0f, 0f, 1f)
     }
 
     init {
@@ -25,12 +25,20 @@ data class Color(var red: Float, var green: Float, var blue: Float, var alpha: F
         return Color(blend(red, other.red), blend(green, other.green), blend(blue, other.blue), a)
     }
 
+    operator fun times(multiplier: Float) = Color(multiplier * red, multiplier * green, multiplier * blue, alpha)
+
     operator fun plusAssign(other: Color) {
         val result = this + other
         red = result.red
         green = result.green
         blue = result.blue
         alpha = result.alpha
+    }
+
+    operator fun timesAssign(multiplier: Float) {
+        red *= multiplier
+        green *= multiplier
+        blue *= multiplier
     }
 
     fun asSequence() = sequenceOf(red, green, blue, alpha)
