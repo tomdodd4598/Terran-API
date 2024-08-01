@@ -1,13 +1,12 @@
 package dodd.terran.value
 
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 class Matrix(private val internal: Array<FloatArray>) {
 
     companion object {
-        val IDENTITY = Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
+        val identity get() = Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
 
         fun rotationX(angle: Float) = Matrix(1f, 0f, 0f, 0f, cos(angle), -sin(angle), 0f, sin(angle), cos(angle))
 
@@ -81,5 +80,5 @@ class Matrix(private val internal: Array<FloatArray>) {
 
     override fun hashCode() = internal.contentDeepHashCode()
 
-    override fun toString() = internal.contentDeepToString()
+    override fun toString() = internal.joinToString(prefix = "[", postfix = "]") { "${it}f" }
 }

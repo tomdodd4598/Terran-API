@@ -56,17 +56,17 @@ class World(private val game: Game, val root: RootNode) {
                 "Use Custom World Name" to (customWorldName != null).node,
                 "Custom World Name" to (customWorldName ?: "").node,
                 "Use Custom World Description" to (customWorldDescription != null).node,
-                "Custom World Description" to (customWorldDescription ?: "").node,
+                "Custom World Description" to (customWorldDescription ?: "").node
             )
 
             root["Game"] = NestedNode(
                 "Time" to NestedNode(
                     "Game Tick" to 0.node,
-                    "Game Time" to 0.0.node,
+                    "Game Time" to 0.0.node
                 ),
                 "Frame" to (-1).node,
                 "Paused" to false.node,
-                "ActivePlayerIndex" to (-1).node,
+                "ActivePlayerIndex" to (-1).node
             )
 
             root["World"] = NestedNode(
@@ -85,7 +85,7 @@ class World(private val game: Game, val root: RootNode) {
                     "World Description Sting ID" to worldDescription.node,
                     "World Name Sting ID" to worldID.node,
                     "Effect Event Keeper" to NestedNode(
-                        "NumEffectEventInfoChunks" to 0.node,
+                        "NumEffectEventInfoChunks" to 0.node
                     ),
                     "Skybox mesh name" to "skybox_${skyboxID.toString().padStart(2, '0')}_Layer1".node,
                     "Ambient Light" to ambientColor.node,
@@ -115,7 +115,7 @@ class World(private val game: Game, val root: RootNode) {
                     ),
                     "World Rules" to NestedNode(
                         "Rule List" to RuleListNode(
-                        ),
+                        )
                     ),
                     "Objective System" to NestedNode(
                         "Current Objective Point" to (-1).node,
@@ -123,27 +123,27 @@ class World(private val game: Game, val root: RootNode) {
                         "Objective Point Info" to ArrayNode(
                         ),
                         "Objective Task Array" to ArrayNode(
-                        ),
+                        )
                     ),
                     "Rope" to NestedNode(
                         "RopeInfo" to ArrayNode(
-                        ),
+                        )
                     ),
                     "Grappled Objects" to NestedNode(
                         "Grappled Objects Info" to ArrayNode(
-                        ),
+                        )
                     ),
                     "Boarding Actions" to NestedNode(
                         "Boarding Actions Info" to ArrayNode(
-                        ),
+                        )
                     ),
                     "Journal Entry" to NestedNode(
                         "Page Info" to ArrayNode(
                         ),
-                        "Title StringID" to "IDGS_TPJOURNALSCREEN_DUMMY_TITLE".node,
+                        "Title StringID" to "IDGS_TPJOURNALSCREEN_DUMMY_TITLE".node
                     ),
                     "World Map" to NestedNode(
-                        "Backdrop Texture Name" to mapTextureName.node,
+                        "Backdrop Texture Name" to mapTextureName.node
                     ),
                     "Can Assemble Fleets" to canAssembleFleet.node,
                     "World Crew List" to ArrayNode(
@@ -152,7 +152,7 @@ class World(private val game: Game, val root: RootNode) {
                     ),
                     "MapText System" to NestedNode(
                         "MapText Point Info" to ArrayNode(
-                        ),
+                        )
                     ),
                     "READAIENTITYCOUNTS" to false.node,
                     "Journal Music Name" to journalMusic.node,
@@ -167,12 +167,12 @@ class World(private val game: Game, val root: RootNode) {
                     "DATA_NEBULA_CAMERA_EFFECT" to 0.node,
                     "DATA_NEXT_NEBULA_CAMERA_EFFECT" to 0.node,
                     "DATA_NEBULA_CAMERA_EFFECT_FADE_IN_TIMER" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
                     "DATA_NEBULA_CAMERA_EFFECT_SPIN_TIMER" to NestedNode(
-                        "StartTime" to 0.0.node,
-                    ),
-                ),
+                        "StartTime" to 0.0.node
+                    )
+                )
             )
 
             root["GameImpl"] = createGameImpl()
@@ -182,7 +182,7 @@ class World(private val game: Game, val root: RootNode) {
 
         fun createPlayerInfoTuple(playerName: String, teamIndex: Int) = TupleNode(
             "PlayerInfo - Player Name" to playerName.node,
-            "PlayerInfo - TeamIndex" to teamIndex.node,
+            "PlayerInfo - TeamIndex" to teamIndex.node
         )
 
         fun createPlayerListElement(playerName: String, teamIndex: Int, color: Color, isPlayable: Boolean, start: Vector, direction: Vector, faction: Faction, formation: Formation) = NestedNode(
@@ -198,7 +198,7 @@ class World(private val game: Game, val root: RootNode) {
             "TeamIndex" to teamIndex.node,
             "FormationType" to formation.node,
             "FleetAI" to createFleetAI(),
-            "FlagIndex" to 0.node,
+            "FlagIndex" to 0.node
         )
 
         fun createAIFleetElement(playerName: String, teamIndex: Int, color: Color, start: Vector, direction: Vector, formation: Formation): NestedNode {
@@ -206,15 +206,15 @@ class World(private val game: Game, val root: RootNode) {
         }
 
         fun createFakeFleetElement(playerName: String, color: Color, start: Vector): NestedNode {
-            return createPlayerListElement(playerName, -1, color, false, start, Vector.EAST, Faction.ANY, Formation.NONE)
+            return createPlayerListElement(playerName, -1, color, false, start, Vector.east, Faction.ANY, Formation.NONE)
         }
 
         fun createFleetAI(formationType: String = "None", holdingFire: Boolean = false) = NestedNode(
             "UPDATETIMER" to NestedNode(
-                "StartTime" to 0.0.node,
+                "StartTime" to 0.0.node
             ),
             "OFFSETTIMER" to NestedNode(
-                "StartTime" to 0.0.node,
+                "StartTime" to 0.0.node
             ),
             "OFFSETTIME" to 0.0625f.node,
             "UPDATETIME" to 0.5f.node,
@@ -224,10 +224,10 @@ class World(private val game: Game, val root: RootNode) {
             "SHIPINFO" to ArrayNode(
             ),
             "HOLDFIREACTIVE" to holdingFire.node,
-            "AITYPE" to "AIFLEET".node,
+            "AITYPE" to "AIFLEET".node
         )
 
-        fun createWorldObject(objectID: Int, typeID: String, ownerIndex: Int, position: Vector, rotation: Matrix = Matrix.IDENTITY) = TupleNode(
+        fun createWorldObject(objectID: Int, typeID: String, ownerIndex: Int, position: Vector, rotation: Matrix = Matrix.identity) = TupleNode(
             "ID" to objectID.node,
             "Type" to typeID.node,
             "State" to NestedNode(
@@ -237,35 +237,56 @@ class World(private val game: Game, val root: RootNode) {
                 "PlayerIndex" to ownerIndex.node,
                 RawNode("# AIEntity").entry,
                 "# AIEntityType" to TupleNode(
-                    "Type" to "".node,
+                    "Type" to "".node
                 ),
                 RawNode("# RenderEntity").entry,
                 "# RenderEntityType" to TupleNode(
-                    "Type" to "".node,
+                    "Type" to "".node
                 ),
                 RawNode("# PhysicsEntity").entry,
                 "# PhysicsEntityType" to TupleNode(
-                    "Type" to "".node,
+                    "Type" to "".node
                 ),
                 RawNode("# CollisionEntity").entry,
                 "# CollisionEntityType" to TupleNode(
-                    "Type" to "".node,
+                    "Type" to "".node
                 ),
                 RawNode("# CustomInfoEntity").entry,
                 "# CustomInfoEntityType" to TupleNode(
-                    "Type" to "".node,
-                ),
-            ),
+                    "Type" to "".node
+                )
+            )
         )
 
         fun createWaypointPath(pathName: String, vararg pathPoints: Vector) = NestedNode(
             "Waypoint Path Name" to pathName.node,
-            "Waypoint Path Points" to ArrayNode(pathPoints.mapTo(mutableListOf()) { it.node }),
+            "Waypoint Path Points" to ArrayNode(pathPoints.mapTo(mutableListOf()) { it.node })
+        )
+
+        fun createWorldPolygon(polygonName: String, vararg polygonCoords: Coord) = NestedNode(
+            "Name" to polygonName.node,
+            "Points" to PointsListNode(polygonCoords.mapTo(mutableListOf()) { it.node })
+        )
+
+        fun createWorldPointSet(pointSetName: String, vararg worldPoints: NestedNode) = NestedNode(
+            "Name" to pointSetName.node,
+            "World Points" to ArrayNode(*worldPoints)
+        )
+
+        fun createWorldPoint(pointMagnitude: Float, position: Vector, lookLength: Float, forward: Vector, up: Vector = Vector.up) = NestedNode(
+            "World Point Magnitude" to pointMagnitude.node,
+            "World Point Basis" to NestedNode(
+                "Position" to position.node,
+                "LookAt Vector Length" to lookLength.node,
+                "Orientation - Cross" to forward.cross(up).node,
+                "Orientation - Forward" to forward.node,
+                "Orientation - Up" to up.node
+            )
         )
 
         fun createGroup(groupName: String, vararg objectIDs: Int) = NestedNode(
             "Name" to groupName.node,
-            "World Object IDs" to ArrayNode(objectIDs.mapTo(mutableListOf()) { it.node }),
+            "World Object IDs" to ArrayNode(objectIDs.mapTo(mutableListOf()) { it.node })
         )
 
         fun createWorldRule(ruleName: String, runOnce: Boolean, isActive: Boolean, conditions: ConditionListNode, actions: ActionListNode) = TupleNode(
@@ -273,7 +294,7 @@ class World(private val game: Game, val root: RootNode) {
             "Run Once" to runOnce.node,
             "Is Active" to isActive.node,
             "Conditions" to conditions,
-            "Actions" to actions,
+            "Actions" to actions
         )
 
         fun createInitializationWorldRule(ruleName: String, vararg actions: ActionNode) = createWorldRule(
@@ -282,8 +303,8 @@ class World(private val game: Game, val root: RootNode) {
             isActive = true,
             ConditionListNode(
                 ConditionNode(
-                    "Type" to "World Initialize".node,
-                ),
+                    "Type" to "World Initialize".node
+                )
             ),
             ActionListNode(*actions)
         )
@@ -294,15 +315,15 @@ class World(private val game: Game, val root: RootNode) {
             isActive = true,
             ConditionListNode(
                 ConditionNode(
-                    "Type" to "Skirmish Game Complete".node,
+                    "Type" to "Skirmish Game Complete".node
                 )
             ),
             ActionListNode(
-                createEndGameAction(null, null, true),
+                createEndGameAction(null, null, true)
             )
         )
 
-        fun createSetupEtheriumCurrentAction(pathName: String, objectID: Int) = ActionNode(
+        fun createSetupEtheriumCurrentAction(objectID: Int, pathName: String) = ActionNode(
             "Type" to "*State Init* Setup Etherium Current".node,
             "World Object ID" to objectID.node,
             "Etherium Name" to "New $pathName".node,
@@ -313,33 +334,156 @@ class World(private val game: Game, val root: RootNode) {
             groupName: String,
             pathName: String?,
             followMode: FollowMode,
-            findClosestPath: Boolean,
-            minSpeed: Float,
-            maxSpeed: Float,
-            minAngularSpeed: Float,
-            maxAngularSpeed: Float
+            findClosestPoint: Boolean,
+            minVelocity: Float,
+            maxVelocity: Float,
+            minAngularVelocity: Float,
+            maxAngularVelocity: Float
         ) = ActionNode(
             "Type" to "Setup Asteroid Belt".node,
             "Group Name" to groupName.node,
             "Path Name" to (pathName ?: "NO PATH").node,
             "Follow Mode" to followMode.node,
-            "Find Closest Point" to findClosestPath.stringNode(),
-            "Velocity Upper m/sec" to maxSpeed.node,
-            "Velocity Lower m/sec" to minSpeed.node,
-            "Tumble Upper Rads/sec" to maxAngularSpeed.node,
-            "Tumble Lower Rads/sec" to minAngularSpeed.node,
+            "Find Closest Point" to findClosestPoint.stringNode(),
+            "Velocity Upper m/sec" to maxVelocity.node,
+            "Velocity Lower m/sec" to minVelocity.node,
+            "Tumble Upper Rads/sec" to maxAngularVelocity.node,
+            "Tumble Lower Rads/sec" to minAngularVelocity.node
         )
 
         fun createSetOwnerAction(groupName: String, ownerName: String) = ActionNode(
             "Type" to "Set Group/Unit Owner".node,
             "Group/Unit Name" to groupName.node,
-            "New Owner" to ownerName.node,
+            "New Owner" to ownerName.node
+        )
+
+        fun createSetupWeatherAction(
+            objectID: Int,
+            weatherName: String,
+            polygonName: String,
+            nebulaPointSetName: String?,
+            solarStormPointSetName: String?,
+            meteorShowerPointSetName: String?,
+            nebulaEnergyDrain: Boolean,
+            nebulaOcclusion: Boolean,
+            lightningRechargeTime: Float?,
+            stormAngularVelocity: Float,
+            stormDamageRate: Float,
+            meteorRechargeTime: Float?,
+            maxAmbientSoundDistance: Float
+        ) = ActionNode(
+            "Type" to "*State Init* Setup Nebula".node,
+            "World Object ID" to objectID.node,
+            "New Nebula Name" to weatherName.node,
+            "Polygon Name" to polygonName.node,
+            "Lightning On/Off" to (lightningRechargeTime != null).stringNode(),
+            "Lightning Blast Recharge Time" to (lightningRechargeTime ?: 0f).node,
+            "Meteors On/Off" to (meteorRechargeTime != null).stringNode(),
+            "Meteor Strike Recharge Time" to (meteorRechargeTime ?: 0f).node,
+            "Nebula Cloud Effect Name" to (if (nebulaPointSetName == null) "EFFECT" else "Nebula").node,
+            "Solar Storm Effect Name" to (if (solarStormPointSetName == null) "EFFECT" else "SolarStorm").node,
+            "Meteor Shower Effect Name" to (if (meteorShowerPointSetName == null) "EFFECT" else "MeteorStorm").node,
+            "Nebula Cloud Point Set Name" to (nebulaPointSetName ?: "POINT SET").node,
+            "Solar Storm Point Set Name" to (solarStormPointSetName ?: "POINT SET").node,
+            "Meteor Shower Point Set Name" to (meteorShowerPointSetName ?: "POINT SET").node,
+            "Rotational Winds On/Off" to (stormAngularVelocity != 0f).stringNode(),
+            "Wind Magnitude" to stormAngularVelocity.node,
+            "Nebula Cloud Energy Drain On/Off" to nebulaEnergyDrain.stringNode(),
+            "Nebula Occlusion On/Off" to nebulaOcclusion.stringNode(),
+            "Solar Storm Wind Damage Frequency" to stormDamageRate.node,
+            "Ambient sound max distance" to maxAmbientSoundDistance.node
+        )
+
+        fun createSetupNebulaAction(
+            objectID: Int,
+            weatherName: String,
+            polygonName: String,
+            pointSetName: String,
+            energyDrain: Boolean,
+            occlusion: Boolean,
+            maxAmbientSoundDistance: Float
+        ) = createSetupWeatherAction(
+            objectID,
+            weatherName,
+            polygonName,
+            pointSetName,
+            null,
+            null,
+            energyDrain,
+            occlusion,
+            null,
+            0f,
+            0f,
+            null,
+            maxAmbientSoundDistance
+        )
+
+        fun createSetupSolarStormAction(
+            objectID: Int,
+            weatherName: String,
+            polygonName: String,
+            pointSetName: String,
+            lightningRechargeTime: Float?,
+            angularVelocity: Float,
+            damageRate: Float,
+            maxAmbientSoundDistance: Float
+        ) = createSetupWeatherAction(
+            objectID,
+            weatherName,
+            polygonName,
+            null,
+            pointSetName,
+            null,
+            nebulaEnergyDrain = false,
+            nebulaOcclusion = false,
+            lightningRechargeTime,
+            angularVelocity,
+            damageRate,
+            null,
+            maxAmbientSoundDistance
+        )
+
+        fun createSetupMeteorShowerAction(
+            objectID: Int,
+            weatherName: String,
+            polygonName: String,
+            pointSetName: String,
+            rechargeTime: Float?,
+            maxAmbientSoundDistance: Float
+        ) = createSetupWeatherAction(
+            objectID,
+            weatherName,
+            polygonName,
+            null,
+            null,
+            pointSetName,
+            nebulaEnergyDrain = false,
+            nebulaOcclusion = false,
+            null,
+            0f,
+            0f,
+            rechargeTime,
+            maxAmbientSoundDistance
+        )
+
+        fun createGroupFollowPathAction(groupName: String, pathName: String, followMode: FollowMode, findClosestPoint: Boolean) = ActionNode(
+            "Type" to "Group to follow path".node,
+            "Group Name" to groupName.node,
+            "Path Name" to pathName.node,
+            "Follow Mode" to followMode.node,
+            "Find Closest Point" to findClosestPoint.stringNode()
+        )
+
+        fun createSetGroupSpeedAction(groupName: String, speed: Int) = ActionNode(
+            "Type" to "Set Group Space Objects velocity".node,
+            "Group Name" to groupName.node,
+            "Velocity" to speed.node
         )
 
         fun createSetObjectiveTaskStateAction(taskName: String, state: Boolean) = ActionNode(
             "Type" to "Set Objective Task Active State".node,
             "Objective Task" to taskName.node,
-            "Active State" to state.stringNode(),
+            "Active State" to state.stringNode()
         )
 
         fun createPlayMusicAction(musicID: String, volume: Float, fadeInTime: Float = 0f, fadeOutTime: Float = 0f) = ActionNode(
@@ -348,7 +492,7 @@ class World(private val game: Game, val root: RootNode) {
             "Crossfade transition" to (fadeInTime > 0f || fadeOutTime > 0f).stringNode(),
             "Fade Out Time ( secs )" to fadeOutTime.node,
             "Fade In Time ( secs )" to fadeInTime.node,
-            "New Volume ( 0 to 1 )" to volume.node,
+            "New Volume ( 0 to 1 )" to volume.node
         )
 
         fun createEndGameAction(winMessageID: String?, loseMessageID: String?, showStats: Boolean) = ActionNode(
@@ -356,12 +500,12 @@ class World(private val game: Game, val root: RootNode) {
             "Use Custom Message" to (winMessageID != null || loseMessageID != null).stringNode(),
             "Winner - Custom Message String ID" to (winMessageID ?: "GAME STRING").node,
             "Loser - Custom Message String ID" to (loseMessageID ?: "GAME STRING").node,
-            "Show Stats Screen" to showStats.stringNode(),
+            "Show Stats Screen" to showStats.stringNode()
         )
 
         fun createObjectivePoint(pointName: String, position: Vector) = NestedNode(
             "Name" to pointName.node,
-            "Position" to position.node,
+            "Position" to position.node
         )
 
         fun createObjectiveTask(taskName: String, descriptionID: String, isActive: Boolean = false, isCompleted: Boolean = false, isFailed: Boolean = false) = NestedNode(
@@ -369,20 +513,20 @@ class World(private val game: Game, val root: RootNode) {
             "TextStringID" to descriptionID.node,
             "Active" to isActive.node,
             "Completed" to isCompleted.node,
-            "Failed" to isFailed.node,
+            "Failed" to isFailed.node
         )
 
         fun createJournalPage(textID: String, speechID: String, image: String) = NestedNode(
             "TextStringID" to textID.node,
             "SpeechEventFileName" to speechID.node,
-            "PictureTexture" to image.node,
+            "PictureTexture" to image.node
         )
 
         fun createMapText(textName: String, stringID: String, position: Vector, visible: Boolean = true) = NestedNode(
             "Name" to textName.node,
             "DisplayedText" to stringID.node,
             "Position" to position.node,
-            "Visible" to visible.node,
+            "Visible" to visible.node
         )
 
         fun createGameImpl(
@@ -406,7 +550,7 @@ class World(private val game: Game, val root: RootNode) {
                 ),
                 "PlayerDamageInfo" to ArrayNode(
                 ),
-                "SinglePlayer Points" to 0.node,
+                "SinglePlayer Points" to 0.node
             ),
             "SinglePlayerVictoryPoints" to 0.node,
             "SinglePlayerCrewList" to ArrayNode(
@@ -417,21 +561,21 @@ class World(private val game: Game, val root: RootNode) {
                 "Are NIS Bars Open" to nisBarsOpen.node,
                 "Skip Current Speech Event" to false.node,
                 "Active Speech Event Timer" to NestedNode(
-                    "StartTime" to 0.0.node,
+                    "StartTime" to 0.0.node
                 ),
                 "Speech Event Active" to false.node,
                 "Speech Event Queue" to ArrayNode(
                 ),
                 "Artificial Pause Between Speech Events Active" to false.node,
                 "Artificial Pause Between Speech Events Timer" to NestedNode(
-                    "StartTime" to 0.0.node,
+                    "StartTime" to 0.0.node
                 ),
-                "Request To Close NIS Bars" to false.node,
+                "Request To Close NIS Bars" to false.node
             ),
             "Game Complete" to false.node,
             "Custom Game Complete" to false.node,
             "Game Complete Timer" to NestedNode(
-                "StartTime" to 0.0.node,
+                "StartTime" to 0.0.node
             ),
             "Custom Game Complete String" to "".node,
             "Game Winner Players" to ArrayNode(
@@ -442,7 +586,7 @@ class World(private val game: Game, val root: RootNode) {
             "Goto Next Level Enabled" to false.node,
             "Next Level World Name" to "".node,
             "Next Level Display Timer" to NestedNode(
-                "StartTime" to 0.0.node,
+                "StartTime" to 0.0.node
             ),
             "Already Created Game" to false.node,
             "Game Camera" to NestedNode(
@@ -456,21 +600,21 @@ class World(private val game: Game, val root: RootNode) {
                         "Orthographic" to false.node,
                         "OrthographicZoom" to 1f.node,
                         "LocalBasis" to NestedNode(
-                            "Position" to Vector.ZERO.node,
+                            "Position" to Vector.zero.node,
                             "LookAt Vector Length" to 1f.node,
-                            "Orientation - Cross" to Vector.EAST.node,
-                            "Orientation - Forward" to Vector.NORTH.node,
-                            "Orientation - Up" to Vector.UP.node,
-                        ),
+                            "Orientation - Cross" to Vector.east.node,
+                            "Orientation - Forward" to Vector.north.node,
+                            "Orientation - Up" to Vector.up.node
+                        )
                     ),
                     "TargetInfo" to NestedNode(
                         "TargetID" to (-1).node,
-                        "TargetPoint" to Vector.ZERO.node,
+                        "TargetPoint" to Vector.zero.node
                     ),
                     "GameTimeUpdateTimer" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
-                    "NewFocusData" to true.node,
+                    "NewFocusData" to true.node
                 ),
                 "SplineCameraController" to NestedNode(
                     "Camera" to NestedNode(
@@ -482,25 +626,25 @@ class World(private val game: Game, val root: RootNode) {
                         "Orthographic" to false.node,
                         "OrthographicZoom" to 1f.node,
                         "LocalBasis" to NestedNode(
-                            "Position" to Vector.ZERO.node,
+                            "Position" to Vector.zero.node,
                             "LookAt Vector Length" to 10f.node,
-                            "Orientation - Cross" to Vector.WEST.node,
-                            "Orientation - Forward" to Vector.SOUTH.node,
-                            "Orientation - Up" to Vector.UP.node,
-                        ),
+                            "Orientation - Cross" to Vector.west.node,
+                            "Orientation - Forward" to Vector.south.node,
+                            "Orientation - Up" to Vector.up.node
+                        )
                     ),
                     "TargetInfo" to NestedNode(
                         "TargetID" to (-1).node,
-                        "TargetPoint" to Vector.ZERO.node,
+                        "TargetPoint" to Vector.zero.node
                     ),
                     "GameTimeUpdateTimer" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
                     "NewFocusData" to true.node,
                     "PositionInterpolater" to NestedNode(
-                        "Position" to Vector.ZERO.node,
-                        "StartPointControlPoint" to Vector.ZERO.node,
-                        "EndPointControlPoint" to Vector.ZERO.node,
+                        "Position" to Vector.zero.node,
+                        "StartPointControlPoint" to Vector.zero.node,
+                        "EndPointControlPoint" to Vector.zero.node,
                         "ControlIndex" to 0.node,
                         "Acceleration" to 10f.node,
                         "MaxSpeed" to 30f.node,
@@ -508,13 +652,13 @@ class World(private val game: Game, val root: RootNode) {
                         "Distance" to 0f.node,
                         "Percentage" to cameraIncrement.node,
                         "ControlPointsInfo" to ArrayNode(
-                        ),
+                        )
                     ),
                     "PrevTargetPoint" to Vector(0f, -10f, 0f).node,
                     "LockPosition" to false.node,
                     "LockOrientation" to false.node,
                     "ForceOrientation" to false.node,
-                    "PercentIncrement" to cameraIncrement.node,
+                    "PercentIncrement" to cameraIncrement.node
                 ),
                 "SwoopCameraController" to NestedNode(
                     "Camera" to NestedNode(
@@ -526,19 +670,19 @@ class World(private val game: Game, val root: RootNode) {
                         "Orthographic" to false.node,
                         "OrthographicZoom" to 1f.node,
                         "LocalBasis" to NestedNode(
-                            "Position" to Vector.ZERO.node,
+                            "Position" to Vector.zero.node,
                             "LookAt Vector Length" to 10f.node,
-                            "Orientation - Cross" to Vector.WEST.node,
-                            "Orientation - Forward" to Vector.SOUTH.node,
-                            "Orientation - Up" to Vector.UP.node,
-                        ),
+                            "Orientation - Cross" to Vector.west.node,
+                            "Orientation - Forward" to Vector.south.node,
+                            "Orientation - Up" to Vector.up.node
+                        )
                     ),
                     "TargetInfo" to NestedNode(
                         "TargetID" to (-1).node,
-                        "TargetPoint" to Vector.ZERO.node,
+                        "TargetPoint" to Vector.zero.node
                     ),
                     "GameTimeUpdateTimer" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
                     "NewFocusData" to true.node,
                     "DistanceToTarget" to 20f.node,
@@ -553,8 +697,8 @@ class World(private val game: Game, val root: RootNode) {
                     "RestrictMaxHorizontal" to false.node,
                     "RestrictMaxDistance" to maxSwoopCameraDistanceRestriction.node,
                     "PercentIncrement" to cameraIncrement.node,
-                    "TargetPoint" to Vector.ZERO.node,
-                    "JumpToFocusPoint" to false.node,
+                    "TargetPoint" to Vector.zero.node,
+                    "JumpToFocusPoint" to false.node
                 ),
                 "TransitionCameraController" to NestedNode(
                     "Camera" to NestedNode(
@@ -566,25 +710,25 @@ class World(private val game: Game, val root: RootNode) {
                         "Orthographic" to false.node,
                         "OrthographicZoom" to 1f.node,
                         "LocalBasis" to NestedNode(
-                            "Position" to Vector.ZERO.node,
+                            "Position" to Vector.zero.node,
                             "LookAt Vector Length" to 10f.node,
-                            "Orientation - Cross" to Vector.WEST.node,
-                            "Orientation - Forward" to Vector.SOUTH.node,
-                            "Orientation - Up" to Vector.UP.node,
-                        ),
+                            "Orientation - Cross" to Vector.west.node,
+                            "Orientation - Forward" to Vector.south.node,
+                            "Orientation - Up" to Vector.up.node
+                        )
                     ),
                     "TargetInfo" to NestedNode(
                         "TargetID" to (-1).node,
-                        "TargetPoint" to Vector.ZERO.node,
+                        "TargetPoint" to Vector.zero.node
                     ),
                     "GameTimeUpdateTimer" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
                     "NewFocusData" to true.node,
                     "PositionInterpolater" to NestedNode(
-                        "Position" to Vector.ZERO.node,
-                        "StartPointControlPoint" to Vector.ZERO.node,
-                        "EndPointControlPoint" to Vector.ZERO.node,
+                        "Position" to Vector.zero.node,
+                        "StartPointControlPoint" to Vector.zero.node,
+                        "EndPointControlPoint" to Vector.zero.node,
                         "ControlIndex" to 0.node,
                         "Acceleration" to 10f.node,
                         "MaxSpeed" to 30f.node,
@@ -592,13 +736,13 @@ class World(private val game: Game, val root: RootNode) {
                         "Distance" to 0f.node,
                         "Percentage" to cameraIncrement.node,
                         "ControlPointsInfo" to ArrayNode(
-                        ),
+                        )
                     ),
                     "PrevTargetPoint" to Vector(0f, -10f, 0f).node,
                     "LockPosition" to false.node,
                     "LockOrientation" to false.node,
                     "ForceOrientation" to false.node,
-                    "PercentIncrement" to cameraIncrement.node,
+                    "PercentIncrement" to cameraIncrement.node
                 ),
                 "AttachCameraController" to NestedNode(
                     "Camera" to NestedNode(
@@ -610,19 +754,19 @@ class World(private val game: Game, val root: RootNode) {
                         "Orthographic" to false.node,
                         "OrthographicZoom" to 1f.node,
                         "LocalBasis" to NestedNode(
-                            "Position" to Vector.ZERO.node,
+                            "Position" to Vector.zero.node,
                             "LookAt Vector Length" to 10f.node,
-                            "Orientation - Cross" to Vector.WEST.node,
-                            "Orientation - Forward" to Vector.SOUTH.node,
-                            "Orientation - Up" to Vector.UP.node,
-                        ),
+                            "Orientation - Cross" to Vector.west.node,
+                            "Orientation - Forward" to Vector.south.node,
+                            "Orientation - Up" to Vector.up.node
+                        )
                     ),
                     "TargetInfo" to NestedNode(
                         "TargetID" to (-1).node,
-                        "TargetPoint" to Vector.ZERO.node,
+                        "TargetPoint" to Vector.zero.node
                     ),
                     "GameTimeUpdateTimer" to NestedNode(
-                        "StartTime" to 0.0.node,
+                        "StartTime" to 0.0.node
                     ),
                     "NewFocusData" to true.node,
                     "AttachedObjectID" to (-1).node,
@@ -630,15 +774,15 @@ class World(private val game: Game, val root: RootNode) {
                     "AngleYZ" to 0f.node,
                     "AngleXY" to 0f.node,
                     "LockOrientation" to false.node,
-                    "PercentIncrement" to cameraIncrement.node,
+                    "PercentIncrement" to cameraIncrement.node
                 ),
                 "CameraMode" to 0.node,
                 "TargetModeForTransition" to transitionTargetMode.node,
                 "InTransitionMode" to false.node,
                 "TurnOffNISWhenDoneTransition" to true.node,
-                "TransitionStartPoint" to Vector.ZERO.node,
-                "LastTargetPosition" to Vector.ZERO.node,
-                "LastCameraPosition" to Vector.ZERO.node,
+                "TransitionStartPoint" to Vector.zero.node,
+                "LastTargetPosition" to Vector.zero.node,
+                "LastCameraPosition" to Vector.zero.node
             ),
             "SoundPlayer" to NestedNode(
                 "CurrentMix" to MixNode(
@@ -647,7 +791,7 @@ class World(private val game: Game, val root: RootNode) {
                     "2 PercentageVolume" to 1f.node,
                     "3 PercentageVolume" to 1f.node,
                     "4 PercentageVolume" to 1f.node,
-                    "5 PercentageVolume" to 1f.node,
+                    "5 PercentageVolume" to 1f.node
                 ),
                 "UserMix" to MixNode(
                     "0 PercentageVolume" to 1f.node,
@@ -655,11 +799,11 @@ class World(private val game: Game, val root: RootNode) {
                     "2 PercentageVolume" to 1f.node,
                     "3 PercentageVolume" to 1f.node,
                     "4 PercentageVolume" to 1f.node,
-                    "5 PercentageVolume" to 1f.node,
-                ),
+                    "5 PercentageVolume" to 1f.node
+                )
             ),
             "MusicPlayer" to NestedNode(
-                "Is Playing" to false.node,
+                "Is Playing" to false.node
             ),
             "TPSound" to NestedNode(
                 "MusicVolume" to 1f.node,
@@ -670,7 +814,7 @@ class World(private val game: Game, val root: RootNode) {
                 "Inside Abyss" to false.node,
             ),
             "Radar Active" to true.node,
-            "Crew Speech Silent State" to false.node,
+            "Crew Speech Silent State" to false.node
         )
     }
 
@@ -693,7 +837,7 @@ class World(private val game: Game, val root: RootNode) {
         addPlayerListElement(createPlayerListElement(playerName, teamIndex, color, true, start, direction, faction, formation))
     }
 
-    fun addWorldObject(typeID: String, ownerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.IDENTITY): Int {
+    fun addWorldObject(typeID: String, ownerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.identity): Int {
         val world = root.get<NestedNode>("World")!!
         val nextID = world.get<IntNode>("NextID")!!
         val objectID = nextID.value
@@ -716,6 +860,14 @@ class World(private val game: Game, val root: RootNode) {
 
     fun addWaypointPath(waypointPath: NestedNode) {
         root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Waypoint Path Info Vector")!!.add(waypointPath)
+    }
+
+    fun addWorldPolygon(worldPolygon: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("World Polygons Vectors")!!.add(worldPolygon)
+    }
+
+    fun addWorldPointSet(worldPointSet: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("World Point Sets Vector")!!.add(worldPointSet)
     }
 
     fun addGroup(group: NestedNode) {

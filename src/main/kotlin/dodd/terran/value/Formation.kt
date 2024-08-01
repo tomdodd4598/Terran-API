@@ -9,5 +9,7 @@ enum class Formation {
     LINE,
     DIAGONAL_V,
     DIAGONAL_V_ALT,
-    OVERLAP,
+    OVERLAP;
+
+    override fun toString() = "Formation.$name"
 }

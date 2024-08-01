@@ -20,7 +20,8 @@ fun diablo() {
         Vector(0.739606f, 0.237109f, -0.629891f),
         Color(1f, 0.52549f, 0.066667f),
         Color(0.996078f, 1f, 0.882353f),
-        "Map_Open_Diablo_Straight"
+        "Map_Open_Diablo_Straight",
+        bufferSize = 200f
     )
 
     fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
@@ -36,31 +37,31 @@ fun diablo() {
     addPlayer(7, Color(0f, 0f, 1f), Vector(-378.004f, 961.7678f), Vector.dir(0.999634f, -0.027063f))
     addPlayer(8, Color(0.9059f, 0.5373f, 0.0392f), Vector(362.05246f, 1006.83997f), Vector.dir(-0.98992f, 0.141626f))
 
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.BLACK, Vector(-1352.0924f, 265.17676f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-1352.0924f, 265.17676f)))
 
-    fun addIsland(type: String, position: Vector, cos: Float = 1f) {
-        world.addWorldObject("Island_$type", null, "Island Group", position, Matrix.rotationZ(acos(cos)))
+    fun addIsland(typeID: String, position: Vector, cos: Float = 1f) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(acos(cos)))
     }
 
-    addIsland("Volcano_01", Vector(-570.1949f, -148.24173f), 0.913547f)
-    addIsland("Volcano_02", Vector(-373.1324f, 558.6688f))
-    addIsland("Volcano_03", Vector(234.8505f, 133.67128f), 0.104529f)
-    addIsland("Volcano_04", Vector(139.5621f, -114.19995f))
-    addIsland("Volcano_05", Vector(-459.1112f, 690.91473f))
-    addIsland("Volcano_06", Vector(-445.773f, 1232.2682f))
-    addIsland("Volcano_07", Vector(-512.3461f, -936.54285f, -0.000244f))
-    addIsland("Volcano_02", Vector(261.23947f, -826.29535f))
-    addIsland("Volcano_03", Vector(-568.94995f, 579.75446f))
-    addIsland("Volcano_02", Vector(142.49583f, -705.3527f), 0.190809f)
-    addIsland("Volcano_03", Vector(-622.4879f, 129.23808f))
-    addIsland("Rocky_04", Vector(371.6263f, 1357.2142f))
-    addIsland("Rocky_05", Vector(279.2582f, 716.40717f))
-    addIsland("Rocky_06", Vector(338.89914f, -244.7013f))
-    addIsland("Rocky_07", Vector(-491.25952f, -644.5425f))
-    addIsland("Rocky_07", Vector(340.92377f, -1287.2688f, -0.000244f))
-    addIsland("Rocky_08", Vector(-499.76703f, -1311.3401f))
+    addIsland("Island_Volcano_01", Vector(-570.1949f, -148.24173f), 0.913547f)
+    addIsland("Island_Volcano_02", Vector(-373.1324f, 558.6688f))
+    addIsland("Island_Volcano_03", Vector(234.8505f, 133.67128f), 0.104529f)
+    addIsland("Island_Volcano_04", Vector(139.5621f, -114.19995f))
+    addIsland("Island_Volcano_05", Vector(-459.1112f, 690.91473f))
+    addIsland("Island_Volcano_06", Vector(-445.773f, 1232.2682f))
+    addIsland("Island_Volcano_07", Vector(-512.3461f, -936.54285f, -0.000244f))
+    addIsland("Island_Volcano_02", Vector(261.23947f, -826.29535f))
+    addIsland("Island_Volcano_03", Vector(-568.94995f, 579.75446f))
+    addIsland("Island_Volcano_02", Vector(142.49583f, -705.3527f), 0.190809f)
+    addIsland("Island_Volcano_03", Vector(-622.4879f, 129.23808f))
+    addIsland("Island_Rocky_04", Vector(371.6263f, 1357.2142f))
+    addIsland("Island_Rocky_05", Vector(279.2582f, 716.40717f))
+    addIsland("Island_Rocky_06", Vector(338.89914f, -244.7013f))
+    addIsland("Island_Rocky_07", Vector(-491.25952f, -644.5425f))
+    addIsland("Island_Rocky_07", Vector(340.92377f, -1287.2688f, -0.000244f))
+    addIsland("Island_Rocky_08", Vector(-499.76703f, -1311.3401f))
 
-    val etheriumID = world.addWorldObject("Terrain_Etherium_Current", null, null, Vector(-95f, 2.999973f))
+    val etheriumObjectID = world.addWorldObject("Terrain_Etherium_Current", null, null, Vector(-95f, 2.999973f))
 
     fun addAsteroid(size: String, position: Vector) {
         world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
@@ -135,17 +136,200 @@ fun diablo() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
-        World.createSetupEtheriumCurrentAction("Etherium Current", etheriumID),
+        World.createSetupEtheriumCurrentAction(etheriumObjectID, "Etherium Current"),
         World.createSetupAsteroidBeltAction("Asteroid Group", null, FollowMode.TO_END, false, 0f, 0f, 0.02f, 3.02f),
         World.createSetOwnerAction("Asteroid Group", "Asteroids"),
         World.createSetObjectiveTaskStateAction("Kill All", true),
-        World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f),
+        World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Etherium Current", "IDGS_TPMAPTEXTITEMS_MP_DIABLO_STRAIT_CURRENT", Vector(-186.8336f, 9.868164f)))
+
+    println(world.build())
+}
+
+fun shadow() {
+    val world = World.create(
+        game,
+        "Shadow Dance",
+        "IDGS_TPWORLDNAMES_MP_NEBULA_WAR",
+        "IDGS_TPWORLDDESCRIPTION_MP_SHADOW_DANCE",
+        Vector(1900f, 1900f, 1000f),
+        1,
+        Color(0.152941f, 0.152941f, 0.152941f),
+        Vector(-0.219754f, -0.815193f, -0.535881f),
+        Color(0.203922f, 0.192157f, 0.423529f),
+        Color(0.862745f, 0.980392f, 0.968627f),
+        "Map_ShadowDance",
+        randomSeed = -1526094716,
+        bufferSize = 200f
+    )
+
+    fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
+        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.DIAGONAL_V)
+    }
+
+    addPlayer(1, Color(0f, 0.502f, 0f), Vector(-541.1266f, 630.96155f), Vector.dir(1f, 0f))
+    addPlayer(2, Color(0f, 0f, 0.502f), Vector(622.7023f, 592.0886f), Vector.dir(1f, 0f))
+    addPlayer(3, Color(0f, 0.502f, 0.502f), Vector(6.498825f, 882.9153f), Vector.dir(1f, 0f))
+    addPlayer(4, Color(0.651f, 0.7922f, 0.9412f), Vector(799.8519f, -26.944336f), Vector.dir(1f, 0f))
+    addPlayer(5, Color(0.9059f, 0.5373f, 0.0392f), Vector(18.560791f, -810.7614f), Vector.dir(1f, 0f))
+    addPlayer(6, Color(1f, 0f, 0f), Vector(603.85004f, -508.37128f), Vector.dir(1f, 0f))
+    addPlayer(7, Color(0f, 0f, 1f), Vector(-720.58923f, 176.86047f), Vector.dir(1f, 0f))
+    addPlayer(8, Color(1f, 1f, 0f), Vector(-475.92407f, -529.2828f), Vector.dir(1f, 0f))
+
+    val nebulaObjectID = world.addWorldObject("Terrain_Nebula", null, null, Vector(34.784943f, 47.516388f))
+
+    fun addIsland(typeID: String, position: Vector, cos: Float = 1f) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(acos(cos)))
+    }
+
+    addIsland("Island01", Vector(-649.7423f, 1027.5746f))
+    addIsland("Island02", Vector(-441.42435f, 1172.3391f))
+    addIsland("Island03", Vector(-153.73283f, 1220.6642f), 0.139173f)
+    addIsland("Island04", Vector(159.30537f, 1186.1365f, -0.000244f))
+    addIsland("Island05", Vector(383.55704f, 1076.261f))
+    addIsland("Island06", Vector(542.7456f, 936.31195f))
+    addIsland("Island07", Vector(-916.1911f, 703.7328f, 0.000244f))
+    addIsland("Island08", Vector(888.22754f, 560.2029f))
+    addIsland("Island08", Vector(1022.2626f, 249.93701f))
+    addIsland("Island09", Vector(1096.4343f, -65.76062f, 0.000244f))
+    addIsland("Island10", Vector(1056.2955f, -312.54553f))
+    addIsland("Island11", Vector(956.46545f, -533.6833f))
+    addIsland("Island12", Vector(771.95044f, -767.37634f))
+    addIsland("Island13", Vector(554.7782f, -974.2602f))
+    addIsland("Island14", Vector(92.87059f, -1105.2847f))
+    addIsland("Island_Rocky_01", Vector(-279.39697f, -980.0161f))
+    addIsland("Island_Dragon_07", Vector(-674.81915f, -751.10645f), 0.939693f)
+    addIsland("Island_Dragon_01", Vector(-949.8212f, -332.29706f), -0.275637f)
+    addIsland("Island_Rocky_03", Vector(-1067.1179f, 112.55988f, 0.000244f))
+    addIsland("Island_Small01", Vector(-1060.196f, 468.01663f))
+    addIsland("Island_Rocky_06", Vector(698.668f, 781.9974f))
+    addIsland("Island_Rocky_08", Vector(-818.13605f, 917.51086f))
+
+    fun addWhale(position: Vector) {
+        world.addWorldObject("Animal_SpaceWhale", null, "Whale Group", position, Matrix.rotationZ(0.34906474f))
+    }
+
+    addWhale(Vector(-458.10767f, -919.8695f, -0.000031f))
+    addWhale(Vector(-479.84482f, -961.45966f))
+    addWhale(Vector(-428.18384f, -962.39734f))
+    addWhale(Vector(-441.9633f, -1008.9878f))
+
+    fun addDerelict(typeID: String, position: Vector, rotation: Matrix = Matrix.identity) {
+        world.addWorldObject("Ship_${typeID}_Wrecked", null, "Derelict Group", position, rotation)
+    }
+
+    addDerelict("Civilian_Barque", Vector(-138.69653f, 112.54449f), Matrix.rotationZ(acos(0.838671f)))
+    addDerelict("Civilian_Galleon", Vector(131.05696f, -233.56627f), Matrix(
+        -0.643565f, 0.764314f, -0.040642f,
+        -0.628794f, -0.558238f, -0.541287f,
+        -0.436399f, -0.322797f, 0.839856f
+    ))
+    addDerelict("Pirate_FastFrigate", Vector(219.05482f, 307.33923f), Matrix(
+        0.568634f, -0.781172f, 0.257737f,
+        0.81216f, 0.483413f, -0.326664f,
+        0.130587f, 0.395076f, 0.90932f
+    ))
+    addDerelict("Pirate_JollyRoger", Vector(107.59898f, 60.13287f, 0.000031f), Matrix(
+        0.787765f, -0.327514f, 0.521694f,
+        0.594988f, 0.623792f, -0.50683f,
+        -0.159434f, 0.709663f, 0.686268f
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Whale Path",
+        Vector(-476.54776f, -908.5619f),
+        Vector(-507.09027f, -841.03516f),
+        Vector(-612.07965f, -587.5864f),
+        Vector(-854.8967f, -216.02747f),
+        Vector(-1216.9668f, 54.63208f),
+        Vector(-1312.6748f, 315.88477f),
+        Vector(-1365.723f, 576.553f),
+        Vector(-1319.328f, 677.8706f),
+        Vector(-1093.0818f, 671.4138f),
+        Vector(-897.8308f, 595.2329f),
+        Vector(-748.39954f, 684.34326f),
+        Vector(-627.40625f, 824.301f),
+        Vector(-545.5033f, 997.9199f),
+        Vector(-555.1889f, 1279.6873f),
+        Vector(-456.21164f, 1481.9824f),
+        Vector(-302.15555f, 1517.1401f),
+        Vector(-153.366f, 1473.2595f),
+        Vector(-2.176825f, 1191.6482f),
+        Vector(107.15542f, 1001.5842f),
+        Vector(235.45662f, 957.9199f),
+        Vector(406.88058f, 965.1477f),
+        Vector(540.15247f, 1129.3542f),
+        Vector(792.9584f, 1121.6672f),
+        Vector(896.7057f, 1023.6904f),
+        Vector(975.20435f, 838.0432f),
+        Vector(992.3482f, 545.7366f),
+        Vector(926.34875f, 296.05176f),
+        Vector(930.2272f, 141.78223f),
+        Vector(971.9022f, 61.04785f),
+        Vector(1057.4847f, -182.08301f),
+        Vector(1121.3546f, -298.24878f),
+        Vector(1114.8103f, -501.20703f),
+        Vector(1024.9f, -612.48584f),
+        Vector(876.6885f, -626.9935f),
+        Vector(717.50006f, -616.48584f),
+        Vector(562.8734f, -748.55066f),
+        Vector(452.96356f, -877.8993f),
+        Vector(373.4039f, -1050.9402f),
+        Vector(265.71936f, -1169.5652f),
+        Vector(133.29494f, -1202.2246f),
+        Vector(-55.164078f, -1194.749f),
+        Vector(-225.98544f, -1172.102f),
+        Vector(-331.31174f, -1133.607f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Nebula Polygon",
+        Coord(-484.43982f, 348.28317f),
+        Coord(-570.4739f, 51.524334f),
+        Coord(-490.3123f, -252.31458f),
+        Coord(-262.51105f, -479.47018f),
+        Coord(32.53079f, -559.22284f),
+        Coord(344.3778f, -475.55334f),
+        Coord(555.2445f, -262.29047f),
+        Coord(640.04376f, 38.81142f),
+        Coord(556.7212f, 349.3838f),
+        Coord(331.84933f, 573.2532f),
+        Coord(27.883099f, 654.2556f),
+        Coord(-272.7998f, 565.21735f)
+    ))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Nebula Points",
+        World.createWorldPoint(577.4005f, Vector(30.162416f, 40.36957f), 1f, Vector(0f, 1f))
+    ))
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        World.createSetupNebulaAction(
+            nebulaObjectID,
+            "Nebula Weather",
+            "Nebula Polygon",
+            "Nebula Points",
+            energyDrain = true,
+            occlusion = true,
+            300f
+        ),
+        World.createGroupFollowPathAction("Whale Group", "Whale Path", FollowMode.LOOP, true),
+        World.createSetGroupSpeedAction("Whale Group", 8),
+        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
+    ))
+    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+
+    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+
+    world.addMapText(World.createMapText("Nebula", "IDGS_TPMAPTEXTITEMS_MP_SHADOW_DANCE_NEBULA", Vector(19.76284f, 48.68347f)))
+    world.addMapText(World.createMapText("Island", "IDGS_TPMAPTEXTITEMS_BTUT_SHADOW_ISLANDS", Vector(-301.43805f, -1010.7231f)))
 
     println(world.build())
 }
@@ -174,7 +358,7 @@ fun zemyatin() {
     addPlayer(3, Color(0.502f, 0.502f, 0f), Vector(284.3098f, -284.89603f), Vector.dir(-0.755651f, 0.654975f))
     addPlayer(4, Color(1f, 1f, 0f), Vector(-281.1714f, -377.8817f), Vector.dir(0.753918f, 0.656969f))
 
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.BLACK, Vector(-145.1806f, -362.53516f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-145.1806f, -362.53516f)))
 
     world.addWorldObject("Terrain_BlackHole_Small", null, "Black Hole Group", Vector(1.800463f, -2.546509f))
 
@@ -200,7 +384,7 @@ fun zemyatin() {
         "All",
         World.createSetOwnerAction("Asteroid Group", "Asteroids"),
         World.createSetObjectiveTaskStateAction("Kill All", true),
-        World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f),
+        World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
@@ -212,7 +396,7 @@ fun zemyatin() {
 }
 
 fun test() {
-    val world = World(game, "Diablo Straight")
+    val world = World(game, "Shadow Dance")
 
     val worldInfo = world.root.get<NestedNode>("WorldInfo")
     val players = worldInfo?.get<FlatNode>("Players")
@@ -226,17 +410,20 @@ fun test() {
 
     val gameSpecific = worldNode?.get<NestedNode>("GameSpecific")
     val waypointPathInfo = gameSpecific?.get<ArrayNode>("Waypoint Path Info Vector")
+    val worldPolygonInfo = gameSpecific?.get<ArrayNode>("World Polygons Vectors")
+    val worldPointSetInfo = gameSpecific?.get<ArrayNode>("World Point Sets Vector")
     val groups = gameSpecific?.get<GroupsListNode>("Num Groups")
     val worldRules = gameSpecific?.get<NestedNode>("World Rules")
     val ruleList = worldRules?.get<RuleListNode>("Rule List")
 
     val gameImpl = world.root.get<NestedNode>("GameImpl")
 
-    //println(waypointPathInfo)
+    println(ruleList)
 }
 
 fun main() {
     //diablo()
+    shadow()
     //zemyatin()
-    test()
+    //test()
 }

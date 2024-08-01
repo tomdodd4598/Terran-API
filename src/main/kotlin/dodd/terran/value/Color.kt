@@ -3,11 +3,11 @@ package dodd.terran.value
 data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float = 1f) {
 
     companion object {
-        val BLACK = Color(0f, 0f, 0f, 0f)
-        val WHITE = Color(1f, 1f, 1f)
-        val RED = Color(1f, 0f, 0f)
-        val GREEN = Color(0f, 1f, 0f)
-        val BLUE = Color(0f, 0f, 1f)
+        val black get() = Color(0f, 0f, 0f, 0f)
+        val white get() = Color(1f, 1f, 1f)
+        val red get() = Color(1f, 0f, 0f)
+        val green get() = Color(0f, 1f, 0f)
+        val blue get() = Color(0f, 0f, 1f)
     }
 
     init {
@@ -42,4 +42,6 @@ data class Color(var red: Float, var green: Float, var blue: Float, var alpha: F
     }
 
     fun asSequence() = sequenceOf(red, green, blue, alpha)
+
+    override fun toString() = "Color($red, $green, $blue, $alpha)"
 }

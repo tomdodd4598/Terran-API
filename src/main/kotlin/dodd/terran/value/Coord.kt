@@ -35,4 +35,6 @@ data class Coord(var u: Float, var v: Float) {
     }
 
     fun asSequence() = sequenceOf(u, v)
+
+    override fun toString() = "Coord($u, $v)"
 }

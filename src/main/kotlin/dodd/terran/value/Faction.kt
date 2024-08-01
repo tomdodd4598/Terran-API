@@ -5,5 +5,7 @@ enum class Faction {
     CIVILIAN,
     PIRATE,
     PROCYON,
-    ANY,
+    ANY;
+
+    override fun toString() = "Faction.$name"
 }
