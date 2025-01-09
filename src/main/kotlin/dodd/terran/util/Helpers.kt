@@ -61,5 +61,9 @@ object Helpers {
 
     val FollowMode.node get() = string.node
 
+    val Skill.node get() = string.node
+
+    val Stance.node get() = string.node
+
     fun Boolean.stringNode() = toString().uppercase().node
 }

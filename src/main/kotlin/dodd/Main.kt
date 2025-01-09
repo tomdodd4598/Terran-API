@@ -151,6 +151,147 @@ fun diablo() {
     println(world.build())
 }
 
+fun dragons() {
+    val world = World.create(
+        game,
+        "Dragons Nest",
+        "IDGS_TPWORLDNAMES_MP_ARENA",
+        "IDGS_TPWORLDDESCRIPTION_MP_ARENA_LARGE",
+        Vector(1750f, 1750f, 500f),
+        10,
+        Color(0.090196f, 0.090196f, 0.090196f),
+        Vector(-0.593311f, 0.549935f, -0.587838f),
+        Color(0.250980f, 0.509804f, 0.180392f),
+        Color(0.992157f, 0.996078f, 0.909804f),
+        "Map_DragonsNest"
+    )
+
+    fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
+        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.SIDE_BY_SIDE)
+    }
+
+    addPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-810.8588f, 7.178986f), Vector.dir(0.99862f, 0.052516f))
+    addPlayer(2, Color(0.502f, 0.502f, 0f), Vector(-0.446236f, 749.6373f), Vector.dir(-0.059969f, -0.9982f))
+    addPlayer(3, Color(0.651f, 0.7922f, 0.9412f), Vector(6.476181f, -684.0395f), Vector.dir(0.028614f, 0.999591f))
+    addPlayer(4, Color(1f, 0f, 0f), Vector(-587.4156f, 510.82135f), Vector.dir(0.722116f, -0.691772f))
+    addPlayer(5, Color(1f, 0f, 1f), Vector(578.3267f, -486.13425f), Vector.dir(-0.787641f, 0.616134f))
+    addPlayer(6, Color(0.7529f, 0.8627f, 0.7529f), Vector(614.0336f, 498.55988f), Vector.dir(-0.838852f, -0.54436f))
+    addPlayer(7, Color(0.502f, 0f, 0f), Vector(-552.6162f, -524.29443f), Vector.dir(0.616675f, 0.787218f))
+    addPlayer(8, Color(0f, 0f, 1f), Vector(739.2843f, 4.082199f), Vector.dir(-0.998379f, -0.056907f))
+
+    val asteroidPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-189.3843f, -391.80975f)))
+    val dragonPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Dragons", Color.white, Vector(73.16046f, 97.105835f), Vector.dir(0.377298f, -0.926092f)))
+
+    fun addIsland(typeID: String, position: Vector, cos: Float = 1f, reverse: Boolean = false) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(acos(cos).let { if (reverse) -it else it }))
+    }
+
+    addIsland("Island11", Vector(593.9529f, 205.11626f), 0.32556f, true)
+    addIsland("Island_Rocky_02", Vector(-0.663002f, -41.20365f))
+    addIsland("Island_Rocky_06", Vector(-210.82018f, 538.31537f))
+    addIsland("Island02", Vector(284.2792f, 514.01385f))
+    addIsland("Island06", Vector(-550.0975f, -63.10529f))
+    addIsland("Island08", Vector(599.31525f, -189.26865f))
+    addIsland("Island08", Vector(-340.00607f, -440.50412f))
+    addIsland("Island_Rocky_01", Vector(278.2439f, -490.7169f))
+    addIsland("Island_Med01", Vector(-711.94025f, -200.62675f))
+
+    fun addAsteroid(size: String, position: Vector) {
+        world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
+    }
+
+    addAsteroid("Large", Vector(286.57913f, 103.3194f))
+    addAsteroid("Med", Vector(272.23532f, -72.081055f))
+    addAsteroid("Small", Vector(255.4793f, -252.46716f))
+    addAsteroid("Small", Vector(33.94876f, -333.44055f, -0.000122f))
+    addAsteroid("Small", Vector(-122.97598f, -397.45337f))
+    addAsteroid("Small", Vector(-350.17474f, -255.22034f))
+    addAsteroid("Small", Vector(-315.39996f, -68.5871f))
+    addAsteroid("Small", Vector(-387.52136f, 117.73651f))
+    addAsteroid("Huge", Vector(-259.00262f, 203.95416f))
+    addAsteroid("Large", Vector(-91.305695f, 367.22708f))
+    addAsteroid("Med", Vector(13.736923f, 256.09293f, -30f))
+    addAsteroid("Med", Vector(194.70226f, 243.272f))
+    addAsteroid("Small", Vector(160.0329f, 155.08075f))
+    addAsteroid("Small", Vector(137.07669f, -225.49567f))
+    addAsteroid("Small", Vector(60.411835f, 339.69247f))
+    addAsteroid("Med", Vector(60.579254f, -389.54706f))
+    addAsteroid("Med", Vector(182.42752f, -302.45123f))
+    addAsteroid("Med", Vector(-228.732f, -333.11414f, 0.000122f))
+    addAsteroid("Large", Vector(-381.14832f, -138.30621f))
+    addAsteroid("Large", Vector(-52.401367f, -421.33197f, -0.000122f))
+
+    fun addDragon(position: Vector, cos: Float) {
+        world.addWorldObject("Animal_SpaceDragon", "Dragons", "Dragon Group", position, Matrix.rotationZ(acos(cos)))
+    }
+
+    addDragon(Vector(106.30721f, 75.81913f, 12f), -0.766046f)
+    addDragon(Vector(112.630615f, 152.48358f, 19.99997f), -0.766049f)
+    addDragon(Vector(47.491673f, 140.87505f, 35.99997f), -0.766051f)
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Asteroid Path",
+        Vector(194.486f, -270.4562f),
+        Vector(53.256634f, -351.66745f),
+        Vector(-59.41383f, -356.08096f),
+        Vector(-196.62004f, -317.25153f),
+        Vector(-306.2032f, -218.09283f),
+        Vector(-370.28613f, -17.374634f),
+        Vector(-363.4583f, 110.42905f),
+        Vector(-314.89197f, 206.56105f),
+        Vector(-231.5422f, 280.80075f),
+        Vector(-85.22492f, 313.9124f),
+        Vector(76.25892f, 277.69125f),
+        Vector(193.27872f, 186.07806f),
+        Vector(269.8293f, 80.50735f),
+        Vector(293.33453f, -38.595524f),
+        Vector(275.6875f, -170.98976f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Dragon Path",
+        Vector(137.00256f, 114.405716f, 38.999985f),
+        Vector(209.01056f, 16.97841f, 37f),
+        Vector(214.7295f, -78.03894f, 37f),
+        Vector(180.22133f, -157.5344f, 37f),
+        Vector(88.1502f, -238.6536f, 40f),
+        Vector(-61.731857f, -240.48607f, 37f),
+        Vector(-172.89912f, -166.25266f, 42f),
+        Vector(-217.83444f, -47.670837f, 32f),
+        Vector(-212.78978f, 67.4821f, 35.00006f),
+        Vector(-142.77435f, 158.03029f, 45f),
+        Vector(-38.00087f, 190.31392f, 47f),
+        Vector(63.719822f, 168.0781f, 41f)
+    ))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Dragon Flee Point Set",
+        World.createWorldPoint(5f, Vector(-1608.0801f, -1702.6455f), 0f, Vector.north)
+    ))
+
+    world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(asteroidPlayerIndex, dragonPlayerIndex))
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        World.createSetupAsteroidBeltAction("Asteroid Group", "Asteroid Path", FollowMode.LOOP, true, 5f, 20f, 0.05f, 4f),
+        World.createSetOwnerAction("Asteroid Group", "Asteroids"),
+        World.createGroupFollowPathAction("Dragon Group", "Dragon Path", FollowMode.LOOP, true),
+        World.createSetOwnerAction("Dragon Group", "Dragons"),
+        World.createSetDragonStanceAction("Dragon Group", Stance.AGGRESSIVE),
+        World.createSetDragonDamageThresholdAction("Dragon Group", 0.8f),
+        World.createSetGroupReturnZone("Dragon Group", "Dragon Flee Point Set"),
+        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
+    ))
+    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+
+    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+
+    world.addMapText(World.createMapText("Dragons", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLANDS_FORSAKEN_RANGE", Vector(-3.243332f, -17.338562f)))
+
+    println(world.build())
+}
+
 fun shadow() {
     val world = World.create(
         game,
@@ -304,7 +445,7 @@ fun shadow() {
     ))
 
     world.addWorldPointSet(World.createWorldPointSet(
-        "Nebula Points",
+        "Nebula Point Set",
         World.createWorldPoint(577.4005f, Vector(30.162416f, 40.36957f), 1f, Vector(0f, 1f))
     ))
 
@@ -314,7 +455,7 @@ fun shadow() {
             nebulaObjectID,
             "Nebula Weather",
             "Nebula Polygon",
-            "Nebula Points",
+            "Nebula Point Set",
             energyDrain = true,
             occlusion = true,
             300f
@@ -329,7 +470,7 @@ fun shadow() {
     world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Nebula", "IDGS_TPMAPTEXTITEMS_MP_SHADOW_DANCE_NEBULA", Vector(19.76284f, 48.68347f)))
-    world.addMapText(World.createMapText("Island", "IDGS_TPMAPTEXTITEMS_BTUT_SHADOW_ISLANDS", Vector(-301.43805f, -1010.7231f)))
+    world.addMapText(World.createMapText("Islands", "IDGS_TPMAPTEXTITEMS_BTUT_SHADOW_ISLANDS", Vector(-301.43805f, -1010.7231f)))
 
     println(world.build())
 }
@@ -423,7 +564,8 @@ fun test() {
 
 fun main() {
     //diablo()
-    shadow()
+    //dragons()
+    //shadow()
     //zemyatin()
     //test()
 }
