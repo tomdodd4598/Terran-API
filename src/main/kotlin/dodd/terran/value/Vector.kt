@@ -1,5 +1,6 @@
 package dodd.terran.value
 
+import dodd.terran.util.Helpers.clean
 import kotlin.math.sqrt
 
 class Vector(private val internal: FloatArray) {
@@ -17,6 +18,12 @@ class Vector(private val internal: FloatArray) {
     }
 
     constructor(x: Float, y: Float, z: Float = 0f) : this(floatArrayOf(x, y, z))
+
+    init {
+        for (i in internal.indices) {
+            internal[i] = internal[i].clean()
+        }
+    }
 
     val size get() = internal.size
 
@@ -96,7 +103,7 @@ class Vector(private val internal: FloatArray) {
 
     fun asSequence() = internal.asSequence()
 
-    override operator fun equals(other: Any?) = other is Vector && internal.contentEquals(other.internal)
+    override fun equals(other: Any?) = other is Vector && internal.contentEquals(other.internal)
 
     override fun hashCode() = internal.contentHashCode()
 

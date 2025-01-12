@@ -1,5 +1,6 @@
 package dodd.terran.value
 
+import dodd.terran.util.Helpers.clean
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -8,11 +9,17 @@ class Matrix(private val internal: Array<FloatArray>) {
     companion object {
         val identity get() = Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
 
-        fun rotationX(angle: Float) = Matrix(1f, 0f, 0f, 0f, cos(angle), -sin(angle), 0f, sin(angle), cos(angle))
+        fun rotationX(angle: Float) = rotationX(cos(angle), -sin(angle))
 
-        fun rotationY(angle: Float) = Matrix(cos(angle), 0f, sin(angle), 0f, 1f, 0f, -sin(angle), 0f, cos(angle))
+        fun rotationX(yy: Float, zy: Float) = Matrix(1f, 0f, 0f, 0f, yy, zy, 0f, -zy, yy)
 
-        fun rotationZ(angle: Float) = Matrix(cos(angle), -sin(angle), 0f, sin(angle), cos(angle), 0f, 0f, 0f, 1f)
+        fun rotationY(angle: Float) = rotationY(cos(angle), sin(angle))
+
+        fun rotationY(xx: Float, zx: Float) = Matrix(xx, 0f, zx, 0f, 1f, 0f, -zx, 0f, xx)
+
+        fun rotationZ(angle: Float) = rotationZ(cos(angle), -sin(angle))
+
+        fun rotationZ(xx: Float, yx: Float) = Matrix(xx, yx, 0f, -yx, xx, 0f, 0f, 0f, 1f)
 
         fun rotation(angle: Float, axis: Vector): Matrix {
             val n = axis.normalized()
@@ -33,6 +40,14 @@ class Matrix(private val internal: Array<FloatArray>) {
     constructor(x: FloatArray, y: FloatArray, z: FloatArray) : this(arrayOf(x, y, z))
 
     constructor(xx: Float, yx: Float, zx: Float, xy: Float, yy: Float, zy: Float, xz: Float, yz: Float, zz: Float) : this(floatArrayOf(xx, yx, zx), floatArrayOf(xy, yy, zy), floatArrayOf(xz, yz, zz))
+
+    init {
+        for (row in internal) {
+            for (i in row.indices) {
+                row[i] = row[i].clean()
+            }
+        }
+    }
 
     val rowCount = internal.size
     val colCount = internal.firstOrNull()?.size ?: 0
@@ -76,9 +91,9 @@ class Matrix(private val internal: Array<FloatArray>) {
 
     fun asSequence() = internal.asSequence()
 
-    override operator fun equals(other: Any?) = other is Matrix && internal.contentDeepEquals(other.internal)
+    override fun equals(other: Any?) = other is Matrix && internal.contentDeepEquals(other.internal)
 
     override fun hashCode() = internal.contentDeepHashCode()
 
-    override fun toString() = internal.joinToString(prefix = "[", postfix = "]") { "${it}f" }
+    override fun toString() = internal.joinToString(prefix = "[", postfix = "]") { arr -> arr.joinToString(prefix = "[", postfix = "]") { "${it}f" } }
 }

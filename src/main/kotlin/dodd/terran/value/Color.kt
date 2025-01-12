@@ -1,5 +1,7 @@
 package dodd.terran.value
 
+import dodd.terran.util.Helpers.clean
+
 data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float = 1f) {
 
     companion object {
@@ -11,10 +13,10 @@ data class Color(var red: Float, var green: Float, var blue: Float, var alpha: F
     }
 
     init {
-        red = red.coerceIn(0f, 1f)
-        green = green.coerceIn(0f, 1f)
-        blue = blue.coerceIn(0f, 1f)
-        alpha = alpha.coerceIn(0f, 1f)
+        red = red.coerceIn(0f, 1f).clean()
+        green = green.coerceIn(0f, 1f).clean()
+        blue = blue.coerceIn(0f, 1f).clean()
+        alpha = alpha.coerceIn(0f, 1f).clean()
     }
 
     operator fun unaryPlus() = Color(red, green, blue, alpha)

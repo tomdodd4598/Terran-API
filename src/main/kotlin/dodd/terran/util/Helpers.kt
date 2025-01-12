@@ -1,6 +1,7 @@
 package dodd.terran.util
 
 import dodd.terran.Global
+import dodd.terran.World
 import dodd.terran.translation.*
 import dodd.terran.util.Helpers.node
 import dodd.terran.value.*
@@ -27,6 +28,8 @@ object Helpers {
 
     fun String.capitalize() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
+    fun String.titlecase() = lowercase().capitalize()
+
     private fun Float.places(n: Int) = "%.${n}f".format(this)
 
     fun Float.definitionString() = places(6)
@@ -36,6 +39,18 @@ object Helpers {
     fun Double.definitionString() = places(6)
 
     fun Float.toRadians() = (PI * this / 180.0).toFloat()
+
+    fun Float.clean() = if (this == -0f) 0f else this
+
+    fun Double.clean() = if (this == -0.0) 0.0 else this
+
+    fun <T> List<T>.forEachPair(function: (T, T) -> Unit) {
+        for (i in indices) {
+            for (j in (i + 1)..<size) {
+                function(this[i], this[j])
+            }
+        }
+    }
 
     val String.node get() = StringNode(this)
 
@@ -59,11 +74,17 @@ object Helpers {
 
     val Formation.node get() = ordinal.node
 
+    val Equivalence.node get() = string.node
+
     val FollowMode.node get() = string.node
 
     val Skill.node get() = string.node
 
     val Stance.node get() = string.node
 
+    val VitalSection.node get() = string.node
+
     fun Boolean.stringNode() = toString().uppercase().node
+
+    infix fun String.of(groupName: String) = "$groupName,$this"
 }

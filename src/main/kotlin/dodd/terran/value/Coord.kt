@@ -1,6 +1,13 @@
 package dodd.terran.value
 
+import dodd.terran.util.Helpers.clean
+
 data class Coord(var u: Float, var v: Float) {
+
+    init {
+        u = u.clean()
+        v = v.clean()
+    }
 
     operator fun unaryPlus() = Coord(u, v)
 

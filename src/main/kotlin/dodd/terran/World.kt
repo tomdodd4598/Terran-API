@@ -313,32 +313,76 @@ class World(private val game: Game, val root: RootNode) {
             runOnce = true,
             isActive = true,
             ConditionListNode(
-                ConditionNode(
-                    "Type" to "World Initialize".node
-                )
+                createWorldInitializeCondition()
             ),
             ActionListNode(*actions)
         )
 
-        fun createSkirmishCompleteWorldRule(ruleName: String) = createWorldRule(
+        fun createStandardGameCompleteWorldRule(ruleName: String, vararg conditions: ConditionNode) = createWorldRule(
             ruleName,
             runOnce = true,
             isActive = true,
-            ConditionListNode(
-                ConditionNode(
-                    "Type" to "Skirmish Game Complete".node
-                )
-            ),
+            ConditionListNode(*conditions),
             ActionListNode(
                 createEndGameAction(null, null, true)
             )
+        )
+
+        fun createSkirmishCompleteWorldRule(ruleName: String) = createStandardGameCompleteWorldRule(ruleName, createSkirmishCompleteCondition())
+
+        fun createTeamGameCompleteWorldRule(ruleName: String) = createStandardGameCompleteWorldRule(ruleName, createTeamGameCompleteCondition())
+
+        fun createWorldInitializeCondition() = ConditionNode(
+            "Type" to "World Initialize".node
+        )
+
+        fun createSkirmishCompleteCondition() = ConditionNode(
+            "Type" to "Skirmish Game Complete".node
+        )
+
+        fun createTeamGameCompleteCondition() = ConditionNode(
+            "Type" to "Team Game Complete".node
+        )
+
+        fun createNoHumanControlledFleetCondition() = ConditionNode(
+            "Type" to "No Human Controlled Ships Remain".node
+        )
+
+        fun createNoTeamHasShipsCondition() = ConditionNode(
+            "Type" to "No Team Has Ships".node
+        )
+
+        fun createTeamHasNoShipsCondition(teamID: String) = ConditionNode(
+            "Type" to "Team X has no ships".node,
+            "Team Name" to teamID.node
+        )
+
+        fun createTeamCaptureGroupCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
+            "Type" to "Team has captured a ship from Group/Unit".node,
+            "Team Name" to teamID.node,
+            "Group/Unit" to groupName.node,
+            "Number Of Captures" to captureCount.node
+        )
+
+        fun createGroupVitalSectionDamageCondition(groupName: String, vitalSection: VitalSection, equivalence: Equivalence, damageFraction: Float) = ConditionNode(
+            "Type" to "Group/Unit Vital Section has >,<,= X damage".node,
+            "Group/Unit Name" to groupName.node,
+            "Vital Section" to vitalSection.node,
+            "Equivalence" to equivalence.node,
+            "Damage Percent" to damageFraction.node
+        )
+
+        fun createTeamMemberEntersPolygonCondition(teamID: String, polygonName: String) = ConditionNode(
+            "Type" to "Team Member Enters Volume".node,
+            "Team Name" to teamID.node,
+            "Volume Name" to polygonName.node
         )
 
         fun createSetupEtheriumCurrentAction(objectID: Int, pathName: String) = ActionNode(
             "Type" to "*State Init* Setup Etherium Current".node,
             "World Object ID" to objectID.node,
             "Etherium Name" to "New $pathName".node,
-            "Etherium Path" to pathName.node,
+            "Etherium Path" to pathName.node
         )
 
         fun createSetupAsteroidBeltAction(
@@ -374,7 +418,7 @@ class World(private val game: Game, val root: RootNode) {
             "Combat Strength" to combatStrength.node,
             "Player/Owner" to (ownerName ?: "NO PLAYER").node,
             "Gunnery Level" to gunneryLevel.node,
-            "AI Stance" to stance.node,
+            "AI Stance" to stance.node
         )
 
         fun createSetupShipAction(
@@ -402,6 +446,13 @@ class World(private val game: Game, val root: RootNode) {
             "Localized Ship Name" to (displayNameID ?: "LOCALIZED SHIP NAME").node
         )
 
+        fun createSetupTeamObjectiveAction(teamID: String, objectivePoint: String?, objectiveTask: String) = ActionNode(
+            "Type" to "Setup Team Objective".node,
+            "Team Name" to teamID.node,
+            "Objective Point" to (objectivePoint ?: "NO OBJECTIVE POINT").node,
+            "Objective Task" to objectiveTask.node
+        )
+
         fun createSetupWeatherAction(
             objectID: Int,
             weatherName: String,
@@ -415,7 +466,10 @@ class World(private val game: Game, val root: RootNode) {
             stormAngularVelocity: Float,
             stormDamageRate: Float,
             meteorRechargeTime: Float?,
-            maxAmbientSoundDistance: Float
+            maxAmbientSoundDistance: Float,
+            nebulaEffect: String = "Nebula",
+            stormEffect: String = "SolarStorm",
+            meteorEffect: String = "MeteorStorm"
         ) = ActionNode(
             "Type" to "*State Init* Setup Nebula".node,
             "World Object ID" to objectID.node,
@@ -425,9 +479,9 @@ class World(private val game: Game, val root: RootNode) {
             "Lightning Blast Recharge Time" to (lightningRechargeTime ?: 0f).node,
             "Meteors On/Off" to (meteorRechargeTime != null).stringNode(),
             "Meteor Strike Recharge Time" to (meteorRechargeTime ?: 0f).node,
-            "Nebula Cloud Effect Name" to (if (nebulaPointSetName == null) "EFFECT" else "Nebula").node,
-            "Solar Storm Effect Name" to (if (solarStormPointSetName == null) "EFFECT" else "SolarStorm").node,
-            "Meteor Shower Effect Name" to (if (meteorShowerPointSetName == null) "EFFECT" else "MeteorStorm").node,
+            "Nebula Cloud Effect Name" to (if (nebulaPointSetName == null) "EFFECT" else nebulaEffect).node,
+            "Solar Storm Effect Name" to (if (solarStormPointSetName == null) "EFFECT" else stormEffect).node,
+            "Meteor Shower Effect Name" to (if (meteorShowerPointSetName == null) "EFFECT" else meteorEffect).node,
             "Nebula Cloud Point Set Name" to (nebulaPointSetName ?: "POINT SET").node,
             "Solar Storm Point Set Name" to (solarStormPointSetName ?: "POINT SET").node,
             "Meteor Shower Point Set Name" to (meteorShowerPointSetName ?: "POINT SET").node,
@@ -446,7 +500,8 @@ class World(private val game: Game, val root: RootNode) {
             pointSetName: String,
             energyDrain: Boolean,
             occlusion: Boolean,
-            maxAmbientSoundDistance: Float
+            maxAmbientSoundDistance: Float,
+            nebulaEffect: String = "Nebula"
         ) = createSetupWeatherAction(
             objectID,
             weatherName,
@@ -460,7 +515,8 @@ class World(private val game: Game, val root: RootNode) {
             0f,
             0f,
             null,
-            maxAmbientSoundDistance
+            maxAmbientSoundDistance,
+            nebulaEffect = nebulaEffect
         )
 
         fun createSetupSolarStormAction(
@@ -471,7 +527,8 @@ class World(private val game: Game, val root: RootNode) {
             lightningRechargeTime: Float?,
             angularVelocity: Float,
             damageRate: Float,
-            maxAmbientSoundDistance: Float
+            maxAmbientSoundDistance: Float,
+            stormEffect: String = "SolarStorm"
         ) = createSetupWeatherAction(
             objectID,
             weatherName,
@@ -485,7 +542,8 @@ class World(private val game: Game, val root: RootNode) {
             angularVelocity,
             damageRate,
             null,
-            maxAmbientSoundDistance
+            maxAmbientSoundDistance,
+            stormEffect = stormEffect
         )
 
         fun createSetupMeteorShowerAction(
@@ -494,7 +552,8 @@ class World(private val game: Game, val root: RootNode) {
             polygonName: String,
             pointSetName: String,
             rechargeTime: Float?,
-            maxAmbientSoundDistance: Float
+            maxAmbientSoundDistance: Float,
+            meteorEffect: String = "MeteorStorm"
         ) = createSetupWeatherAction(
             objectID,
             weatherName,
@@ -508,13 +567,20 @@ class World(private val game: Game, val root: RootNode) {
             0f,
             0f,
             rechargeTime,
-            maxAmbientSoundDistance
+            maxAmbientSoundDistance,
+            meteorEffect = meteorEffect
         )
 
-        fun createSetOwnerAction(groupName: String, ownerName: String) = ActionNode(
+        fun createSetGroupOwnerAction(groupName: String, ownerName: String) = ActionNode(
             "Type" to "Set Group/Unit Owner".node,
             "Group/Unit Name" to groupName.node,
             "New Owner" to ownerName.node
+        )
+
+        fun createSetGroupStanceAction(groupName: String, stance: Stance) = ActionNode(
+            "Type" to "Set Group/Unit AI Stance".node,
+            "Group/Unit Name" to groupName.node,
+            "AI Stance" to stance.node
         )
 
         fun createGroupFollowPathAction(groupName: String, pathName: String, followMode: FollowMode, findClosestPoint: Boolean) = ActionNode(
@@ -531,16 +597,22 @@ class World(private val game: Game, val root: RootNode) {
             "Velocity" to speed.node
         )
 
-        fun createSetGroupThrottleAction(groupName: String, throttle: Float) = ActionNode(
+        fun createSetGroupThrottleAction(groupName: String, throttleFraction: Float) = ActionNode(
             "Type" to "Set Group Throttle Percent".node,
             "Group Name" to groupName.node,
-            "Throttle Percent" to throttle.node
+            "Throttle Percent" to throttleFraction.node
         )
 
-        fun createSetGroupReturnZone(groupName: String, pointSetName: String) = ActionNode(
+        fun createSetGroupReturnZoneAction(groupName: String, pointSetName: String) = ActionNode(
             "Type" to "Set Group/Unit Border Zone Return Point".node,
             "Group/Unit Name" to groupName.node,
             "Pointset Name" to pointSetName.node
+        )
+
+        fun createSetGroupHoldPositionAction(groupName: String, holdPosition: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Hold Position".node,
+            "Group/Unit Name" to groupName.node,
+            "Boolean" to holdPosition.stringNode()
         )
 
         fun createSetDragonStanceAction(groupName: String, stance: Stance) = ActionNode(
@@ -568,6 +640,11 @@ class World(private val game: Game, val root: RootNode) {
             "Fade Out Time ( secs )" to fadeOutTime.node,
             "Fade In Time ( secs )" to fadeInTime.node,
             "New Volume ( 0 to 1 )" to volume.node
+        )
+
+        fun createTeamWinsAction(teamID: String) = ActionNode(
+            "Type" to "Team X Wins".node,
+            "Team Name" to teamID.node
         )
 
         fun createEndGameAction(winMessageID: String?, loseMessageID: String?, showStats: Boolean) = ActionNode(
@@ -899,9 +976,12 @@ class World(private val game: Game, val root: RootNode) {
 
     fun export(location: String) = getFile(game, location).writeText(build().toString())
 
-    fun addTeam(team: NestedNode) {
-        root.get<NestedNode>("WorldInfo")!!.get<ArrayNode>("Team List")!!.add(team)
+    fun addTeam(team: NestedNode): Int {
+        val teamList = root.get<NestedNode>("WorldInfo")!!.get<ArrayNode>("Team List")!!
+        val teamIndex = teamList.size
+        teamList.add(team)
         root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Team List")!!.add(team)
+        return teamIndex
     }
 
     fun addPlayerListElement(playerListElement: NestedNode): Int {

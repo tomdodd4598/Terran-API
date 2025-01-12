@@ -1,5 +1,7 @@
 package dodd.terran.translation
 
+import java.util.*
+
 abstract class IndexedNode(val value: MutableList<Node>) : Node() {
 
     val size get() = value.size
@@ -46,6 +48,10 @@ abstract class IndexedNode(val value: MutableList<Node>) : Node() {
         fb.append("]", true)
     }
 
+    override fun equals(other: Any?) = other is IndexedNode && value == other.value
+
+    override fun hashCode() = value.hashCode()
+
     override fun toString(): String {
         val fb = FancyBuilder()
         addToString(fb, false)
@@ -87,6 +93,10 @@ abstract class ListNode(value: MutableList<Node>, private val intName: String, p
             node.write(db, nodeName)
         }
     }
+
+    override fun equals(other: Any?) = other is ListNode && intName == other.intName && nodeName == other.nodeName && value == other.value
+
+    override fun hashCode() = Objects.hash(value, intName, nodeName)
 }
 
 class PlayerListNode(value: MutableList<Node>) : ListNode(value, "PlayerList", "Player") {

@@ -57,6 +57,10 @@ abstract class CompoundNode(vararg pairs: Pair<String, Node>) : Node() {
         fb.append("]", true)
     }
 
+    override fun equals(other: Any?) = other is CompoundNode && internal == other.internal
+
+    override fun hashCode() = internal.hashCode()
+
     override fun toString(): String {
         val fb = FancyBuilder()
         addToString(fb, false)
