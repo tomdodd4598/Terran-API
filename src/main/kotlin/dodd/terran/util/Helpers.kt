@@ -74,6 +74,8 @@ object Helpers {
 
     val Formation.node get() = ordinal.node
 
+    val HeadLocation.node get() = ordinal.node
+
     val Equivalence.node get() = string.node
 
     val FollowMode.node get() = string.node

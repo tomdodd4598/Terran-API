@@ -290,6 +290,52 @@ class World(private val game: Game, val root: RootNode) {
             )
         )
 
+        fun createFlag(flagName: String, boolean: Boolean) = NestedNode(
+            "Flag Name" to flagName.node,
+            "Flag Value" to boolean.node
+        )
+
+        fun createTimer(timerName: String, running: Boolean, time: Double) = NestedNode(
+            "Timer Name" to timerName.node,
+            "Timer Status" to running.node,
+            "Timer Value Chunk" to NestedNode(
+                "StartTime" to time.node
+            )
+        )
+
+        fun createSpeechEvent(
+            speechName: String,
+            textColor: Color,
+            headTexture: String?,
+            headLocation: HeadLocation?,
+            textID: String?,
+            speakerID: String?,
+            soundFile: String = speechName,
+            beenPlayedOnce: Boolean = false,
+            isSecondary: Boolean = false,
+            displayTime: Float = 0f,
+            openChatBar: Boolean = true,
+            openSpeechEventBar: Boolean = true
+        ) = NestedNode(
+            "Name" to speechName.node,
+            "Sound FileName" to soundFile.node,
+            "Text Color" to textColor.node,
+            "FaceTexture" to (headTexture ?: "NO TEXTURE").node,
+            "TalkingHeadLocation" to (headLocation ?: HeadLocation.TOP).node,
+            "Has Been Played Once" to beenPlayedOnce.node,
+            "Is Secondary Speech" to isSecondary.node,
+            "Display Time" to displayTime.node,
+            "Open Chat Bar" to openChatBar.node,
+            "Open Talking Head" to (headTexture != null).node,
+            "Has Text" to (textID != null).node,
+            "Use Sound File Length" to (displayTime <= 0f).node,
+            "Always Open Speech Event Bar" to openSpeechEventBar.node,
+            "Valid Text StringID" to (textID != null).node,
+            "TextStringID" to (textID ?: "TEXT STRING").node,
+            "Valid Speaker ID" to (speakerID != null).node,
+            "SpeakerID" to (speakerID ?: "SPEAKER STRING").node
+        )
+
         fun createPlayerAllianceInfo(firstPlayerIndex: Int, secondPlayerIndex: Int) = NestedNode(
             "Player0" to firstPlayerIndex.node,
             "Player1" to secondPlayerIndex.node
@@ -357,11 +403,43 @@ class World(private val game: Game, val root: RootNode) {
             "Team Name" to teamID.node
         )
 
+        fun createGroupMemberCountCondition(groupName: String, equivalence: Equivalence, memberCount: Int) = ConditionNode(
+            "Type" to "Group has X members".node,
+            "Group Name" to groupName.node,
+            "Equivalence" to equivalence.node,
+            "number" to memberCount.node
+        )
+
+        fun createPlayerHasNoLifeboatsCondition(playerName: String) = ConditionNode(
+            "Type" to "Player has no lifeboats".node,
+            "Player Name" to playerName.node
+        )
+
+        fun createPlayerDestroyedObjectTypeCondition(playerName: String, objectType: String) = ConditionNode(
+            "Type" to "Player Killed A Object".node,
+            "Player Name" to playerName.node,
+            "World Object Type" to objectType.node
+        )
+
         fun createTeamCaptureGroupCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
             "Type" to "Team has captured a ship from Group/Unit".node,
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,
             "Number Of Captures" to captureCount.node
+        )
+
+        fun createTeamDestroyGroupCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
+            "Type" to "Team has destroyed a ship from Group/Unit".node,
+            "Team Name" to teamID.node,
+            "Group/Unit" to groupName.node,
+            "Number Of Ships Destroyed" to destroyCount.node
+        )
+
+        fun createGroupDamageCondition(groupName: String, equivalence: Equivalence, damageFraction: Float) = ConditionNode(
+            "Type" to "Group/Unit has >,<,= X damage".node,
+            "Group/Unit Name" to groupName.node,
+            "Equivalence" to equivalence.node,
+            "Damage Percent" to damageFraction.node
         )
 
         fun createGroupVitalSectionDamageCondition(groupName: String, vitalSection: VitalSection, equivalence: Equivalence, damageFraction: Float) = ConditionNode(
@@ -372,10 +450,99 @@ class World(private val game: Game, val root: RootNode) {
             "Damage Percent" to damageFraction.node
         )
 
+        fun createGroupHasNoEssentialShipsCondition(groupName: String) = ConditionNode(
+            "Type" to "Group/Unit contains no mission essential ships".node,
+            "Group Name" to groupName.node
+        )
+
+        fun createGroupEntersPolygonCondition(groupName: String, polygonName: String) = ConditionNode(
+            "Type" to "Enter Volume".node,
+            "Group Name" to groupName.node,
+            "Volume Name" to polygonName.node
+        )
+
         fun createTeamMemberEntersPolygonCondition(teamID: String, polygonName: String) = ConditionNode(
             "Type" to "Team Member Enters Volume".node,
             "Team Name" to teamID.node,
             "Volume Name" to polygonName.node
+        )
+
+        fun createGroupInPolygonCondition(groupName: String, polygonName: String, entireGroup: Boolean) = ConditionNode(
+            "Type" to "Is Group In Volume".node,
+            "Group Name" to groupName.node,
+            "Volume Name" to polygonName.node,
+            "Entire Group" to entireGroup.stringNode()
+        )
+
+        fun createGroupToGroupDistanceCondition(firstGroupName: String, secondGroupName: String, equivalence: Equivalence, separationDistance: Int) = ConditionNode(
+            "Type" to "Group to Group Distance".node,
+            "GroupA Name" to firstGroupName.node,
+            "Equivalence" to equivalence.node,
+            "Distance" to separationDistance.node,
+            "GroupB Name" to secondGroupName.node
+        )
+
+        fun createFlagCondition(flagName: String, boolean: Boolean) = ConditionNode(
+            "Type" to "Flag Condition".node,
+            "Flag Name" to flagName.node,
+            "Boolean Value" to boolean.node
+        )
+
+        fun createTimerCondition(timerName: String, equivalence: Equivalence, time: Int) = ConditionNode(
+            "Type" to "Timer Condition".node,
+            "Timer Name" to timerName.node,
+            "Equivalence" to equivalence.node,
+            "Time in seconds" to time.node
+        )
+
+        fun createSpeechEventPlayedOnceCondition(speechName: String) = ConditionNode(
+            "Type" to "Speech Event Played Once".node,
+            "Speech Event Name" to speechName.node
+        )
+
+        fun createSpeechEventNotYetPlayedCondition(speechName: String) = ConditionNode(
+            "Type" to "Speech Event Not Played Yet".node,
+            "Speech Event Name" to speechName.node
+        )
+
+        fun createIsGroupAttackingTargetCondition(attackingGroupName: String, targetGroupName: String) = ConditionNode(
+            "Type" to "Is Group A attacking Group B".node,
+            "GroupA Name" to attackingGroupName.node,
+            "GroupB Name" to targetGroupName.node
+        )
+
+        fun createIsGroupDockedAtTargetCondition(dockedGroupName: String, targetGroupName: String) = ConditionNode(
+            "Type" to "Group/Unit Docked".node,
+            "Dockers Group/Unit Name" to dockedGroupName.node,
+            "Targets Group/Unit Name" to targetGroupName.node
+        )
+
+        fun createGroupHitCountAtLeastCondition(groupName: String, hitCount: Int) = ConditionNode(
+            "Type" to "Group/Unit Hit at least x Times".node,
+            "Group/Unit Name" to groupName.node,
+            "Number Of Times Hit" to hitCount.node
+        )
+
+        fun createPlayerAttackingTargetHitCountAtLeastCondition(attackingPlayerName: String, targetGroupName: String, hitCount: Int) = ConditionNode(
+            "Type" to "Player has hit Group/Unit at least x Times".node,
+            "Player Name" to attackingPlayerName.node,
+            "Group/Unit Name" to targetGroupName.node,
+            "Number Of Times Hit" to hitCount.node
+        )
+
+        fun createGroupAttackingTargetHitCountCondition(attackingPlayerName: String, targetGroupName: String, equivalence: Equivalence, hitCount: Int) = ConditionNode(
+            "Type" to "Group/Unit Hit at least x Times by Player ( with eqivalence )".node,
+            "Group/Unit Name" to targetGroupName.node,
+            "Number Of Times Hit" to hitCount.node,
+            "Equivalence" to equivalence.node,
+            "Player Name" to attackingPlayerName.node
+        )
+
+        fun createGroupFlagTextureCondition(groupName: String, flagTGA: Equivalence, boolean: Boolean) = ConditionNode(
+            "Type" to "Unit Flag Texture".node,
+            "Unit Name" to groupName.node,
+            "Flag Type" to flagTGA.node,
+            "Boolean" to boolean.node
         )
 
         fun createSetupEtheriumCurrentAction(objectID: Int, pathName: String) = ActionNode(
@@ -409,14 +576,14 @@ class World(private val game: Game, val root: RootNode) {
         fun createSetupIslandAction(
             objectID: Int,
             combatStrength: Int,
-            ownerName: String?,
+            owningPlayerName: String?,
             gunneryLevel: Skill,
             stance: Stance,
         ) = ActionNode(
             "Type" to "*State Init* Setup Island".node,
             "World Object ID" to objectID.node,
             "Combat Strength" to combatStrength.node,
-            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
+            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
             "Gunnery Level" to gunneryLevel.node,
             "AI Stance" to stance.node
         )
@@ -427,7 +594,7 @@ class World(private val game: Game, val root: RootNode) {
             pathName: String?,
             followMode: FollowMode,
             stance: Stance,
-            ownerName: String?,
+            owningPlayerName: String?,
             primaryShip: Boolean,
             crewSkill: Skill,
             boardable: Boolean,
@@ -439,7 +606,7 @@ class World(private val game: Game, val root: RootNode) {
             "Ship Path" to (pathName ?: "NO PATH").node,
             "Follow Mode" to followMode.node,
             "AI Stance" to stance.node,
-            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
+            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
             "Primary Ship" to primaryShip.stringNode(),
             "Crew Skill Level" to crewSkill.node,
             "Boardable" to boardable.stringNode(),
@@ -615,6 +782,12 @@ class World(private val game: Game, val root: RootNode) {
             "Boolean" to holdPosition.stringNode()
         )
 
+        fun createSetGroupVisibilityAction(groupName: String, isVisible: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Visibility".node,
+            "Group/Unit Name" to groupName.node,
+            "Boolean" to isVisible.stringNode()
+        )
+
         fun createSetDragonStanceAction(groupName: String, stance: Stance) = ActionNode(
             "Type" to "Dragon - Set AI Stance".node,
             "Group/Unit Name" to groupName.node,
@@ -633,6 +806,11 @@ class World(private val game: Game, val root: RootNode) {
             "Active State" to state.stringNode()
         )
 
+        fun createStartTimerAction(timerName: String) = ActionNode(
+            "Type" to "Start Timer".node,
+            "Timer Name" to timerName.node
+        )
+
         fun createPlayMusicAction(musicID: String, volume: Float, fadeInTime: Float = 0f, fadeOutTime: Float = 0f, crossfade: Boolean? = null) = ActionNode(
             "Type" to "Play Music Track".node,
             "File Name" to musicID.node,
@@ -640,6 +818,12 @@ class World(private val game: Game, val root: RootNode) {
             "Fade Out Time ( secs )" to fadeOutTime.node,
             "Fade In Time ( secs )" to fadeInTime.node,
             "New Volume ( 0 to 1 )" to volume.node
+        )
+
+        fun createGrantTeamPointsAction(teamID: String, points: Int) = ActionNode(
+            "Type" to "Grant Team X Points".node,
+            "Team Name" to teamID.node,
+            "Points" to points.node
         )
 
         fun createTeamWinsAction(teamID: String) = ActionNode(
@@ -1031,6 +1215,18 @@ class World(private val game: Game, val root: RootNode) {
 
     fun addWorldPointSet(worldPointSet: NestedNode) {
         root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("World Point Sets Vector")!!.add(worldPointSet)
+    }
+
+    fun addFlag(flag: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Flag List")!!.add(flag)
+    }
+
+    fun addTimer(timer: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Timer List")!!.add(timer)
+    }
+
+    fun addSpeechEvent(speechEvent: NestedNode) {
+        root.get<NestedNode>("World")!!.get<NestedNode>("GameSpecific")!!.get<ArrayNode>("Speech Event List")!!.add(speechEvent)
     }
 
     fun addPlayerAllianceInfo(playerAllianceInfo: NestedNode) {

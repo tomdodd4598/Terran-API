@@ -2,10 +2,8 @@ package dodd
 
 import dodd.terran.Game
 import dodd.terran.World
-import dodd.terran.World.Companion.createSetupMeteorShowerAction
 import dodd.terran.translation.*
 import dodd.terran.util.Helpers.forEachPair
-import dodd.terran.util.Helpers.node
 import dodd.terran.util.Helpers.of
 import dodd.terran.util.Helpers.titlecase
 import dodd.terran.value.*
@@ -388,7 +386,7 @@ fun border() {
     navyAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
     procyonAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
 
-    val showerNames = (1..2).map { "Shower Point Set $it" }
+    val showerNames = (1..2).map { "Shower $it" }
 
     fun createSetupShowerAction(showerIndex: Int, rechargeTime: Float) = World.createSetupMeteorShowerAction(
         showerObjectIDs[showerIndex],
@@ -490,6 +488,474 @@ fun border() {
     println(world.build())
 }
 
+fun convoy() {
+    val world = World.create(
+        game,
+        "Convoy Raid",
+        "IDGS_TPWORLDNAMES_SCEN_CONVOY_RAID",
+        "IDGS_TPWORLDDESCRIPTION_MP_CONVOY_RAID",
+        Vector(2000f, 2000f, 1000f),
+        8,
+        Color(0.219608f, 0.219608f, 0.219608f),
+        Vector(-0.725368f, 0.3079f, -0.615662f),
+        Color(0.745098f, 0.396078f, 0.588235f),
+        Color(0.960784f, 0.956863f, 0.878431f),
+        "Map_ConvoyRaid",
+        allianceChangeAllowed = false,
+        randomSeed = 1473591045,
+        bufferSize = 250f
+    )
+
+    val navyTeamID = "IDGS_TPTEAMNAMES_NAVY"
+    val pirateTeamID = "IDGS_TPTEAMNAMES_PIRATES"
+
+    val navyTeamIndex = world.addTeam(World.createTeam(navyTeamID, Faction.NAVY))
+    val pirateTeamIndex = world.addTeam(World.createTeam(pirateTeamID, Faction.PIRATE))
+
+    val navyAllianceIndices = mutableListOf<Int>()
+    val pirateAllianceIndices = mutableListOf<Int>()
+
+    fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
+        val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else pirateTeamIndex to pirateAllianceIndices
+        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE))
+    }
+
+    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(1070.8525f, -971.36255f), Vector.dir(-0.007847f, 0.999969f))
+    addPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(1628.3295f, 830.49884f), Vector.dir(-0.086672f, -0.996237f))
+    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(1138.813f, -1257.1587f), Vector.dir(0.099995f, 0.994988f))
+    addPlayer(Faction.PIRATE, 2, Color(0.501961f, 0f, 0f), Vector(329.9577f, 759.6592f), Vector.dir(0.4438f, -0.896126f))
+    addPlayer(Faction.NAVY, 3, Color(0f, 0f, 0.501961f), Vector(1366.5822f, -1044.3699f), Vector.dir(-0.369247f, 0.929331f))
+    addPlayer(Faction.PIRATE, 3, Color(1f, 0f, 1f), Vector(-68.60469f, 869.2412f), Vector.dir(0.538336f, -0.84273f))
+    addPlayer(Faction.NAVY, 4, Color(0f, 0.501961f, 0.501961f), Vector(931.2105f, -1127.0912f), Vector.dir(0.12174f, 0.992562f))
+    addPlayer(Faction.PIRATE, 4, Color(0.87451f, 0.372549f, 0.12549f), Vector(-460.15494f, 644.50604f), Vector.dir(0.541563f, -0.84066f))
+
+    val convoyPlayerIndex = world.addPlayerListElement(World.createAIFleetElement("Convoy", -1, Color.white, Vector(1351.6436f, -1222.8716f), Vector.east, Formation.NONE))
+
+    navyAllianceIndices.add(convoyPlayerIndex)
+
+    navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Navy Base", Color.blue, Vector(1235.3624f, -1709.1705f))))
+
+    val pirateBasePlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Pirate Base", Color.red, Vector(-1486.9426f, 1285.6729f)))
+
+    pirateAllianceIndices.add(pirateBasePlayerIndex)
+
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-387.71265f, -736.7732f)))
+
+    val etheriumCurrentObjectIDs = mutableListOf<Int>()
+
+    etheriumCurrentObjectIDs.add(world.addWorldObject("Terrain_Etherium_Current", null, null, Vector.zero))
+    etheriumCurrentObjectIDs.add(world.addWorldObject("Terrain_Etherium_Current", null, null, Vector.zero))
+
+    val nebulaObjectID = world.addWorldObject("Terrain_Nebula", null, null, Vector(-1319.1901f, 65.70297f))
+    val showerObjectID = world.addWorldObject("Terrain_Nebula", null, null, Vector(48.86757f, -887.18225f))
+
+    val navyBaseObjectID = world.addWorldObject("Base_Grant", "Navy Base", "Navy Base Group", Vector(1275.2861f, -1484.9083f))
+
+    val pirateBaseObjectID = world.addWorldObject("Base_Pirate", "Pirate Base", "Pirate Base Group", Vector(-1051.8273f, 927.063f), Matrix.rotationZ(-0.707107f, -0.707107f))
+    val pirateStockadeObjectID = world.addWorldObject("Base_PirateStockade", "Pirate Base", "Pirate Base Group", Vector(-779.19916f, 1053.5538f))
+
+    val convoyGroupNames = (1..3).map { "Convoy Group $it" }
+
+    fun addConvoyShip(type: String, convoyIndex: Int, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Civilian_$type", "Convoy", convoyGroupNames[convoyIndex], position, Matrix.rotationZ(xx, yx)
+    )
+
+    val convoyLabradorObjectID = addConvoyShip("Barque", 0, Vector(1240.7277f, -600.7911f))
+    val convoyCapeBretonObjectID = addConvoyShip("Barque", 0, Vector(1190.1398f, -782.6989f))
+    val convoyPrinceEdwardObjectID = addConvoyShip("Barque", 0, Vector(1163.8994f, -996.15344f))
+    val convoyNovaScotiaObjectID = addConvoyShip("Barque", 0, Vector(1163.9807f, -1179.9341f))
+
+    val convoyMarseillesObjectID = addConvoyShip("Schooner", 1, Vector(1636.2905f, -238.87029f), 0.996195f, 0.087155f)
+    val convoyVeneziaObjectID = addConvoyShip("Packet", 1, Vector(1594.0209f, -294.08804f), 0.996195f, 0.087155f)
+    val convoyRomaObjectID = addConvoyShip("Packet", 1, Vector(1682.8848f, -296.36462f), 0.996195f, 0.087155f)
+    val convoyParisObjectID = addConvoyShip("Schooner", 1, Vector(1640.4474f, -358.22717f), 0.996195f, 0.087155f)
+    val convoyTuscanyObjectID = addConvoyShip("Packet", 1, Vector(1638.0419f, -296.26855f), 0.996195f, 0.087155f)
+
+    val convoyVesuviusObjectID = addConvoyShip("Barque", 2, Vector(1082.3011f, -939.26105f), 0.798636f, 0.601815f)
+    val convoyEtnaObjectID = addConvoyShip("Barque", 2, Vector(1166.1431f, -1008.114f), 0.798636f, 0.601815f)
+    val convoyStHelensObjectID = addConvoyShip("Barque", 2, Vector(1182.6407f, -1134.8147f), 0.798636f, 0.601815f)
+    val convoyPeleeObjectID = addConvoyShip("Barque", 2, Vector(1300.0966f, -1168.4252f), 0.798636f, 0.601815f)
+    val convoyOlympusMonsObjectID = addConvoyShip("Barque", 2, Vector(1347.3795f, -1295.4619f), 0.798636f, 0.601815f)
+
+    fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
+    }
+
+    addIsland("Island_Med01", Vector(-515.9323f, 176.48253f))
+    addIsland("Island_Rocky_05", Vector(-835.62805f, 1436.5825f))
+    addIsland("Island_Rocky_07", Vector(167.5988f, 791.37036f))
+    addIsland("Island09", Vector(-1039.0927f, 600.308f))
+    addIsland("Island09", Vector(-1493.1831f, 668.13025f))
+    addIsland("Island06", Vector(-1068.8003f, 509.72607f))
+    addIsland("Island01", Vector(-240.34485f, 1673.3171f))
+    addIsland("Island03", Vector(-279.60876f, 967.2634f))
+    addIsland("Island08", Vector(-894.8638f, 22.90242f))
+    addIsland("Island13", Vector(753.84436f, -1595.9357f), -0.309017f, 0.951056f)
+    addIsland("Island14", Vector(12.352453f, 902.99316f))
+    addIsland("Island_Large01", Vector(479.54922f, -158.94626f), -0.987688f, 0.156434f)
+    addIsland("Island_Mega_01", Vector(998.3333f, 763.0642f), 0.848048f, -0.52992f)
+    addIsland("Island_Rocky_01", Vector(574.0402f, -1415.6887f))
+    addIsland("Island_Rocky_02", Vector(768.2968f, -956.73206f))
+    addIsland("Island_Rocky_03", Vector(731.8384f, -1235.2286f), 0.838671f, -0.544639f)
+    addIsland("Island_Med09", Vector(-499.89706f, 1174.5803f), 0.515038f, 0.857167f)
+    addIsland("Island_Med08", Vector(-542.11035f, 579.2472f))
+    addIsland("Island_Med07", Vector(-354.0318f, 755.39966f), -0.224951f, -0.97437f)
+    addIsland("Island_Med04", Vector(0.650169f, 155.88147f), -0.034899f, 0.999392f)
+    addIsland("Island_Med05", Vector(152.87741f, -1632.6182f))
+    addIsland("Island_Med08", Vector(1036.616f, -235.68431f))
+    addIsland("Island_Med06", Vector(903.1714f, -430.37982f), 0.945519f, -0.325568f)
+    addIsland("Island_Med05", Vector(925.99646f, -51.018005f))
+    addIsland("Island_Med04", Vector(1569.5809f, 1625.6509f))
+
+    fun addAsteroid(size: String, position: Vector) {
+        world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
+    }
+
+    addAsteroid("Huge", Vector(616.6716f, -754.7658f))
+    addAsteroid("Large", Vector(450.7571f, -1310.0688f))
+    addAsteroid("Med", Vector(465.85114f, -1235.9243f))
+    addAsteroid("Huge", Vector(524.7055f, -1196.5165f))
+    addAsteroid("Large", Vector(565.11646f, -1086.0525f))
+    addAsteroid("Huge", Vector(566.1437f, -976.43823f))
+    addAsteroid("Large", Vector(634.8987f, -917.7726f))
+    addAsteroid("Med", Vector(603.7166f, -778.7594f))
+    addAsteroid("Med", Vector(602.3712f, -655.8087f))
+    addAsteroid("Large", Vector(572.89764f, -579.2717f))
+    addAsteroid("Huge", Vector(525.4095f, -476.6897f))
+    addAsteroid("Large", Vector(393.10614f, -383.3401f))
+    addAsteroid("Med", Vector(329.6398f, -284.96082f))
+    addAsteroid("Med", Vector(191.47836f, -263.56177f))
+    addAsteroid("Med", Vector(46.70999f, -236.62866f))
+    addAsteroid("Huge", Vector(-141.48932f, -269.90283f))
+    addAsteroid("Huge", Vector(-256.4646f, -330.11902f))
+    addAsteroid("Large", Vector(-378.5241f, -374.39124f))
+    addAsteroid("Med", Vector(-378.57147f, -472.15088f))
+    addAsteroid("Med", Vector(-434.7268f, -459.45837f))
+    addAsteroid("Large", Vector(362.9984f, -1335.2526f))
+    addAsteroid("Med", Vector(302.75873f, -1388.1636f))
+    addAsteroid("Large", Vector(256.6183f, -1367.8284f))
+    addAsteroid("Huge", Vector(205.66005f, -1407.8333f))
+    addAsteroid("Large", Vector(85.45654f, -1394.249f))
+    addAsteroid("Med", Vector(15.503029f, -1416.6835f))
+    addAsteroid("Large", Vector(-84.17912f, -1362.9421f))
+    addAsteroid("Huge", Vector(-160.26334f, -1367.4161f))
+    addAsteroid("Large", Vector(-240.8226f, -1294.7603f))
+    addAsteroid("Med", Vector(-330.70032f, -1268.8616f))
+    addAsteroid("Large", Vector(-366.61316f, -1195.3237f))
+    addAsteroid("Huge", Vector(-449.19336f, -1130.925f))
+    addAsteroid("Med", Vector(-439.40247f, -1040.6904f))
+    addAsteroid("Large", Vector(-515.4529f, -942.85547f))
+    addAsteroid("Huge", Vector(-490.5528f, -872.6468f))
+    addAsteroid("Large", Vector(-544.1848f, -738.1589f))
+    addAsteroid("Huge", Vector(-481.0541f, -657.0004f))
+    addAsteroid("Med", Vector(-519.8541f, -558.8989f))
+    addAsteroid("Large", Vector(-417.5039f, -557.2196f))
+    addAsteroid("Huge", Vector(-4.424423f, -321.2732f))
+    addAsteroid("Huge", Vector(116.31986f, -1329.8024f))
+    addAsteroid("Large", Vector(320.3739f, -1282.6659f))
+    addAsteroid("Large", Vector(446.51532f, -1126.7854f))
+    addAsteroid("Large", Vector(550.56116f, -866.6896f))
+    addAsteroid("Large", Vector(481.52982f, -574.16296f))
+    addAsteroid("Large", Vector(364.0297f, -478.36548f))
+    addAsteroid("Large", Vector(241.18515f, -366.2527f))
+    addAsteroid("Large", Vector(139.57993f, -341.58557f))
+    addAsteroid("Large", Vector(-117.56787f, -379.9121f))
+    addAsteroid("Huge", Vector(-243.46484f, -431.97778f))
+    addAsteroid("Huge", Vector(-340.3644f, -563.42334f))
+    addAsteroid("Med", Vector(-452.07513f, -737.6969f))
+    addAsteroid("Med", Vector(-399.4691f, -1010.36816f))
+    addAsteroid("Med", Vector(-338.20895f, -1127.2671f))
+    addAsteroid("Med", Vector(-235.20752f, -1222.8978f))
+    addAsteroid("Med", Vector(-135.10963f, -1268.8468f))
+    addAsteroid("Med", Vector(421.5588f, -1408.4077f))
+    addAsteroid("Med", Vector(649.71484f, -1117.699f))
+    addAsteroid("Med", Vector(702.6757f, -791.4512f))
+
+    fun addArmedAsteroid(position: Vector, xx: Float = 1f, yx: Float = 0f) {
+        world.addWorldObject("Asteroid_Large_Armed", "Pirate Base", "Pirate Base Group", position, Matrix.rotationZ(xx, yx))
+    }
+
+    addArmedAsteroid(Vector(-192.673f, 760.0504f))
+    addArmedAsteroid(Vector(-22.918304f, 838.0873f))
+    addArmedAsteroid(Vector(-247.52307f, 669.4498f))
+    addArmedAsteroid(Vector(-368.87936f, 454.26337f))
+    addArmedAsteroid(Vector(-414.3614f, 350.15067f))
+    addArmedAsteroid(Vector(-577.5598f, 65.47653f))
+    addArmedAsteroid(Vector(-674.49915f, 894.9005f))
+    addArmedAsteroid(Vector(-481.8105f, 235.59616f))
+    addArmedAsteroid(Vector(-316.22296f, 551.8981f))
+    addArmedAsteroid(Vector(-646.8971f, -38.136414f))
+    addArmedAsteroid(Vector(-171.94223f, -55.565735f))
+    addArmedAsteroid(Vector(-264.49896f, -60.867096f), 0.978148f, 0.207912f)
+    addArmedAsteroid(Vector(-330.5645f, -7.393005f), 0.087156f, -0.996195f)
+    addArmedAsteroid(Vector(-269.3781f, 79.55112f), -0.933581f, -0.358368f)
+    addArmedAsteroid(Vector(-210.04187f, 110.44711f), -0.990268f, 0.139173f)
+    addArmedAsteroid(Vector(-131.88504f, 193.7586f), -0.809017f, 0.587785f)
+
+    val etheriumCurrentPathNames = (1..2).map { "Etherium Current Path $it" }
+
+    world.addWaypointPath(World.createWaypointPath(
+        etheriumCurrentPathNames[0],
+        Vector(1905.5027f, -318.56094f),
+        Vector(1558.1089f, -575.24677f),
+        Vector(1461.1335f, -693.1725f),
+        Vector(1447.5256f, -796.1757f),
+        Vector(1445.9396f, -926.65906f),
+        Vector(1472.5399f, -1012.27844f),
+        Vector(1526.9854f, -1138.6248f),
+        Vector(1585.0021f, -1232.2225f),
+        Vector(1925.5165f, -1539.371f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        etheriumCurrentPathNames[1],
+        Vector(-127.036705f, -1809.5618f),
+        Vector(-670.9184f, -1436.8914f),
+        Vector(-926.28564f, -1325.8363f),
+        Vector(-1106.7025f, -1243.3434f),
+        Vector(-1313.6432f, -1117.5674f),
+        Vector(-1437.7421f, -1010.6151f),
+        Vector(-1504.9562f, -818.9338f),
+        Vector(-1704.484f, -571.8143f),
+        Vector(-1978.1212f, -190.88043f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Asteroid Path",
+        Vector(-79.228516f, -266.9878f),
+        Vector(-303.91174f, -335.03214f),
+        Vector(-474.95422f, -538.7092f),
+        Vector(-529.8523f, -774.0176f),
+        Vector(-492.2041f, -987.2825f),
+        Vector(-371.26086f, -1225.0225f),
+        Vector(-185.39825f, -1339.2827f),
+        Vector(-14.640015f, -1413.9434f),
+        Vector(180.36534f, -1415.986f),
+        Vector(372.87604f, -1345.6665f),
+        Vector(510.49573f, -1211.8635f),
+        Vector(572.6483f, -1062.9421f),
+        Vector(632.27936f, -900.407f),
+        Vector(592.1744f, -638.072f),
+        Vector(492.3526f, -445.12964f),
+        Vector(280.13004f, -286.6006f),
+        Vector(55.835144f, -235.64844f)
+    ))
+
+    val convoyPathNames = (1..3).map { "Convoy Path $it" }
+
+    world.addWaypointPath(World.createWaypointPath(
+        convoyPathNames[0],
+        Vector(1218.7784f, -554.2097f),
+        Vector(1277.847f, -121.53637f),
+        Vector(1267.6536f, 50.017334f),
+        Vector(1220.8174f, 191.95508f),
+        Vector(1141.7454f, 281.0647f),
+        Vector(1046.9917f, 311.53247f),
+        Vector(959.9724f, 271.6753f),
+        Vector(730.71924f, 129.23401f),
+        Vector(633.1344f, 124.922f),
+        Vector(526.885f, 125.09119f),
+        Vector(413.2921f, 171.29456f),
+        Vector(186.68298f, 351.80725f),
+        Vector(81.576294f, 415.45715f),
+        Vector(-69.47473f, 424.29504f),
+        Vector(-210.1112f, 270.61926f),
+        Vector(-323.53473f, 131.54272f),
+        Vector(-430.41742f, -28.75122f),
+        Vector(-619.1405f, -328.9126f),
+        Vector(-774.2743f, -533.9004f),
+        Vector(-900.0504f, -697.4612f),
+        Vector(-1085.7715f, -810.272f),
+        Vector(-1202.8691f, -839.2158f),
+        Vector(-1354.8641f, -838.89233f),
+        Vector(-1997.1635f, -238.75015f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        convoyPathNames[1],
+        Vector(1634.4154f, -181.12067f),
+        Vector(1638.5873f, 925.6022f),
+        Vector(1524.3741f, 1149.0844f),
+        Vector(1297.04f, 1339.2075f),
+        Vector(947.3711f, 1388.1616f),
+        Vector(511.91968f, 1356.0432f),
+        Vector(-132.48682f, 635.8618f),
+        Vector(-215.48682f, 383.86182f),
+        Vector(-1143.1375f, -693.34204f),
+        Vector(-1410.2834f, -664.64734f),
+        Vector(-1715.2454f, -576.7003f),
+        Vector(-1998.364f, -196.38245f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        convoyPathNames[2],
+        Vector(1073.8816f, -938.06616f),
+        Vector(860.44836f, -744.50684f),
+        Vector(728.7037f, -568.7245f),
+        Vector(592.89246f, -358.28906f),
+        Vector(410.61005f, -213.69592f),
+        Vector(-87.537994f, -125.72705f),
+        Vector(-304.13965f, -186.9231f),
+        Vector(-646.15533f, -509.2539f),
+        Vector(-794.53345f, -686.7051f),
+        Vector(-888.5448f, -790.0791f),
+        Vector(-1042.638f, -861.5073f),
+        Vector(-1218.8536f, -840.0051f),
+        Vector(-1377.8235f, -787.01074f),
+        Vector(-1647.8835f, -638.85645f),
+        Vector(-1995.0377f, -169.7375f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Nebula Polygon",
+        Coord(-1122.1559f, 622.5877f),
+        Coord(-1410.2573f, 703.2494f),
+        Coord(-1667.7268f, 633.87445f),
+        Coord(-1868.7247f, 425.35684f),
+        Coord(-1952.7521f, 139.6059f),
+        Coord(-1849.0609f, -231.2956f),
+        Coord(-1591.0739f, -490.80264f),
+        Coord(-1280.648f, -571.84344f),
+        Coord(-1017.3764f, -498.05673f),
+        Coord(-769.7389f, -244.38866f),
+        Coord(-685.6281f, 84.95043f),
+        Coord(-856.16833f, 369.09662f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Shower Polygon",
+        Coord(-112.725494f, -538.15686f),
+        Coord(-256.17688f, -654.01965f),
+        Coord(-345.02866f, -807.2618f),
+        Coord(-352.75772f, -1050.1868f),
+        Coord(-210.31952f, -1219.0768f),
+        Coord(-65.705505f, -1307.4874f),
+        Coord(141.25688f, -1307.3861f),
+        Coord(334.6712f, -1219.5437f),
+        Coord(454.24774f, -1071.0177f),
+        Coord(496.35193f, -770.2368f),
+        Coord(263.5285f, -529.4249f),
+        Coord(55.423492f, -466.87708f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Convoy Theft Polygon",
+        Coord(-1021.14105f, 1118.1697f),
+        Coord(-1124.3322f, 1077.3267f),
+        Coord(-1210.3428f, 1008.53656f),
+        Coord(-1272.8163f, 930.7525f),
+        Coord(-1274.692f, 809.6049f),
+        Coord(-1187.6125f, 741.39014f),
+        Coord(-977.6232f, 660.95337f),
+        Coord(-832.2729f, 718.6839f),
+        Coord(-729.76874f, 805.27893f),
+        Coord(-640.13007f, 872.5682f),
+        Coord(-549.60175f, 939.7831f),
+        Coord(-526.61835f, 1035.9674f),
+        Coord(-659.10443f, 1179.8185f),
+        Coord(-847.3455f, 1178.8031f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Convoy Safety Polygon",
+        Coord(-1392.7418f, -806.6031f),
+        Coord(-1607.2126f, -898.9988f),
+        Coord(-1762.271f, -801.0354f),
+        Coord(-1886.0508f, -631.3992f),
+        Coord(-1971.8049f, -440.70023f),
+        Coord(-1972.5032f, -288.88208f),
+        Coord(-1849.0942f, -234.68164f)
+    ))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Nebula Point Set",
+        World.createWorldPoint(636.9999f, Vector(-1328.9067f, 60.80042f), 0f, Vector.north)
+    ))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Shower Point Set",
+        World.createWorldPoint(416.59988f, Vector(87.97014f, -905.9183f), 0f, Vector.north)
+    ))
+
+    world.addTimer(World.createTimer(
+        "Convoy Timer",
+        false,
+        622.974
+    ))
+
+    navyAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+    pirateAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+
+    world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(convoyPlayerIndex, pirateBasePlayerIndex))
+
+    fun createSetupEtheriumCurrentAction(etheriumCurrentIndex: Int) = World.createSetupEtheriumCurrentAction(etheriumCurrentObjectIDs[etheriumCurrentIndex], etheriumCurrentPathNames[etheriumCurrentIndex])
+
+    fun createSetConvoyGroupHoldPositionAction(convoyIndex: Int, holdPosition: Boolean) = World.createSetGroupHoldPositionAction(convoyGroupNames[convoyIndex], holdPosition)
+
+    fun createSetConvoyGroupVisibilityAction(convoyIndex: Int, isVisible: Boolean) = World.createSetGroupVisibilityAction(convoyGroupNames[convoyIndex], isVisible)
+
+    fun createConvoyGroupFollowPathAction(convoyIndex: Int) = World.createGroupFollowPathAction(convoyGroupNames[convoyIndex], convoyPathNames[convoyIndex], FollowMode.TO_END, true)
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        createSetupEtheriumCurrentAction(0),
+        createSetupEtheriumCurrentAction(1),
+        World.createSetupNebulaAction(
+            nebulaObjectID,
+            "Mourning Nebula",
+            "Nebula Polygon",
+            "Nebula Point Set",
+            energyDrain = true,
+            occlusion = true,
+            0f
+        ),
+        World.createSetupMeteorShowerAction(
+            showerObjectID,
+            "Shower",
+            "Shower Polygon",
+            "Shower Point Set",
+            1f,
+            50f
+        ),
+        World.createStartTimerAction("Convoy Timer"),
+        createSetConvoyGroupHoldPositionAction(1, true),
+        createSetConvoyGroupHoldPositionAction(2, true),
+        createSetConvoyGroupVisibilityAction(1, false),
+        createSetConvoyGroupVisibilityAction(2, false),
+        createConvoyGroupFollowPathAction(0),
+        World.createPlayMusicAction("BTL_DeadlyPirate_Full01", 0.8f, 2f, 2f)
+    ))
+
+    fun addWorldRule(ruleName: String, runOnce: Boolean, condition: ConditionNode, vararg actions: ActionNode) {
+        world.addWorldRule(World.createWorldRule(ruleName, runOnce, true, ConditionListNode(condition), ActionListNode(*actions)))
+    }
+
+    fun addNavyFailWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Navy Fail ${convoyIndex + 1}",
+        true,
+        World.createTeamDestroyGroupCondition(navyTeamID, convoyGroupNames[convoyIndex]),
+        World.createGrantTeamPointsAction(pirateTeamID, points)
+    )
+
+    addNavyFailWorldRule(0, 70)
+    addNavyFailWorldRule(1, 50)
+    addNavyFailWorldRule(2, 70)
+
+    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 1", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_ESCORT_CONVOY"))
+    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 2", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_ESCORT_CONVOY"))
+    world.addObjectiveTask(World.createObjectiveTask("Pirate Objective", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_CAPTURE_CONVOY"))
+
+    world.addMapText(World.createMapText("Etherium Current 1", "IDGS_TPMAPTEXTITEMS_M04_MCCULLOUGH_CURRENT", Vector(1460.1858f, -791.14136f)))
+    world.addMapText(World.createMapText("Etherium Current 2", "IDGS_TPMAPTEXTITEMS_MP_CONVOY_RAID_CURRENT_LABEL", Vector(-865.2241f, -1386.5819f)))
+    world.addMapText(World.createMapText("Asteroids", "IDGS_TPMAPTEXTITEMS_M04_CAUTION_ASTEROIDS", Vector(-524.314f, -774.0017f)))
+    world.addMapText(World.createMapText("Nebula", "IDGS_TPMAPTEXTITEMS_GENERAL_MOURNING_NEBULA", Vector(-1313.0574f, -2.641357f)))
+    world.addMapText(World.createMapText("Town", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLANDS_BILGE_BAY", Vector(434.44177f, -220.37134f)))
+    world.addMapText(World.createMapText("Navy Base", "IDGS_TPMAPTEXTITEMS_GENERAL_OUTPOST_PERSEUS", Vector(1258.1836f, -1487.6672f)))
+    world.addMapText(World.createMapText("Pirate Base", "IDGS_TPMAPTEXTITEMS_GENERAL_CAMP_STRONGBOX", Vector(-1059.449f, 1082.1455f)))
+
+    println(world.build())
+}
+
 fun diablo() {
     val world = World.create(
         game,
@@ -543,7 +1009,7 @@ fun diablo() {
     addIsland("Island_Rocky_07", Vector(340.92377f, -1287.2688f, -0.000244f))
     addIsland("Island_Rocky_08", Vector(-499.76703f, -1311.3401f))
 
-    val etheriumObjectID = world.addWorldObject("Terrain_Etherium_Current", null, null, Vector(-95f, 2.999973f))
+    val etheriumCurrentObjectID = world.addWorldObject("Terrain_Etherium_Current", null, null, Vector(-95f, 2.999973f))
 
     fun addAsteroid(size: String, position: Vector) {
         world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
@@ -618,14 +1084,14 @@ fun diablo() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
-        World.createSetupEtheriumCurrentAction(etheriumObjectID, "Etherium Current Path"),
+        World.createSetupEtheriumCurrentAction(etheriumCurrentObjectID, "Etherium Current Path"),
         World.createSetupAsteroidBeltAction("Asteroid Group", null, FollowMode.TO_END, false, 0f, 0f, 0.02f, 3.02f),
-        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
-    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Etherium Current", "IDGS_TPMAPTEXTITEMS_MP_DIABLO_STRAIT_CURRENT", Vector(-186.8336f, 9.868164f)))
 
@@ -759,12 +1225,12 @@ fun dragon() {
         World.createSetDragonStanceAction("Dragon Group", Stance.AGGRESSIVE),
         World.createSetDragonDamageThresholdAction("Dragon Group", 0.8f),
         World.createSetGroupReturnZoneAction("Dragon Group", "Dragon Flee Point Set"),
-        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
-    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Dragons", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLANDS_FORSAKEN_RANGE", Vector(-3.243332f, -17.338562f)))
 
@@ -1728,12 +2194,12 @@ fun shadow() {
         ),
         World.createGroupFollowPathAction("Whale Group", "Whale Path", FollowMode.LOOP, true),
         World.createSetGroupSpeedAction("Whale Group", 8),
-        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
-    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Nebula", "IDGS_TPMAPTEXTITEMS_MP_SHADOW_DANCE_NEBULA", Vector(19.76284f, 48.68347f)))
     world.addMapText(World.createMapText("Islands", "IDGS_TPMAPTEXTITEMS_BTUT_SHADOW_ISLANDS", Vector(-301.43805f, -1010.7231f)))
@@ -1789,12 +2255,12 @@ fun zemyatin() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
-        World.createSetObjectiveTaskStateAction("Kill All", true),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
 
-    world.addObjectiveTask(World.createObjectiveTask("Kill All", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
     world.addMapText(World.createMapText("Black Hole", "IDGS_TPMAPTEXTITEMS_MP_ARENA_SMALL", Vector(1.299599f, 4.263611f)))
 
@@ -1802,7 +2268,7 @@ fun zemyatin() {
 }
 
 fun test() {
-    val world = World(game, "Red Rover_Navy")
+    val world = World(game, "Convoy Raid_Navy")
 
     val worldInfo = world.root.get<NestedNode>("WorldInfo")
     val players = worldInfo?.get<FlatNode>("Players")
@@ -1829,6 +2295,7 @@ fun test() {
 
 fun main() {
     //border()
+    convoy()
     //diablo()
     //dragon()
     //mousetrap()
