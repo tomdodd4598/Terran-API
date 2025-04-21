@@ -421,14 +421,20 @@ class World(private val game: Game, val root: RootNode) {
             "World Object Type" to objectType.node
         )
 
-        fun createTeamCaptureGroupCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
+        fun createTeamHasPointsCondition(teamID: String, points: Int) = ConditionNode(
+            "Type" to "Team has X points".node,
+            "Team Name" to teamID.node,
+            "Points" to points.node
+        )
+
+        fun createTeamCaptureGroupShipCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
             "Type" to "Team has captured a ship from Group/Unit".node,
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,
             "Number Of Captures" to captureCount.node
         )
 
-        fun createTeamDestroyGroupCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
+        fun createTeamDestroyGroupShipCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
             "Type" to "Team has destroyed a ship from Group/Unit".node,
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,
@@ -465,6 +471,15 @@ class World(private val game: Game, val root: RootNode) {
             "Type" to "Team Member Enters Volume".node,
             "Team Name" to teamID.node,
             "Volume Name" to polygonName.node
+        )
+
+        fun createGroupMemberFromTeamEntersPolygonCondition(groupName: String, teamID: String, polygonName: String, pendingCount: Int = 0, enteredCount: Int = 0) = ConditionNode(
+            "Type" to "Unit from Group enters trigger volume ( Once per Unit )".node,
+            "Group Name" to groupName.node,
+            "Volume Name" to polygonName.node,
+            "Team Name" to teamID.node,
+            "Number of objects entered, waiting to report" to pendingCount.node,
+            "Object that have already entered - Size" to enteredCount.node
         )
 
         fun createGroupInPolygonCondition(groupName: String, polygonName: String, entireGroup: Boolean) = ConditionNode(
@@ -768,6 +783,12 @@ class World(private val game: Game, val root: RootNode) {
             "Type" to "Set Group Throttle Percent".node,
             "Group Name" to groupName.node,
             "Throttle Percent" to throttleFraction.node
+        )
+
+        fun createSetGroupMaxThrottleAction(groupName: String, maxThrottleFraction: Float) = ActionNode(
+            "Type" to "Set Max Throttle Percent (Max user settable)".node,
+            "Group Name" to groupName.node,
+            "Throttle Percent" to maxThrottleFraction.node
         )
 
         fun createSetGroupReturnZoneAction(groupName: String, pointSetName: String) = ActionNode(

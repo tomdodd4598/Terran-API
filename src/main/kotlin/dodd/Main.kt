@@ -50,11 +50,31 @@ fun border() {
     addPlayer(Faction.NAVY, 4, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.SIDE_BY_SIDE)
     addPlayer(Faction.PROCYON, 4, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.LINE)
 
-    navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Navy Base", Color.blue, Vector(924.07874f, -1053.405f))))
-    procyonAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Procyon Base", Color(0.043137f, 0.392157f, 0.094118f), Vector(-693.76605f, 1286.6199f))))
+    navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
+        "Navy Base",
+        Color.blue,
+        Vector(924.07874f, -1053.405f)
+    )))
+    procyonAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
+        "Procyon Base",
+        Color(0.043137f, 0.392157f, 0.094118f),
+        Vector(-693.76605f, 1286.6199f)
+    )))
 
-    val navyBaseObjectID = world.addWorldObject("Base_Grant", "Navy Base", "Navy Base Group", Vector(746.5273f, -835.4745f), Matrix.rotationZ(-acos(0.829038f)))
-    val procyonBaseObjectID = world.addWorldObject("Base_Procyon1", "Procyon Base", "Procyon Base Group", Vector(-549.45374f, 1083.6077f), Matrix.rotationZ(-acos(0.453991f)))
+    val navyBaseObjectID = world.addWorldObject(
+        "Base_Grant",
+        "Navy Base",
+        "Navy Base Group",
+        Vector(746.5273f, -835.4745f),
+        Matrix.rotationZ(-acos(0.829038f))
+    )
+    val procyonBaseObjectID = world.addWorldObject(
+        "Base_Procyon1",
+        "Procyon Base",
+        "Procyon Base Group",
+        Vector(-549.45374f, 1083.6077f),
+        Matrix.rotationZ(-acos(0.453991f))
+    )
 
     fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
         world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
@@ -375,12 +395,24 @@ fun border() {
 
     world.addWorldPointSet(World.createWorldPointSet(
         showerPointSetNames[0],
-        World.createWorldPoint(155.8f, Vector(649.0459f, 1707.9666f), 0f, Vector(-0.450909f, -0.890678f, -0.05814f), Vector(-0.056754f, -0.036395f, 0.997729f))
+        World.createWorldPoint(
+            155.8f,
+            Vector(649.0459f, 1707.9666f),
+            0f,
+            Vector(-0.450909f, -0.890678f, -0.05814f),
+            Vector(-0.056754f, -0.036395f, 0.997729f)
+        )
     ))
 
     world.addWorldPointSet(World.createWorldPointSet(
         showerPointSetNames[1],
-        World.createWorldPoint(200.1999f, Vector(1712.557f, 570.7459f), 0f, Vector(-0.452358f, -0.890596f, -0.047137f), Vector(-0.060142f, -0.022271f, 0.997947f))
+        World.createWorldPoint(
+            200.1999f,
+            Vector(1712.557f, 570.7459f),
+            0f,
+            Vector(-0.452358f, -0.890596f, -0.047137f),
+            Vector(-0.060142f, -0.022271f, 0.997947f)
+        )
     ))
 
     navyAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
@@ -450,14 +482,14 @@ fun border() {
 
     addWorldRule(
         "Navy Win 2",
-        World.createTeamCaptureGroupCondition(navyTeamID, "Procyon Base Group"),
+        World.createTeamCaptureGroupShipCondition(navyTeamID, "Procyon Base Group"),
         World.createTeamWinsAction(navyTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
     )
 
     addWorldRule(
         "Procyon Win 2",
-        World.createTeamCaptureGroupCondition(procyonTeamID, "Navy Base Group"),
+        World.createTeamCaptureGroupShipCondition(procyonTeamID, "Navy Base Group"),
         World.createTeamWinsAction(procyonTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
     )
@@ -551,8 +583,19 @@ fun convoy() {
 
     val navyBaseObjectID = world.addWorldObject("Base_Grant", "Navy Base", "Navy Base Group", Vector(1275.2861f, -1484.9083f))
 
-    val pirateBaseObjectID = world.addWorldObject("Base_Pirate", "Pirate Base", "Pirate Base Group", Vector(-1051.8273f, 927.063f), Matrix.rotationZ(-0.707107f, -0.707107f))
-    val pirateStockadeObjectID = world.addWorldObject("Base_PirateStockade", "Pirate Base", "Pirate Base Group", Vector(-779.19916f, 1053.5538f))
+    val pirateBaseObjectID = world.addWorldObject(
+        "Base_Pirate",
+        "Pirate Base",
+        "Pirate Base Group",
+        Vector(-1051.8273f, 927.063f),
+        Matrix.rotationZ(-0.707107f, -0.707107f)
+    )
+    val pirateStockadeObjectID = world.addWorldObject(
+        "Base_PirateStockade",
+        "Pirate Base",
+        "Pirate Base Group",
+        Vector(-779.19916f, 1053.5538f)
+    )
 
     val convoyGroupNames = (1..3).map { "Convoy Group $it" }
 
@@ -671,26 +714,30 @@ fun convoy() {
     addAsteroid("Med", Vector(649.71484f, -1117.699f))
     addAsteroid("Med", Vector(702.6757f, -791.4512f))
 
-    fun addArmedAsteroid(position: Vector, xx: Float = 1f, yx: Float = 0f) {
-        world.addWorldObject("Asteroid_Large_Armed", "Pirate Base", "Pirate Base Group", position, Matrix.rotationZ(xx, yx))
-    }
+    fun addArmedAsteroid(position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Asteroid_Large_Armed",
+        "Pirate Base",
+        "Pirate Base Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
 
-    addArmedAsteroid(Vector(-192.673f, 760.0504f))
-    addArmedAsteroid(Vector(-22.918304f, 838.0873f))
-    addArmedAsteroid(Vector(-247.52307f, 669.4498f))
-    addArmedAsteroid(Vector(-368.87936f, 454.26337f))
-    addArmedAsteroid(Vector(-414.3614f, 350.15067f))
-    addArmedAsteroid(Vector(-577.5598f, 65.47653f))
-    addArmedAsteroid(Vector(-674.49915f, 894.9005f))
-    addArmedAsteroid(Vector(-481.8105f, 235.59616f))
-    addArmedAsteroid(Vector(-316.22296f, 551.8981f))
-    addArmedAsteroid(Vector(-646.8971f, -38.136414f))
-    addArmedAsteroid(Vector(-171.94223f, -55.565735f))
-    addArmedAsteroid(Vector(-264.49896f, -60.867096f), 0.978148f, 0.207912f)
-    addArmedAsteroid(Vector(-330.5645f, -7.393005f), 0.087156f, -0.996195f)
-    addArmedAsteroid(Vector(-269.3781f, 79.55112f), -0.933581f, -0.358368f)
-    addArmedAsteroid(Vector(-210.04187f, 110.44711f), -0.990268f, 0.139173f)
-    addArmedAsteroid(Vector(-131.88504f, 193.7586f), -0.809017f, 0.587785f)
+    val armedAsteroid1ObjectID = addArmedAsteroid(Vector(-192.673f, 760.0504f))
+    val armedAsteroid2ObjectID = addArmedAsteroid(Vector(-22.918304f, 838.0873f))
+    val armedAsteroid3ObjectID = addArmedAsteroid(Vector(-247.52307f, 669.4498f))
+    val armedAsteroid4ObjectID = addArmedAsteroid(Vector(-368.87936f, 454.26337f))
+    val armedAsteroid5ObjectID = addArmedAsteroid(Vector(-414.3614f, 350.15067f))
+    val armedAsteroid6ObjectID = addArmedAsteroid(Vector(-577.5598f, 65.47653f))
+    val armedAsteroid7ObjectID = addArmedAsteroid(Vector(-674.49915f, 894.9005f))
+    val armedAsteroid8ObjectID = addArmedAsteroid(Vector(-481.8105f, 235.59616f))
+    val armedAsteroid9ObjectID = addArmedAsteroid(Vector(-316.22296f, 551.8981f))
+    val armedAsteroid10ObjectID = addArmedAsteroid(Vector(-646.8971f, -38.136414f))
+    val armedAsteroid11ObjectID = addArmedAsteroid(Vector(-171.94223f, -55.565735f))
+    val armedAsteroid12ObjectID = addArmedAsteroid(Vector(-264.49896f, -60.867096f), 0.978148f, 0.207912f)
+    val armedAsteroid13ObjectID = addArmedAsteroid(Vector(-330.5645f, -7.393005f), 0.087156f, -0.996195f)
+    val armedAsteroid14ObjectID = addArmedAsteroid(Vector(-269.3781f, 79.55112f), -0.933581f, -0.358368f)
+    val armedAsteroid15ObjectID = addArmedAsteroid(Vector(-210.04187f, 110.44711f), -0.990268f, 0.139173f)
+    val armedAsteroid16ObjectID = addArmedAsteroid(Vector(-131.88504f, 193.7586f), -0.809017f, 0.587785f)
 
     val etheriumCurrentPathNames = (1..2).map { "Etherium Current Path $it" }
 
@@ -839,6 +886,17 @@ fun convoy() {
     ))
 
     world.addWorldPolygon(World.createWorldPolygon(
+        "Convoy Safety Polygon",
+        Coord(-1392.7418f, -806.6031f),
+        Coord(-1607.2126f, -898.9988f),
+        Coord(-1762.271f, -801.0354f),
+        Coord(-1886.0508f, -631.3992f),
+        Coord(-1971.8049f, -440.70023f),
+        Coord(-1972.5032f, -288.88208f),
+        Coord(-1849.0942f, -234.68164f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
         "Convoy Theft Polygon",
         Coord(-1021.14105f, 1118.1697f),
         Coord(-1124.3322f, 1077.3267f),
@@ -854,17 +912,6 @@ fun convoy() {
         Coord(-526.61835f, 1035.9674f),
         Coord(-659.10443f, 1179.8185f),
         Coord(-847.3455f, 1178.8031f)
-    ))
-
-    world.addWorldPolygon(World.createWorldPolygon(
-        "Convoy Safety Polygon",
-        Coord(-1392.7418f, -806.6031f),
-        Coord(-1607.2126f, -898.9988f),
-        Coord(-1762.271f, -801.0354f),
-        Coord(-1886.0508f, -631.3992f),
-        Coord(-1971.8049f, -440.70023f),
-        Coord(-1972.5032f, -288.88208f),
-        Coord(-1849.0942f, -234.68164f)
     ))
 
     world.addWorldPointSet(World.createWorldPointSet(
@@ -890,16 +937,42 @@ fun convoy() {
 
     fun createSetupEtheriumCurrentAction(etheriumCurrentIndex: Int) = World.createSetupEtheriumCurrentAction(etheriumCurrentObjectIDs[etheriumCurrentIndex], etheriumCurrentPathNames[etheriumCurrentIndex])
 
-    fun createSetConvoyGroupHoldPositionAction(convoyIndex: Int, holdPosition: Boolean) = World.createSetGroupHoldPositionAction(convoyGroupNames[convoyIndex], holdPosition)
+    fun createSetupArmedAsteroidAction(objectID: Int) = World.createSetupIslandAction(objectID, 10, "Pirate Base", Skill.ELITE, Stance.AGGRESSIVE)
+
+    fun createSetupConvoyShipAction(objectID: Int, shipName: String, convoyIndex: Int, crewSkill: Skill, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        "SS $shipName",
+        convoyPathNames[convoyIndex],
+        FollowMode.TO_END,
+        Stance.PERSISTENT,
+        "Convoy",
+        false,
+        crewSkill,
+        true,
+        displayNameID
+    )
 
     fun createSetConvoyGroupVisibilityAction(convoyIndex: Int, isVisible: Boolean) = World.createSetGroupVisibilityAction(convoyGroupNames[convoyIndex], isVisible)
 
+    fun createSetConvoyGroupHoldPositionAction(convoyIndex: Int, holdPosition: Boolean) = World.createSetGroupHoldPositionAction(convoyGroupNames[convoyIndex], holdPosition)
+
     fun createConvoyGroupFollowPathAction(convoyIndex: Int) = World.createGroupFollowPathAction(convoyGroupNames[convoyIndex], convoyPathNames[convoyIndex], FollowMode.TO_END, true)
+
+    fun createSetConvoyGroupMaxThrottleAction(convoyIndex: Int, throttleFraction: Float) = World.createSetGroupMaxThrottleAction(convoyGroupNames[convoyIndex], throttleFraction)
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
         createSetupEtheriumCurrentAction(0),
         createSetupEtheriumCurrentAction(1),
+        World.createSetupAsteroidBeltAction(
+            "Asteroid Group",
+            "Asteroid Path",
+            FollowMode.LOOP,
+            true,
+            9f, 15f,
+            0.2f,
+            2f
+        ),
         World.createSetupNebulaAction(
             nebulaObjectID,
             "Mourning Nebula",
@@ -917,12 +990,48 @@ fun convoy() {
             1f,
             50f
         ),
+        World.createSetupIslandAction(navyBaseObjectID, 70, "Navy Base", Skill.AVERAGE, Stance.AGGRESSIVE),
+        World.createSetupIslandAction(pirateBaseObjectID, 90, "Pirate Base", Skill.ELITE, Stance.AGGRESSIVE),
+        World.createSetupIslandAction(pirateStockadeObjectID, 50, "Pirate Base", Skill.ELITE, Stance.AGGRESSIVE),
+        createSetupArmedAsteroidAction(armedAsteroid1ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid2ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid3ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid4ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid5ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid6ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid7ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid8ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid9ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid10ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid11ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid12ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid13ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid14ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid15ObjectID),
+        createSetupArmedAsteroidAction(armedAsteroid16ObjectID),
+        createSetupConvoyShipAction(convoyLabradorObjectID, "Labrador", 0, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_SPIRIT_OF_THE_WEST"),
+        createSetupConvoyShipAction(convoyCapeBretonObjectID, "Cape Breton", 0, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_SPIRIT_OF_THE_NORTH"),
+        createSetupConvoyShipAction(convoyPrinceEdwardObjectID, "Prince Edward", 0, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_VITORIA"),
+        createSetupConvoyShipAction(convoyNovaScotiaObjectID, "Nova Scotia", 0, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_VANCOUVER"),
+        createSetupConvoyShipAction(convoyMarseillesObjectID, "Marseilles", 1, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES00_SS_ABBOT"),
+        createSetupConvoyShipAction(convoyVeneziaObjectID, "Venezia", 1, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES00_SS_HARVESTER"),
+        createSetupConvoyShipAction(convoyRomaObjectID, "Roma", 1, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES00_SS_DENMAN"),
+        createSetupConvoyShipAction(convoyParisObjectID, "Paris", 1, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_PRINCETON"),
+        createSetupConvoyShipAction(convoyTuscanyObjectID, "Tuscany", 1, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES00_SS_FAULKNER"),
+        createSetupConvoyShipAction(convoyVesuviusObjectID, "Vesuvius", 2, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES00_SS_LADY_J"),
+        createSetupConvoyShipAction(convoyEtnaObjectID, "Etna", 2, Skill.AVERAGE, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_GALILEO"),
+        createSetupConvoyShipAction(convoyStHelensObjectID, "St Helens", 2, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_PLENTIFUL"),
+        createSetupConvoyShipAction(convoyPeleeObjectID, "Pelee", 2, Skill.AVERAGE, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_CARLTON_BAY"),
+        createSetupConvoyShipAction(convoyOlympusMonsObjectID, "Olympus Mons", 2, Skill.GREEN, "IDGS_TPCAMPAIGNSHIPNAMES01_SS_CAPE_HOPE"),
         World.createStartTimerAction("Convoy Timer"),
-        createSetConvoyGroupHoldPositionAction(1, true),
-        createSetConvoyGroupHoldPositionAction(2, true),
         createSetConvoyGroupVisibilityAction(1, false),
         createSetConvoyGroupVisibilityAction(2, false),
+        createSetConvoyGroupHoldPositionAction(1, true),
+        createSetConvoyGroupHoldPositionAction(2, true),
         createConvoyGroupFollowPathAction(0),
+        createSetConvoyGroupMaxThrottleAction(0, 0.6f),
+        World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective"),
+        World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
         World.createPlayMusicAction("BTL_DeadlyPirate_Full01", 0.8f, 2f, 2f)
     ))
 
@@ -930,19 +1039,125 @@ fun convoy() {
         world.addWorldRule(World.createWorldRule(ruleName, runOnce, true, ConditionListNode(condition), ActionListNode(*actions)))
     }
 
-    fun addNavyFailWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
-        "Navy Fail ${convoyIndex + 1}",
+    fun addStartConvoyWorldRule(convoyIndex: Int, startTime: Int, throttleFraction: Float?) = addWorldRule(
+        "Start Convoy ${convoyIndex + 1}",
         true,
-        World.createTeamDestroyGroupCondition(navyTeamID, convoyGroupNames[convoyIndex]),
+        World.createTimerCondition("Convoy Timer", Equivalence.GREATER_THAN, startTime),
+        createSetConvoyGroupVisibilityAction(convoyIndex, true),
+        createSetConvoyGroupHoldPositionAction(convoyIndex, false),
+        createConvoyGroupFollowPathAction(convoyIndex),
+        *if (throttleFraction == null) emptyArray() else arrayOf(createSetConvoyGroupMaxThrottleAction(convoyIndex, throttleFraction))
+    )
+
+    addStartConvoyWorldRule(1, 480, 0.7f)
+    addStartConvoyWorldRule(2, 720, null)
+
+    fun addNavyDestroysConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Navy Destroys Convoy ${convoyIndex + 1} Ship",
+        true,
+        World.createTeamDestroyGroupShipCondition(navyTeamID, convoyGroupNames[convoyIndex]),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
-    addNavyFailWorldRule(0, 70)
-    addNavyFailWorldRule(1, 50)
-    addNavyFailWorldRule(2, 70)
+    addNavyDestroysConvoyShipWorldRule(0, 70)
+    addNavyDestroysConvoyShipWorldRule(1, 50)
+    addNavyDestroysConvoyShipWorldRule(2, 70)
 
-    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 1", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_ESCORT_CONVOY"))
-    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 2", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_ESCORT_CONVOY"))
+    fun addPiratesDestroyConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Pirates Destroy Convoy ${convoyIndex + 1} Ship",
+        false,
+        World.createTeamDestroyGroupShipCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
+        World.createGrantTeamPointsAction(pirateTeamID, points)
+    )
+
+    addPiratesDestroyConvoyShipWorldRule(0, 50)
+    addPiratesDestroyConvoyShipWorldRule(1, 20)
+    addPiratesDestroyConvoyShipWorldRule(2, 50)
+
+    fun addPiratesCaptureConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Pirates Capture Convoy ${convoyIndex + 1} Ship",
+        false,
+        World.createTeamCaptureGroupShipCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
+        World.createGrantTeamPointsAction(pirateTeamID, points)
+    )
+
+    addPiratesCaptureConvoyShipWorldRule(0, 40)
+    addPiratesCaptureConvoyShipWorldRule(1, 30)
+    addPiratesCaptureConvoyShipWorldRule(2, 40)
+
+    fun addNavyEscortsConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Navy Escorts Captured Convoy ${convoyIndex + 1} Ship",
+        false,
+        World.createGroupMemberFromTeamEntersPolygonCondition(convoyGroupNames[convoyIndex], navyTeamID, "Convoy Safety Polygon"),
+        World.createGrantTeamPointsAction(navyTeamID, points)
+    )
+
+    addNavyEscortsConvoyShipWorldRule(0, 100)
+    addNavyEscortsConvoyShipWorldRule(1, 50)
+    addNavyEscortsConvoyShipWorldRule(2, 70)
+
+    fun addPiratesTakeConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
+        "Pirates Take Convoy ${convoyIndex + 1} Ship",
+        false,
+        World.createGroupMemberFromTeamEntersPolygonCondition(convoyGroupNames[convoyIndex], pirateTeamID, "Convoy Theft Polygon"),
+        World.createGrantTeamPointsAction(pirateTeamID, points)
+    )
+
+    addPiratesTakeConvoyShipWorldRule(0, 80)
+    addPiratesTakeConvoyShipWorldRule(1, 40)
+    addPiratesTakeConvoyShipWorldRule(2, 50)
+
+    fun addPiratesTransferConvoyShipToBaseWorldRule(convoyIndex: Int, shipName: String) {
+        val groupName = "SS $shipName" of convoyGroupNames[convoyIndex]
+        addWorldRule(
+            "Pirates Transfer Convoy ${convoyIndex + 1} SS $shipName To Base",
+            true,
+            World.createGroupEntersPolygonCondition(groupName, "Convoy Theft Polygon"),
+            World.createSetGroupOwnerAction(groupName, "Pirate Base"),
+            World.createSetGroupStanceAction(groupName, Stance.DUMMY)
+        )
+    }
+
+    addPiratesTransferConvoyShipToBaseWorldRule(0, "Labrador")
+    addPiratesTransferConvoyShipToBaseWorldRule(0, "Cape Breton")
+    addPiratesTransferConvoyShipToBaseWorldRule(0, "Prince Edward")
+    addPiratesTransferConvoyShipToBaseWorldRule(0, "Nova Scotia")
+    addPiratesTransferConvoyShipToBaseWorldRule(1, "Marseilles")
+    addPiratesTransferConvoyShipToBaseWorldRule(1, "Venezia")
+    addPiratesTransferConvoyShipToBaseWorldRule(1, "Roma")
+    addPiratesTransferConvoyShipToBaseWorldRule(1, "Paris")
+    addPiratesTransferConvoyShipToBaseWorldRule(1, "Tuscany")
+    addPiratesTransferConvoyShipToBaseWorldRule(2, "Vesuvius")
+    addPiratesTransferConvoyShipToBaseWorldRule(2, "Etna")
+    addPiratesTransferConvoyShipToBaseWorldRule(2, "St Helens")
+    addPiratesTransferConvoyShipToBaseWorldRule(2, "Pelee")
+    addPiratesTransferConvoyShipToBaseWorldRule(2, "Olympus Mons")
+
+    addWorldRule(
+        "Navy Win 1",
+        true,
+        World.createTeamHasPointsCondition(navyTeamID, 350),
+        World.createTeamWinsAction(navyTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_CONVOY_VICTORYNAVY", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Navy Win 2",
+        true,
+        World.createTeamHasNoShipsCondition(pirateTeamID),
+        World.createTeamWinsAction(navyTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_CONVOY_VICTORYNAVY", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Pirate Win",
+        true,
+        World.createTeamHasPointsCondition(pirateTeamID, 400),
+        World.createTeamWinsAction(pirateTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_CONVOY_VICTORYPIRATE", "IDGS_TPINGAMEMESSAGE_GAME_CONVOY_DEFEAT", true)
+    )
+
+    world.addObjectiveTask(World.createObjectiveTask("Navy Objective", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_ESCORT_CONVOY"))
     world.addObjectiveTask(World.createObjectiveTask("Pirate Objective", "IDGS_TPOBJECTIVES2_MP_CONVOY_RAID_CAPTURE_CONVOY"))
 
     world.addMapText(World.createMapText("Etherium Current 1", "IDGS_TPMAPTEXTITEMS_M04_MCCULLOUGH_CURRENT", Vector(1460.1858f, -791.14136f)))
@@ -1085,7 +1300,16 @@ fun diablo() {
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
         World.createSetupEtheriumCurrentAction(etheriumCurrentObjectID, "Etherium Current Path"),
-        World.createSetupAsteroidBeltAction("Asteroid Group", null, FollowMode.TO_END, false, 0f, 0f, 0.02f, 3.02f),
+        World.createSetupAsteroidBeltAction(
+            "Asteroid Group",
+            null,
+            FollowMode.TO_END,
+            false,
+            0f,
+            0f,
+            0.02f,
+            3.02f
+        ),
         World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
@@ -1220,7 +1444,16 @@ fun dragon() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
-        World.createSetupAsteroidBeltAction("Asteroid Group", "Asteroid Path", FollowMode.LOOP, true, 5f, 20f, 0.05f, 4f),
+        World.createSetupAsteroidBeltAction(
+            "Asteroid Group",
+            "Asteroid Path",
+            FollowMode.LOOP,
+            true,
+            5f,
+            20f,
+            0.05f,
+            4f
+        ),
         World.createGroupFollowPathAction("Dragon Group", "Dragon Path", FollowMode.LOOP, true),
         World.createSetDragonStanceAction("Dragon Group", Stance.AGGRESSIVE),
         World.createSetDragonDamageThresholdAction("Dragon Group", 0.8f),
@@ -1277,8 +1510,19 @@ fun mousetrap() {
     addPlayer(Faction.PIRATE, 4, Color(0.509804f, 0.039216f, 0.023529f), Vector(258.27625f, 557.71155f), Vector.dir(-0.03774f, -0.999288f))
     addPlayer(Faction.PROCYON, 4, Color(0.109804f, 0.4f, 0.101961f), Vector(198.13431f, -367.82397f), Vector.dir(-0.265867f, 0.96401f))
 
-    procyonAllianceIndices.add(world.addPlayerListElement(World.createAIFleetElement("Procyon Backup", -1, Color(0.701961f, 1f, 0.701961f), Vector(76.66661f, -1034.9675f), Vector.dir(0.067777f, 0.9977f), Formation.NONE)))
-    pirateAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Pirate Base", Color.white, Vector(-7.950306f, 1013.2767f))))
+    procyonAllianceIndices.add(world.addPlayerListElement(World.createAIFleetElement(
+        "Procyon Backup",
+        -1,
+        Color(0.701961f, 1f, 0.701961f),
+        Vector(76.66661f, -1034.9675f),
+        Vector.dir(0.067777f, 0.9977f),
+        Formation.NONE
+    )))
+    pirateAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
+        "Pirate Base",
+        Color.white,
+        Vector(-7.950306f, 1013.2767f)
+    )))
     world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-741.1809f, 253.76825f)))
 
     fun addIsland(typeID: String, position: Vector, cos: Float = 1f) {
@@ -1589,7 +1833,13 @@ fun mousetrap() {
     val procyonCrescentBearObjectID = addProcyonBackupShip("Frigate", Vector(277.96152f, -696.3086f))
     val procyonNovaMaceObjectID = addProcyonBackupShip("Frigate", Vector(-100.592316f, -685.2343f))
 
-    val pirateBaseObjectID = world.addWorldObject("Base_PirateMP_3", "Pirate Base", "Pirate Base Group", Vector(-10.458221f, 913.86884f), Matrix.rotationZ(acos(-0.978148f)))
+    val pirateBaseObjectID = world.addWorldObject(
+        "Base_PirateMP_3",
+        "Pirate Base",
+        "Pirate Base Group",
+        Vector(-10.458221f, 913.86884f),
+        Matrix.rotationZ(acos(-0.978148f))
+    )
 
     world.addWaypointPath(World.createWaypointPath(
         "Asteroid Path",
@@ -1628,13 +1878,22 @@ fun mousetrap() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
+        World.createSetupAsteroidBeltAction(
+            "Asteroid Group",
+            "Asteroid Path",
+            FollowMode.TELEPORT_LOOP,
+            true,
+            10f,
+            25f,
+            0.2f,
+            3f
+        ),
         createSetupProcyonBackupShipAction(procyonSiriusObjectID, "Sirius", Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON00_SIRIUS"),
         createSetupProcyonBackupShipAction(procyonMajorisObjectID, "Majoris", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_MAJORIS"),
         createSetupProcyonBackupShipAction(procyonFrostKnifeObjectID, "Frost Knife", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON01_FROSTKNIFE"),
         createSetupProcyonBackupShipAction(procyonCrescentBearObjectID, "Crescent Bear", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_CRESCENTBEAR"),
         createSetupProcyonBackupShipAction(procyonNovaMaceObjectID, "Nova Mace", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON01_NOVAMACE"),
         World.createSetupIslandAction(pirateBaseObjectID, 100, "Pirate Base", Skill.ELITE, Stance.AGGRESSIVE),
-        World.createSetupAsteroidBeltAction("Asteroid Group", "Asteroid Path", FollowMode.TELEPORT_LOOP, true, 10f, 25f, 0.2f, 3f),
         World.createSetGroupHoldPositionAction("Procyon Backup Group", true),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
         World.createSetupTeamObjectiveAction(procyonTeamID, "Procyon Objective Point", "Procyon Objective"),
@@ -1672,7 +1931,7 @@ fun mousetrap() {
 
     addWorldRule(
         "Procyon Win 2",
-        World.createTeamCaptureGroupCondition(procyonTeamID, "Pirate Base Group"),
+        World.createTeamCaptureGroupShipCondition(procyonTeamID, "Pirate Base Group"),
         World.createTeamWinsAction(procyonTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
     )
@@ -1995,14 +2254,14 @@ fun rover() {
 
     addWorldRule(
         "Navy Win 2",
-        World.createTeamCaptureGroupCondition(navyTeamID, "Pirate Base Group"),
+        World.createTeamCaptureGroupShipCondition(navyTeamID, "Pirate Base Group"),
         World.createTeamWinsAction(navyTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
     )
 
     addWorldRule(
         "Pirate Win 2",
-        World.createTeamCaptureGroupCondition(pirateTeamID, "Navy Base Group"),
+        World.createTeamCaptureGroupShipCondition(pirateTeamID, "Navy Base Group"),
         World.createTeamWinsAction(pirateTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PIRATEDEFEAT", true)
     )
