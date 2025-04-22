@@ -1339,7 +1339,7 @@ fun convoy() {
     addPiratesCaptureConvoyShipWorldRule(2, 40)
 
     fun addNavyEscortsConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
-        "Navy Escorts Captured Convoy ${convoyIndex + 1} Ship",
+        "Navy Escorts Convoy ${convoyIndex + 1} Ship",
         false,
         World.createGroupMemberFromTeamEntersPolygonCondition(convoyGroupNames[convoyIndex], navyTeamID, "Convoy Safety Polygon"),
         World.createGrantTeamPointsAction(navyTeamID, points)
