@@ -403,6 +403,11 @@ class World(private val game: Game, val root: RootNode) {
             "Team Name" to teamID.node
         )
 
+        fun createGroupDestroyedCondition(groupName: String) = ConditionNode(
+            "Type" to "Group Destroyed".node,
+            "Group Name" to groupName.node
+        )
+
         fun createGroupMemberCountCondition(groupName: String, equivalence: Equivalence, memberCount: Int) = ConditionNode(
             "Type" to "Group has X members".node,
             "Group Name" to groupName.node,
@@ -439,6 +444,12 @@ class World(private val game: Game, val root: RootNode) {
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,
             "Number Of Ships Destroyed" to destroyCount.node
+        )
+
+        fun createGroupExistsCondition(groupName: String, exists: Boolean) = ConditionNode(
+            "Type" to "Does Group Contain Unit Name".node,
+            "Unit Name" to groupName.node,
+            "Exists?" to exists.stringNode()
         )
 
         fun createGroupDamageCondition(groupName: String, equivalence: Equivalence, damageFraction: Float) = ConditionNode(
