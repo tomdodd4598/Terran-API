@@ -94,10 +94,12 @@ fun ambush() {
     addIsland("Island_Small01", Vector(123.868034f, -709.05774f))
     addIsland("Island_Small01", Vector(-260.3556f, -345.9f))
 
-    val navyIndefatigableObjectID = world.addWorldObject("Ship_Navy_ManOWar", "Navy", "Navy Group", Vector(-37.017784f, -367.28308f))
-    val navyVigilantObjectID = world.addWorldObject("Ship_Navy_Frigate", "Navy", "Navy Group", Vector(-82.0263f, -534.1063f))
-    val navyOrionObjectID = world.addWorldObject("Ship_Navy_Frigate", "Navy", "Navy Group", Vector(6.550687f, -537.5786f))
-    val navyMercyObjectID = world.addWorldObject("Ship_Navy_Tender", "Navy", "Navy Group", Vector(-32.974262f, -488.50842f))
+    fun addNavyShip(type: String, position: Vector) = world.addWorldObject("Ship_Navy_$type", "Navy", "Navy Group", position)
+
+    val navyIndefatigableObjectID = addNavyShip("ManOWar", Vector(-37.017784f, -367.28308f))
+    val navyVigilantObjectID = addNavyShip("Frigate", Vector(-82.0263f, -534.1063f))
+    val navyOrionObjectID = addNavyShip("Frigate", Vector(6.550687f, -537.5786f))
+    val navyMercyObjectID = addNavyShip("Tender", Vector(-32.974262f, -488.50842f))
 
     val pirateGroupNames = (1..3).map { "Pirate Group $it" }
 
