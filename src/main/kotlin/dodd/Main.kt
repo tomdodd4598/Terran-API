@@ -19,7 +19,7 @@ fun ambush() {
         Vector(2000f, 2000f, 750f),
         19,
         Color(0f, 0f, 0f),
-        Vector(0.560588f, 0.529329f, -0.63683f),
+        Vector.dir(0.560588f, 0.529329f, -0.63683f),
         Color(0.4157f, 0.451f, 0.8667f),
         Color.white,
         "Map_Historical_Ambush",
@@ -37,7 +37,15 @@ fun ambush() {
 
     val piratePlayerNames = (1..3).map { "Pirate $it" }
 
-    val navyPlayerIndex = world.addPlayer("Navy", navyTeamIndex, Color.blue, Vector(-50.48197f, -520.49927f), Vector.dir(-0.163481f, 0.986547f), Faction.NAVY, Formation.NONE)
+    val navyPlayerIndex = world.addPlayer(
+        "Navy",
+        navyTeamIndex,
+        Color.blue,
+        Vector(-50.48197f, -520.49927f),
+        Vector.dir(-0.163481f, 0.986547f),
+        Faction.NAVY,
+        Formation.NONE
+    )
     val piratePlayerIndices = mutableListOf<Int>()
 
     val navyAllianceIndices = mutableListOf(navyPlayerIndex)
@@ -269,7 +277,7 @@ fun border() {
         Vector(2250f, 2250f, 1000f),
         4,
         Color(0.219608f, 0.219608f, 0.219608f),
-        Vector(-0.571849f, -0.446337f, -0.688311f),
+        Vector.dir(-0.571849f, -0.446337f, -0.688311f),
         Color(0.556863f, 0.309804f, 0.835294f),
         Color(0.870588f, 0.909804f, 0.972549f),
         "Map_Border_Dispute",
@@ -778,7 +786,7 @@ fun convoy() {
         Vector(2000f, 2000f, 1000f),
         8,
         Color(0.219608f, 0.219608f, 0.219608f),
-        Vector(-0.725368f, 0.3079f, -0.615662f),
+        Vector.dir(-0.725368f, 0.3079f, -0.615662f),
         Color(0.745098f, 0.396078f, 0.588235f),
         Color(0.960784f, 0.956863f, 0.878431f),
         "Map_ConvoyRaid",
@@ -1433,7 +1441,7 @@ fun diablo() {
         Vector(1825f, 1900f, 1000f),
         6,
         Color(0.090196f, 0.090196f, 0.090196f),
-        Vector(0.739606f, 0.237109f, -0.629891f),
+        Vector.dir(0.739606f, 0.237109f, -0.629891f),
         Color(1f, 0.52549f, 0.066667f),
         Color(0.996078f, 1f, 0.882353f),
         "Map_Open_Diablo_Straight",
@@ -1584,7 +1592,7 @@ fun dragon() {
         Vector(1750f, 1750f, 500f),
         10,
         Color(0.090196f, 0.090196f, 0.090196f),
-        Vector(-0.593311f, 0.549935f, -0.587838f),
+        Vector.dir(-0.593311f, 0.549935f, -0.587838f),
         Color(0.250980f, 0.509804f, 0.180392f),
         Color(0.992157f, 0.996078f, 0.909804f),
         "Map_DragonsNest"
@@ -1732,7 +1740,7 @@ fun mousetrap() {
         Vector(1750f, 1750f, 1000f),
         1,
         Color(0.141176f, 0.141176f, 0.141176f),
-        Vector(-0.77906f, 0.253133f, -0.573576f),
+        Vector.dir(-0.77906f, 0.253133f, -0.573576f),
         Color(0.219608f, 0.282353f, 0.47451f),
         Color(0.866667f, 0.909804f, 0.972549f),
         "Map_Mousetrap",
@@ -2225,7 +2233,7 @@ fun rover() {
         Vector(2100f, 1750f, 750f),
         9,
         Color(0.141176f, 0.141176f, 0.141176f),
-        Vector(0.637654f, 0.273401f, -0.720173f),
+        Vector.dir(0.637654f, 0.273401f, -0.720173f),
         Color(0.494118f, 0.203922f, 0.25098f),
         Color(0.976471f, 0.886275f, 0.866667f),
         "Map_RedRover",
@@ -2554,7 +2562,7 @@ fun shadow() {
         Vector(1900f, 1900f, 1000f),
         1,
         Color(0.152941f, 0.152941f, 0.152941f),
-        Vector(-0.219754f, -0.815193f, -0.535881f),
+        Vector.dir(-0.219754f, -0.815193f, -0.535881f),
         Color(0.203922f, 0.192157f, 0.423529f),
         Color(0.862745f, 0.980392f, 0.968627f),
         "Map_ShadowDance",
@@ -2737,7 +2745,7 @@ fun zemyatin() {
         Vector(1750f, 1750f, 500f),
         8,
         Color(0.101961f, 0.101961f, 0.101961f),
-        Vector(0.501989f, 0.145542f, -0.85254f),
+        Vector.dir(0.501989f, 0.145542f, -0.85254f),
         Color(0.368627f, 0.121569f, 0.109804f),
         Color(0.909804f, 0.894118f, 0.756863f),
         "Map_Zemyatin"
@@ -2815,8 +2823,8 @@ fun test() {
 }
 
 fun main() {
-    ambush()
-    //bayles()
+    //ambush()
+    bayles()
     //iron()
     //locusts()
     //storm()

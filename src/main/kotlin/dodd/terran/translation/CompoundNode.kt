@@ -93,7 +93,7 @@ open class NestedNode(vararg pairs: Pair<String, Node>) : CompoundNode(*pairs), 
         val size = max(0, lines.size - 1)
         db.append("${size.toString().padStart(8, '0')} $name")
         db.append("{")
-        lines.asSequence().take(size).forEach { db.append(it) }
+        lines.asSequence().take(size).forEach(db::append)
         db.append("}")
     }
 
