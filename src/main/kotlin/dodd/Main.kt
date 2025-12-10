@@ -245,7 +245,267 @@ fun ambush() {
 }
 
 fun bayles() {
+    val world = World.create(
+        game,
+        "Bayles Stand",
+        "IDGS_TPWORLDNAMES_SCEN_BAYLES_STAND",
+        "IDGS_TPWORLDDESCRIPTION_HISTORICAL_WAR",
+        Vector(1650f, 1650f, 750f),
+        18,
+        Color(0.137255f, 0.137255f, 0.137255f),
+        Vector.dir(0.654898f, 0.48866f, -0.576473f),
+        Color(0.2f, 0.184314f, 0.356863f),
+        Color(0.909804f, 1f, 0.992157f),
+        "Map_BaylesStand",
+        mustAssembleFleet = false,
+        canAssembleFleet = false,
+        allianceChangeAllowed = false,
+        randomSeed = -1725389526,
+        bufferSize = 200f
+    )
 
+    val navyTeamID = "IDGS_TPTEAMNAMES_NAVY"
+    val procyonTeamID = "IDGS_TPTEAMNAMES_PROCYON"
+
+    val navyTeamIndex = world.addTeam(World.createTeam(navyTeamID, Faction.NAVY, false))
+    val procyonTeamIndex = world.addTeam(World.createTeam(procyonTeamID, Faction.PROCYON, false))
+
+    val navyPlayerIndex = world.addPlayer(
+        "Navy",
+        navyTeamIndex,
+        Color.blue,
+        Vector(-19.10955f, 487.86093f),
+        Vector.dir(-0.17892f, -0.983864f),
+        Faction.NAVY,
+        Formation.NONE
+    )
+    world.addPlayer(
+        "Procyon",
+        procyonTeamIndex,
+        Color(0f, 0.501961f, 0f),
+        Vector(-425.3829f, 264.18643f),
+        Vector.dir(0.799649f, 0.600467f),
+        Faction.PROCYON,
+        Formation.NONE
+    )
+
+    val navyBasePlayerIndex = world.addPlayerListElement(World.createFakeFleetElement(
+        "Navy Base",
+        Color.blue,
+        Vector(107.79932f, 524.20276f)
+    ))
+
+    val navyBaseObjectID = world.addWorldObject(
+        "Base_Montgomery",
+        "Navy Base",
+        "Navy Base Group",
+        Vector(-2.714188f, 650.93964f),
+        Matrix.rotationZ(-1f, 0f)
+    )
+
+    fun addNavyShip(type: String, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Navy_$type",
+        "Navy",
+        "Navy Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val navyTriumphantObjectID = addNavyShip("Frigate", Vector(-14.6113f, 549.90234f), -0.999391f, -0.034901f)
+    val navyBladeObjectID = addNavyShip("Torpedo", Vector(37.79287f, 546.6155f), -0.999391f, -0.034901f)
+    val navyDirkObjectID = addNavyShip("Torpedo", Vector(63.594345f, 551.8686f), -0.999391f, -0.034901f)
+    val navySwiftObjectID = addNavyShip("Cutter", Vector(14.48999f, 546.77295f), -0.999848f, 0.017452f)
+
+    fun addProcyonShip(type: String, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Procyon_$type",
+        "Procyon",
+        "Procyon Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val procyonStormFalconObjectID = addProcyonShip("ManOWar", Vector(-502.8947f, 74.03754f), 0.529908f, -0.848055f)
+    val procyonSeekerObjectID = addProcyonShip("Gunboat", Vector(64.375465f, -75.6034f), 0.997565f, 0.069743f)
+    val procyonTrackerObjectID = addProcyonShip("Gunboat", Vector(25.48649f, -57.17805f), 0.997565f, 0.069743f)
+    val procyonScoutObjectID = addProcyonShip("Gunboat", Vector(66.11965f, -17.132973f), 0.997565f, 0.069743f)
+    val procyonSunBlastObjectID = addProcyonShip("Cutter", Vector(-462.25436f, 145.41399f), 0.5f, -0.866026f)
+    val procyonProviderObjectID = addProcyonShip("Tender", Vector(-322.22482f, -10.768294f))
+
+    fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
+    }
+
+    addIsland("Island_Med01", Vector(-355.83142f, 531.8081f), -0.453982f, 0.891011f)
+    addIsland("Island11", Vector(231.98277f, 494.11877f), 0.829036f, 0.559196f)
+    addIsland("Island12", Vector(197.46725f, 296.26154f), 0.999848f, 0.017456f)
+    addIsland("Island13", Vector(-140.35124f, 82.55331f))
+    addIsland("Island14", Vector(496.05902f, -59.57312f))
+    addIsland("Island06", Vector(368.80627f, -35.402546f))
+    addIsland("Island08", Vector(-41.77176f, -156.4198f))
+    addIsland("Island10", Vector(-353.3543f, -221.0636f))
+    addIsland("Island_Lighthouse", Vector(-353.8452f, 311.5928f))
+    addIsland("Island_Lighthouse", Vector(171.18307f, 97.43048f))
+    addIsland("Island03", Vector(-693.24286f, 148.60443f))
+    addIsland("Island04", Vector(-540.3465f, 253.92596f))
+
+    fun addManta(position: Vector) {
+        world.addWorldObject("Animal_SpaceMantaray", null, "Manta Group", position, Matrix.rotationZ(-0.882948f, -0.469472f))
+    }
+
+    addManta(Vector(329.40924f, 444.7176f, 3f))
+    addManta(Vector(351.06458f, 431.86105f, 9f))
+    addManta(Vector(355.56168f, 408.66367f, 1f))
+    addManta(Vector(334.70883f, 393.30103f, 1f))
+    addManta(Vector(317.4187f, 402.71194f, -7f))
+    addManta(Vector(314.91223f, 425.8464f))
+    addManta(Vector(317.74298f, 447.42657f))
+    addManta(Vector(335.85083f, 418.23743f, -3f))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "ManOWar Path",
+        Vector(-459.56488f, 96.824554f),
+        Vector(-409.31976f, 134.069f),
+        Vector(-360.25305f, 170.59058f),
+        Vector(-305.9748f, 215.63245f),
+        Vector(-257.50378f, 258.6313f),
+        Vector(-222.17615f, 314.57635f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Manta Path",
+        Vector(322.5235f, 520.5041f),
+        Vector(340.56778f, 406.56924f),
+        Vector(371.7603f, 325.11475f),
+        Vector(377.99472f, 232.08917f),
+        Vector(364.82843f, 96.79047f),
+        Vector(294.1316f, -12.019501f),
+        Vector(166.48215f, -103.14389f),
+        Vector(14.081696f, -68.87761f),
+        Vector(-81.95117f, -57.660324f),
+        Vector(-264.11737f, -230.20427f),
+        Vector(-380.51196f, -354.6756f),
+        Vector(-519.4421f, -361.75183f),
+        Vector(-577.56085f, -265.3319f),
+        Vector(-579.9196f, -151.47818f),
+        Vector(-500.61334f, -65.29228f),
+        Vector(-391.05975f, -42.750046f),
+        Vector(-278.08478f, -89.8322f),
+        Vector(-215.32812f, -185.33464f),
+        Vector(-132.39825f, -277.2417f),
+        Vector(-32.00592f, -311.84528f),
+        Vector(94.17041f, -290.59033f),
+        Vector(198.28513f, -232.35509f),
+        Vector(289.61005f, -155.4484f),
+        Vector(337.29236f, -93.218475f),
+        Vector(294.09668f, 44.575066f),
+        Vector(234.09183f, 110.14255f),
+        Vector(154.3339f, 167.64868f),
+        Vector(80.50983f, 231.28339f),
+        Vector(42.694244f, 310.93915f),
+        Vector(65.206604f, 360.81366f),
+        Vector(125.09842f, 434.48206f),
+        Vector(161.8157f, 531.4369f),
+        Vector(141.98654f, 628.1064f),
+        Vector(88.36359f, 756.71497f),
+        Vector(16.311676f, 847.84186f),
+        Vector(14.395599f, 910.63275f),
+        Vector(90.83566f, 991.1514f),
+        Vector(176.05917f, 990.4041f),
+        Vector(246.80708f, 945.8836f),
+        Vector(301.62354f, 841.26044f),
+        Vector(330.17084f, 704.3956f),
+        Vector(322.5857f, 612.4215f)
+    ))
+
+    world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(navyPlayerIndex, navyBasePlayerIndex))
+
+    fun createSetupNavyShipAction(objectID: Int, shipName: String, primaryShip: Boolean, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        "RLS $shipName",
+        null,
+        FollowMode.TO_END,
+        Stance.DEFAULT,
+        "Navy",
+        primaryShip,
+        Skill.AVERAGE,
+        false,
+        displayNameID
+    )
+
+    fun createSetupProcyonShipAction(objectID: Int, shipName: String, stance: Stance, primaryShip: Boolean, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        "PSR $shipName",
+        null,
+        FollowMode.TO_END,
+        stance,
+        "Procyon",
+        primaryShip,
+        Skill.AVERAGE,
+        false,
+        displayNameID
+    )
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        World.createSetupIslandAction(navyBaseObjectID, 65, "Navy Base", Skill.DEFAULT, Stance.AGGRESSIVE),
+        createSetupNavyShipAction(navyTriumphantObjectID, "Triumphant", true, "IDGS_TPSHIPNAMENAVY00_TRIUMPH"),
+        createSetupNavyShipAction(navyBladeObjectID, "Blade", false, "IDGS_TPCAMPAIGNSHIPNAMES01_RLS_FLYER"),
+        createSetupNavyShipAction(navyDirkObjectID, "Dirk", false, "IDGS_TPSHIPNAMENAVY00_WASP"),
+        createSetupNavyShipAction(navySwiftObjectID, "Swift", false, "IDGS_TPSHIPNAMENAVY00_SIMS"),
+        createSetupProcyonShipAction(procyonStormFalconObjectID, "Storm Falcon", Stance.AGGRESSIVE, true, "IDGS_TPSHIPNAMEPROCYON00_STEELAURORA"),
+        createSetupProcyonShipAction(procyonSeekerObjectID, "Seeker", Stance.AGGRESSIVE, false, "IDGS_TPSHIPNAMEPROCYON01_DIAMOND"),
+        createSetupProcyonShipAction(procyonTrackerObjectID, "Tracker", Stance.AGGRESSIVE, false, "IDGS_TPSHIPNAMEPROCYON01_SNOWMONKEY"),
+        createSetupProcyonShipAction(procyonScoutObjectID, "Scout", Stance.AGGRESSIVE, false, "IDGS_TPSHIPNAMEPROCYON00_ESK"),
+        createSetupProcyonShipAction(procyonSunBlastObjectID, "SunBlast", Stance.AGGRESSIVE, false, "IDGS_TPSHIPNAMEPROCYON01_WINDRUSH"),
+        createSetupProcyonShipAction(procyonProviderObjectID, "Provider", Stance.PERSISTENT, false, "IDGS_TPSHIPNAMEPROCYON00_ENDURANCE"),
+        World.createGroupFollowPathAction("PSR Storm Falcon" of "Procyon Group", "ManOWar Path", FollowMode.TO_END, true),
+        World.createGroupFollowPathAction("Manta Group", "Manta Path", FollowMode.LOOP, true),
+        World.createSetGroupThrottleAction("PSR Storm Falcon" of "Procyon Group", 1f),
+        World.createSetGroupSpeedAction("Manta Group", 15),
+        World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective 1"),
+        World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective 2"),
+        World.createSetupTeamObjectiveAction(procyonTeamID, null, "Procyon Objective"),
+        World.createPlayMusicAction("BTL_ProcWarDrums_Full", 0.9f, 2f, 2f, true)
+    ))
+
+    fun addWorldRule(ruleName: String, condition: ConditionNode, vararg actions: ActionNode) {
+        world.addWorldRule(World.createWorldRule(ruleName, runOnce = true, isActive = true, ConditionListNode(condition), ActionListNode(*actions)))
+    }
+
+    addWorldRule(
+        "Navy Win",
+        World.createGroupDestroyedCondition("Procyon Group"),
+        World.createTeamWinsAction(navyTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_BAYLES_BASECAPTURED", "IDGS_TPINGAMEMESSAGE_GAME_BAYLES_BASECAPTURED", true)
+    )
+
+    addWorldRule(
+        "Procyon Win 1",
+        World.createGroupVitalSectionDamageCondition("Navy Base Group", VitalSection.MISSION, Equivalence.EQUAL_TO, 1f),
+        World.createTeamWinsAction(procyonTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_BAYLES_BASEDESTROYED", "IDGS_TPINGAMEMESSAGE_GAME_BAYLES_BASEDESTROYED", true)
+    )
+
+    addWorldRule(
+        "Procyon Win 2",
+        World.createTeamCaptureGroupCondition(procyonTeamID, "Navy Base Group"),
+        World.createTeamWinsAction(procyonTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_BAYLES_VICTORYBASECAPTURED", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Draw",
+        World.createNoHumanControlledFleetCondition(),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_LOST", "IDGS_TPINGAMEMESSAGE_GAME_LOST", true)
+    )
+
+    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 1", "IDGS_TPOBJECTIVES2_MP_DEFENDBASE"))
+    world.addObjectiveTask(World.createObjectiveTask("Navy Objective 2", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Procyon Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYBASE"))
+
+    world.addMapText(World.createMapText("Navy Base", "IDGS_TPMAPTEXTITEMS_HIST_WAR_MONTGOMERY", Vector(4.486832f, 716.8321f)))
+
+    println(world.build())
 }
 
 fun iron() {
