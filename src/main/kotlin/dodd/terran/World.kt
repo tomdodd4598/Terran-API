@@ -432,14 +432,14 @@ class World(private val game: Game, val root: RootNode) {
             "Points" to points.node
         )
 
-        fun createTeamCaptureGroupShipCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
+        fun createTeamCaptureGroupCondition(teamID: String, groupName: String, captureCount: Int = 0) = ConditionNode(
             "Type" to "Team has captured a ship from Group/Unit".node,
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,
             "Number Of Captures" to captureCount.node
         )
 
-        fun createTeamDestroyGroupShipCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
+        fun createTeamDestroyGroupCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
             "Type" to "Team has destroyed a ship from Group/Unit".node,
             "Team Name" to teamID.node,
             "Group/Unit" to groupName.node,

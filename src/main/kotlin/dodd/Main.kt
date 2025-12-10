@@ -46,26 +46,22 @@ fun ambush() {
         Faction.NAVY,
         Formation.NONE
     )
-    val piratePlayerIndices = mutableListOf<Int>()
 
-    val navyAllianceIndices = mutableListOf(navyPlayerIndex)
     val pirateAllianceIndices = mutableListOf<Int>()
 
     fun addPiratePlayer(pirateIndex: Int, color: Color, start: Vector, direction: Vector) {
-        val playerIndex = world.addPlayer(piratePlayerNames[pirateIndex], pirateTeamIndex, color, start, direction, Faction.PIRATE, Formation.NONE)
-        piratePlayerIndices.add(playerIndex)
-        pirateAllianceIndices.add(playerIndex)
+        pirateAllianceIndices.add(world.addPlayer(piratePlayerNames[pirateIndex], pirateTeamIndex, color, start, direction, Faction.PIRATE, Formation.NONE))
     }
 
     addPiratePlayer(0, Color(1f, 0f, 0f), Vector(299.42032f, -896.59766f), Vector.dir(-0.581316f, 0.813678f))
     addPiratePlayer(1, Color(1f, 0.309804f, 0.309804f), Vector(-465.41516f, -369.09375f), Vector.dir(0.996482f, 0.083809f))
     addPiratePlayer(2, Color(0.72549f, 0f, 0f), Vector(-37.54479f, 230.56396f), Vector.dir(-0.111614f, -0.993752f))
 
-    navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
+    val navyBasePlayerIndex = world.addPlayerListElement(World.createFakeFleetElement(
         "Navy Base",
         Color.blue,
         Vector(-974.74603f, 1143.1138f)
-    )))
+    ))
 
     val navyBaseObjectID = world.addWorldObject(
         "Base_ShipyardFreemason",
@@ -74,6 +70,32 @@ fun ambush() {
         Vector(-723.8877f, 1160.0863f),
         Matrix.rotationZ(0.857168f, 0.515038f)
     )
+
+    fun addNavyShip(type: String, position: Vector) = world.addWorldObject("Ship_Navy_$type", "Navy", "Navy Group", position)
+
+    val navyIndefatigableObjectID = addNavyShip("ManOWar", Vector(-37.017784f, -367.28308f))
+    val navyVigilantObjectID = addNavyShip("Frigate", Vector(-82.0263f, -534.1063f))
+    val navyOrionObjectID = addNavyShip("Frigate", Vector(6.550687f, -537.5786f))
+    val navyMercyObjectID = addNavyShip("Tender", Vector(-32.974262f, -488.50842f))
+
+    val pirateGroupNames = (1..3).map { "Pirate Group $it" }
+
+    fun addPirateShip(type: String, pirateIndex: Int, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Pirate_$type",
+        piratePlayerNames[pirateIndex],
+        pirateGroupNames[pirateIndex],
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val pirateBanditObjectID = addPirateShip("Schooner", 0, Vector(280.05725f, -812.63794f), 0.743155f, 0.66912f)
+    val pirateThugObjectID = addPirateShip("Schooner", 0, Vector(235.67952f, -866.5217f), 0.743162f, 0.669111f)
+    val pirateThiefObjectID = addPirateShip("Sloop", 0, Vector(277.65533f, -867.0646f), 0.743155f, 0.66912f)
+    val pirateAngerObjectID = addPirateShip("Schooner", 1, Vector(-474.19662f, -394.14484f), 0.104521f, -0.994523f)
+    val pirateGreedObjectID = addPirateShip("Schooner", 1, Vector(-505.2382f, -338.7469f), 0.104521f, -0.994523f)
+    val pirateAvariceObjectID = addPirateShip("Sloop", 1, Vector(-516.23956f, -418.03607f), 0.104524f, -0.994522f)
+    val pirateLuckyMareObjectID = addPirateShip("Carrack", 2, Vector(-93.17375f, 165.47351f), -0.999848f, 0.017456f)
+    val pirateOlSauceObjectID = addPirateShip("Barque", 2, Vector(38.793118f, 159.08534f), -0.999848f, 0.017452f)
 
     fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
         world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
@@ -101,32 +123,6 @@ fun ambush() {
     addIsland("Island05", Vector(54.496758f, -809.59644f))
     addIsland("Island_Small01", Vector(123.868034f, -709.05774f))
     addIsland("Island_Small01", Vector(-260.3556f, -345.9f))
-
-    fun addNavyShip(type: String, position: Vector) = world.addWorldObject("Ship_Navy_$type", "Navy", "Navy Group", position)
-
-    val navyIndefatigableObjectID = addNavyShip("ManOWar", Vector(-37.017784f, -367.28308f))
-    val navyVigilantObjectID = addNavyShip("Frigate", Vector(-82.0263f, -534.1063f))
-    val navyOrionObjectID = addNavyShip("Frigate", Vector(6.550687f, -537.5786f))
-    val navyMercyObjectID = addNavyShip("Tender", Vector(-32.974262f, -488.50842f))
-
-    val pirateGroupNames = (1..3).map { "Pirate Group $it" }
-
-    fun addPirateShip(type: String, pirateIndex: Int, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
-        "Ship_Pirate_$type",
-        piratePlayerNames[pirateIndex],
-        pirateGroupNames[pirateIndex],
-        position,
-        Matrix.rotationZ(xx, yx)
-    )
-
-    val pirateBanditObjectID = addPirateShip("Schooner", 0, Vector(280.05725f, -812.63794f), 0.743155f, 0.66912f)
-    val pirateThugObjectID = addPirateShip("Schooner", 0, Vector(235.67952f, -866.5217f), 0.743162f, 0.669111f)
-    val pirateThiefObjectID = addPirateShip("Sloop", 0, Vector(277.65533f, -867.0646f), 0.743155f, 0.66912f)
-    val pirateAngerObjectID = addPirateShip("Schooner", 1, Vector(-474.19662f, -394.14484f), 0.104521f, -0.994523f)
-    val pirateGreedObjectID = addPirateShip("Schooner", 1, Vector(-505.2382f, -338.7469f), 0.104521f, -0.994523f)
-    val pirateAvariceObjectID = addPirateShip("Sloop", 1, Vector(-516.23956f, -418.03607f), 0.104524f, -0.994522f)
-    val pirateLuckyMareObjectID = addPirateShip("Carrack", 2, Vector(-93.17375f, 165.47351f), -0.999848f, 0.017456f)
-    val pirateOlSauceObjectID = addPirateShip("Barque", 2, Vector(38.793118f, 159.08534f), -0.999848f, 0.017452f)
 
     world.addWaypointPath(World.createWaypointPath(
         "Tender Path",
@@ -156,7 +152,7 @@ fun ambush() {
         Coord(-676.08154f, 877.9552f)
     ))
 
-    navyAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+    world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(navyPlayerIndex, navyBasePlayerIndex))
     pirateAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
 
     fun createSetupNavyShipAction(objectID: Int, shipName: String, stance: Stance, primaryShip: Boolean, crewSkill: Skill, displayNameID: String) = World.createSetupShipAction(
@@ -218,17 +214,17 @@ fun ambush() {
     )
 
     addWorldRule(
-        "Pirate Win",
-        arrayOf(World.createTeamCaptureGroupShipCondition(pirateTeamID, "RLS Mercy" of "Navy Group")),
-        World.createTeamWinsAction(pirateTeamID),
-        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_AMBUSH_VICTORYMERCYCAPTURED", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PIRATEDEFEAT", true)
-    )
-
-    addWorldRule(
         "Navy Win 2",
         pirateGroupNames.map { World.createGroupDestroyedCondition(it) }.toTypedArray(),
         World.createTeamWinsAction(navyTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Pirate Win",
+        arrayOf(World.createTeamCaptureGroupCondition(pirateTeamID, "RLS Mercy" of "Navy Group")),
+        World.createTeamWinsAction(pirateTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_AMBUSH_VICTORYMERCYCAPTURED", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PIRATEDEFEAT", true)
     )
 
     addWorldRule(
@@ -731,6 +727,13 @@ fun border() {
     )
 
     addWorldRule(
+        "Navy Win 2",
+        World.createTeamCaptureGroupCondition(navyTeamID, "Procyon Base Group"),
+        World.createTeamWinsAction(navyTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
+    )
+
+    addWorldRule(
         "Procyon Win 1",
         World.createGroupVitalSectionDamageCondition("Navy Base Group", VitalSection.MISSION, Equivalence.EQUAL_TO, 1f),
         World.createTeamWinsAction(procyonTeamID),
@@ -738,15 +741,8 @@ fun border() {
     )
 
     addWorldRule(
-        "Navy Win 2",
-        World.createTeamCaptureGroupShipCondition(navyTeamID, "Procyon Base Group"),
-        World.createTeamWinsAction(navyTeamID),
-        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
-    )
-
-    addWorldRule(
         "Procyon Win 2",
-        World.createTeamCaptureGroupShipCondition(procyonTeamID, "Navy Base Group"),
+        World.createTeamCaptureGroupCondition(procyonTeamID, "Navy Base Group"),
         World.createTeamWinsAction(procyonTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
     )
@@ -1316,7 +1312,7 @@ fun convoy() {
     fun addNavyDestroysConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Navy Destroys Convoy ${convoyIndex + 1} Ship",
         true,
-        World.createTeamDestroyGroupShipCondition(navyTeamID, convoyGroupNames[convoyIndex]),
+        World.createTeamDestroyGroupCondition(navyTeamID, convoyGroupNames[convoyIndex]),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
@@ -1327,7 +1323,7 @@ fun convoy() {
     fun addPiratesDestroyConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Pirates Destroy Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createTeamDestroyGroupShipCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
+        World.createTeamDestroyGroupCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
@@ -1338,7 +1334,7 @@ fun convoy() {
     fun addPiratesCaptureConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Pirates Capture Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createTeamCaptureGroupShipCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
+        World.createTeamCaptureGroupCondition(pirateTeamID, convoyGroupNames[convoyIndex]),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
@@ -2201,7 +2197,7 @@ fun mousetrap() {
 
     addWorldRule(
         "Procyon Win 2",
-        World.createTeamCaptureGroupShipCondition(procyonTeamID, "Pirate Base Group"),
+        World.createTeamCaptureGroupCondition(procyonTeamID, "Pirate Base Group"),
         World.createTeamWinsAction(procyonTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
     )
@@ -2516,6 +2512,13 @@ fun rover() {
     )
 
     addWorldRule(
+        "Navy Win 2",
+        World.createTeamCaptureGroupCondition(navyTeamID, "Pirate Base Group"),
+        World.createTeamWinsAction(navyTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
+    )
+
+    addWorldRule(
         "Pirate Win 1",
         World.createGroupVitalSectionDamageCondition("Navy Base Group", VitalSection.MISSION, Equivalence.EQUAL_TO, 1f),
         World.createTeamWinsAction(pirateTeamID),
@@ -2523,15 +2526,8 @@ fun rover() {
     )
 
     addWorldRule(
-        "Navy Win 2",
-        World.createTeamCaptureGroupShipCondition(navyTeamID, "Pirate Base Group"),
-        World.createTeamWinsAction(navyTeamID),
-        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
-    )
-
-    addWorldRule(
         "Pirate Win 2",
-        World.createTeamCaptureGroupShipCondition(pirateTeamID, "Navy Base Group"),
+        World.createTeamCaptureGroupCondition(pirateTeamID, "Navy Base Group"),
         World.createTeamWinsAction(pirateTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_WON", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PIRATEDEFEAT", true)
     )
