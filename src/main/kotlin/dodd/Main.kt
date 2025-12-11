@@ -18,7 +18,7 @@ fun ambush() {
         "IDGS_TPWORLDDESCRIPTION_MP_AMBUSH",
         Vector(2000f, 2000f, 750f),
         19,
-        Color(0f, 0f, 0f),
+        Color.black,
         Vector.dir(0.560588f, 0.529329f, -0.63683f),
         Color(0.4157f, 0.451f, 0.8667f),
         Color.white,
@@ -35,8 +35,6 @@ fun ambush() {
     val navyTeamIndex = world.addTeam(World.createTeam(navyTeamID, Faction.NAVY, false))
     val pirateTeamIndex = world.addTeam(World.createTeam(pirateTeamID, Faction.PIRATE, false))
 
-    val piratePlayerNames = (1..3).map { "Pirate $it" }
-
     val navyPlayerIndex = world.addPlayer(
         "Navy",
         navyTeamIndex,
@@ -48,6 +46,8 @@ fun ambush() {
     )
 
     val pirateAllianceIndices = mutableListOf<Int>()
+
+    val piratePlayerNames = (1..3).map { "Pirate $it" }
 
     fun addPiratePlayer(pirateIndex: Int, color: Color, start: Vector, direction: Vector) {
         pirateAllianceIndices.add(world.addPlayer(piratePlayerNames[pirateIndex], pirateTeamIndex, color, start, direction, Faction.PIRATE, Formation.NONE))
@@ -196,9 +196,9 @@ fun ambush() {
         createSetupPirateShipAction(pirateAvariceObjectID, "Avarice", Stance.AGGRESSIVE, 1, false, "IDGS_TPSHIPNAMEPIRATE00_NYMPH"),
         createSetupPirateShipAction(pirateLuckyMareObjectID, "The Lucky Mare", Stance.DEFAULT, 2, true, "IDGS_TPCAMPAIGNSHIPNAMES01_THE_CLAW"),
         createSetupPirateShipAction(pirateOlSauceObjectID, "Ol' Sauce", Stance.DEFAULT, 2, false, "IDGS_TPSHIPNAMEPIRATE00_CALSHOTSPIT"),
+        World.createGroupFollowPathAction("RLS Mercy" of "Navy Group", "Tender Path", FollowMode.TO_END, true),
         World.createSetupTeamObjectiveAction(navyTeamID, "Navy Objective Point", "Navy Objective"),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
-        World.createGroupFollowPathAction("RLS Mercy" of "Navy Group", "Tender Path", FollowMode.TO_END, true),
         World.createPlayMusicAction("BTL_DeadlyPirate_Full02", 0.8f, 2f, 2f, true)
     ))
 
@@ -1084,7 +1084,7 @@ fun convoy() {
 
     pirateAllianceIndices.add(pirateBasePlayerIndex)
 
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-387.71265f, -736.7732f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-387.71265f, -736.7732f)))
 
     val etheriumCurrentObjectIDs = mutableListOf<Int>()
 
@@ -1717,7 +1717,7 @@ fun diablo() {
     addPlayer(7, Color(0f, 0f, 1f), Vector(-378.004f, 961.7678f), Vector.dir(0.999634f, -0.027063f))
     addPlayer(8, Color(0.9059f, 0.5373f, 0.0392f), Vector(362.05246f, 1006.83997f), Vector.dir(-0.98992f, 0.141626f))
 
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-1352.0924f, 265.17676f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-1352.0924f, 265.17676f)))
 
     fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
         world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
@@ -1867,7 +1867,7 @@ fun dragon() {
     addPlayer(7, Color(0.502f, 0f, 0f), Vector(-552.6162f, -524.29443f), Vector.dir(0.616675f, 0.787218f))
     addPlayer(8, Color(0f, 0f, 1f), Vector(739.2843f, 4.082199f), Vector.dir(-0.998379f, -0.056907f))
 
-    val asteroidPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-189.3843f, -391.80975f)))
+    val asteroidPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-189.3843f, -391.80975f)))
     val dragonPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Dragons", Color.white, Vector(73.16046f, 97.105835f), Vector.dir(0.377298f, -0.926092f)))
 
     fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
@@ -2040,7 +2040,7 @@ fun mousetrap() {
         Color.white,
         Vector(-7.950306f, 1013.2767f)
     )))
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-741.1809f, 253.76825f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-741.1809f, 253.76825f)))
 
     fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
         world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
@@ -3016,7 +3016,7 @@ fun zemyatin() {
     addPlayer(3, Color(0.502f, 0.502f, 0f), Vector(284.3098f, -284.89603f), Vector.dir(-0.755651f, 0.654975f))
     addPlayer(4, Color(1f, 1f, 0f), Vector(-281.1714f, -377.8817f), Vector.dir(0.753918f, 0.656969f))
 
-    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.black, Vector(-145.1806f, -362.53516f)))
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-145.1806f, -362.53516f)))
 
     world.addWorldObject("Terrain_BlackHole_Small", null, "Black Hole Group", Vector(1.800463f, -2.546509f))
 
@@ -3080,8 +3080,8 @@ fun test() {
 
 fun main() {
     //ambush()
-    bayles()
-    //iron()
+    //bayles()
+    iron()
     //locusts()
     //storm()
     //maw()

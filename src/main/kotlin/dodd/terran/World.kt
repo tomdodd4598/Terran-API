@@ -764,6 +764,13 @@ class World(private val game: Game, val root: RootNode) {
             meteorEffect = meteorEffect
         )
 
+        fun createSetEffectEventStateAction(pointSetName: String, eventEffect: String, state: Boolean) = ActionNode(
+            "Type" to "Create/Release Event Effect".node,
+            "Point Set" to pointSetName.node,
+            "Effect Name" to eventEffect.node,
+            "Boolean State" to state.stringNode()
+        )
+
         fun createSetGroupOwnerAction(groupName: String, ownerName: String) = ActionNode(
             "Type" to "Set Group/Unit Owner".node,
             "Group/Unit Name" to groupName.node,
@@ -861,6 +868,10 @@ class World(private val game: Game, val root: RootNode) {
         fun createTeamWinsAction(teamID: String) = ActionNode(
             "Type" to "Team X Wins".node,
             "Team Name" to teamID.node
+        )
+
+        fun createRemainingTeamWinsAction() = ActionNode(
+            "Type" to "Remaining Team Wins".node
         )
 
         fun createEndGameAction(winMessageID: String?, loseMessageID: String?, showStats: Boolean) = ActionNode(

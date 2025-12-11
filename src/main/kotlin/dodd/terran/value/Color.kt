@@ -5,7 +5,8 @@ import dodd.terran.util.Helpers.clean
 data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float = 1f) {
 
     companion object {
-        val black get() = Color(0f, 0f, 0f, 0f)
+        val none get() = Color(0f, 0f, 0f, 0f)
+        val black get() = Color(0f, 0f, 0f)
         val white get() = Color(1f, 1f, 1f)
         val red get() = Color(1f, 0f, 0f)
         val green get() = Color(0f, 1f, 0f)
