@@ -374,7 +374,7 @@ class World(private val game: Game, val root: RootNode) {
             )
         )
 
-        fun createSkirmishCompleteWorldRule(ruleName: String) = createStandardGameCompleteWorldRule(ruleName, createSkirmishCompleteCondition())
+        fun createSkirmishGameCompleteWorldRule(ruleName: String) = createStandardGameCompleteWorldRule(ruleName, createSkirmishGameCompleteCondition())
 
         fun createTeamGameCompleteWorldRule(ruleName: String) = createStandardGameCompleteWorldRule(ruleName, createTeamGameCompleteCondition())
 
@@ -382,7 +382,7 @@ class World(private val game: Game, val root: RootNode) {
             "Type" to "World Initialize".node
         )
 
-        fun createSkirmishCompleteCondition() = ConditionNode(
+        fun createSkirmishGameCompleteCondition() = ConditionNode(
             "Type" to "Skirmish Game Complete".node
         )
 

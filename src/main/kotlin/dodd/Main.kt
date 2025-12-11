@@ -653,16 +653,7 @@ fun iron() {
         World.createPlayMusicAction("BTL_Ironclad_FirstEncountr", 0.7f, 2f, 2f, true)
     ))
 
-    world.addWorldRule(World.createWorldRule(
-        "End",
-        runOnce = true,
-        isActive = true,
-        ConditionListNode(World.createTeamGameCompleteCondition()),
-        ActionListNode(
-            World.createRemainingTeamWinsAction(),
-            World.createEndGameAction(null, null, true)
-        )
-    ))
+    world.addWorldRule(World.createTeamGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
@@ -677,7 +668,7 @@ fun locusts() {
 }
 
 fun storm() {
-
+    
 }
 
 fun maw() {
@@ -1990,7 +1981,7 @@ fun diablo() {
         World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
-    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+    world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
@@ -2138,7 +2129,7 @@ fun dragon() {
         World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
     ))
-    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+    world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
@@ -3142,7 +3133,7 @@ fun shadow() {
         World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
     ))
-    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+    world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
@@ -3203,7 +3194,7 @@ fun zemyatin() {
         World.createSetObjectiveTaskStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f)
     ))
-    world.addWorldRule(World.createSkirmishCompleteWorldRule("End"))
+    world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
 
