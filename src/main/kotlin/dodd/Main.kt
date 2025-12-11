@@ -509,7 +509,167 @@ fun bayles() {
 }
 
 fun iron() {
+    val world = World.create(
+        game,
+        "Iron War",
+        "IDGS_TPWORLDNAMES_MP_IRON_WAR",
+        "IDGS_TPWORLDDESCRIPTION_MP_IRONWAR",
+        Vector(2000f, 2000f, 1000f),
+        11,
+        Color.black,
+        Vector.dir(0.426732f, 0.699369f, -0.573396f),
+        Color(0.305882f, 0.384314f, 0.654902f),
+        Color(0.862745f, 0.980392f, 0.968627f),
+        "Map_Ironwar",
+        mustAssembleFleet = false,
+        canAssembleFleet = false,
+        allianceChangeAllowed = false,
+        randomSeed = 573775550
+    )
 
+    val navyTeamID = "IDGS_TPTEAMNAMES_NAVY"
+    val ironcladTeamID = "IDGS_TPTEAMNAMES_IRONCLAD"
+
+    val navyTeamIndex = world.addTeam(World.createTeam(navyTeamID, Faction.NAVY, false))
+    val ironcladTeamIndex = world.addTeam(World.createTeam(ironcladTeamID, Faction.PROCYON, false))
+
+    val navyAllianceIndices = mutableListOf<Int>()
+
+    val navyPlayerNames = (1..2).map { "Navy $it" }
+
+    fun addNavyPlayer(navyIndex: Int, color: Color, start: Vector) {
+        navyAllianceIndices.add(world.addPlayer(navyPlayerNames[navyIndex], navyTeamIndex, color, start, Vector.east, Faction.NAVY, Formation.NONE))
+    }
+
+    addNavyPlayer(0, Color(0f, 0f, 1f), Vector(-468.2505f, -357.3807f))
+    addNavyPlayer(1, Color(0f, 1f, 1f), Vector(255.32845f, 467.56085f))
+
+    world.addPlayer(
+        "Ironclad",
+        ironcladTeamIndex,
+        Color.white,
+        Vector(-10.676769f, -19.348145f),
+        Vector.east,
+        Faction.PROCYON,
+        Formation.NONE
+    )
+
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-138.88509f, -93.291504f)))
+
+    val navyGroupNames = (1..2).map { "Navy Group $it" }
+
+    fun addNavyShip(type: String, navyIndex: Int, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Navy_$type",
+        navyPlayerNames[navyIndex],
+        navyGroupNames[navyIndex],
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val navyNavajoObjectID = addNavyShip("FastFrigate", 0, Vector(-333.05264f, -237.07819f), 0.788011f, -0.615662f)
+    val navyHornetObjectID = addNavyShip("Torpedo", 0, Vector(-381.87134f, -212.91205f), 0.766051f, -0.642779f)
+    val navyWaspObjectID = addNavyShip("Torpedo", 0, Vector(-300.03387f, -254.9996f), 0.754717f, -0.656051f)
+    val navyHoodObjectID = addNavyShip("Frigate", 1, Vector(260.49048f, 391.18576f), -0.89879f, 0.438379f)
+    val navyDukeOfYorkObjectID = addNavyShip("Frigate", 1, Vector(291.2726f, 358.06686f), -0.89879f, 0.438379f)
+
+    val ironcladDarknessObjectID = world.addWorldObject(
+        "Ship_Procyon_Dreadnought",
+        "Ironclad",
+        "Ironclad Group",
+        Vector(0.847784f, 2.419591f),
+        Matrix.rotationZ(0.984808f, -0.173648f)
+    )
+
+    fun addIsland(typeID: String, position: Vector) {
+        world.addWorldObject(typeID, null, "Island Group", position)
+    }
+
+    addIsland("Island_Med01", Vector(829.5827f, -338.08142f))
+    addIsland("Island_Med02", Vector(48.993507f, -605.9249f))
+    addIsland("Island_Med03", Vector(-675.1103f, 496.51025f))
+
+    fun addAsteroid(size: String, position: Vector) {
+        world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
+    }
+
+    addAsteroid("Huge", Vector(-221.30128f, -307.3155f, -0.000061f))
+    addAsteroid("Huge", Vector(-442.7389f, 15.53186f))
+    addAsteroid("Large", Vector(-386.45132f, 336.6537f))
+    addAsteroid("Med", Vector(263.90137f, 527.53174f))
+    addAsteroid("Med", Vector(324.21765f, -278.34222f))
+    addAsteroid("Small", Vector(256.43393f, 120.95288f))
+    addAsteroid("Small", Vector(-16.144932f, -292.76123f))
+    addAsteroid("Large", Vector(-147.52574f, 264.5056f, -0.000061f))
+    addAsteroid("Huge", Vector(-82.60037f, 645.9784f))
+    addAsteroid("Large", Vector(178.55927f, 119.70337f))
+    addAsteroid("Med", Vector(-357.9659f, -531.8562f))
+    addAsteroid("Med", Vector(-728.11115f, 284.97827f))
+    addAsteroid("Med", Vector(516.69055f, 409.89673f))
+    addAsteroid("Large", Vector(452.53918f, -142.5028f))
+    addAsteroid("Huge", Vector(246.10722f, -349.27393f))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Moonfish Point Set",
+        World.createWorldPoint(5f, Vector(378.0064f, -126.73419f), 0f, Vector.north),
+        World.createWorldPoint(5f, Vector(236.81812f, -244.59381f), 0f, Vector.north)
+    ))
+
+    navyAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+
+    fun createSetupNavyShipAction(objectID: Int, shipName: String, navyIndex: Int, primaryShip: Boolean, skill: Skill, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        "RLS $shipName",
+        null,
+        FollowMode.TO_END,
+        Stance.DEFAULT,
+        navyPlayerNames[navyIndex],
+        primaryShip,
+        skill,
+        false,
+        displayNameID
+    )
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        createSetupNavyShipAction(navyNavajoObjectID, "Navajo", 0, true, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES01_RLS_STAR_FINDER"),
+        createSetupNavyShipAction(navyHornetObjectID, "Hornet", 0, false, Skill.AVERAGE, "IDGS_TPSHIPNAMENAVY00_GADFLY"),
+        createSetupNavyShipAction(navyWaspObjectID, "Wasp", 0, false, Skill.AVERAGE, "IDGS_TPCAMPAIGNSHIPNAMES00_RLS_SWIFT"),
+        createSetupNavyShipAction(navyHoodObjectID, "Hood", 1, true, Skill.AVERAGE, "IDGS_TPSHIPNAMENAVY01_FREJA"),
+        createSetupNavyShipAction(navyDukeOfYorkObjectID, "Duke of York", 1, false, Skill.AVERAGE, "IDGS_TPSHIPNAMENAVY01_LEXINGTON"),
+        World.createSetupShipAction(
+            ironcladDarknessObjectID,
+            "Darkness",
+            null,
+            FollowMode.TO_END,
+            Stance.DEFAULT,
+            "Ironclad",
+            true,
+            Skill.ELITE,
+            false,
+            "IDGS_TPSHIPNAMEPROCYON01_OBLITERATION"
+        ),
+        World.createSetEffectEventStateAction("Moonfish Point Set", "MoonFish", true),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createPlayMusicAction("BTL_Ironclad_FirstEncountr", 0.7f, 2f, 2f, true)
+    ))
+
+    world.addWorldRule(World.createWorldRule(
+        "End",
+        runOnce = true,
+        isActive = true,
+        ConditionListNode(World.createTeamGameCompleteCondition()),
+        ActionListNode(
+            World.createRemainingTeamWinsAction(),
+            World.createEndGameAction(null, null, true)
+        )
+    ))
+
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+
+    world.addMapText(World.createMapText("Island 1", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLE_WAYWARD", Vector(-686.2091f, 509.53162f)))
+    world.addMapText(World.createMapText("Island 2", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLE_SENTINEL", Vector(50.074753f, -610.15906f)))
+
+    println(world.build())
 }
 
 fun locusts() {
