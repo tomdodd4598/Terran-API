@@ -668,7 +668,207 @@ fun locusts() {
 }
 
 fun storm() {
-    
+    val world = World.create(
+        game,
+        "Storm Front",
+        "IDGS_TPWORLDNAMES_MP_STORM_FRONT",
+        "IDGS_TPWORLDDESCRIPTION_MP_STORMFRONT",
+        Vector(1650f, 1650f, 750f),
+        23,
+        Color(0.145098f, 0.145098f, 0.145098f),
+        Vector.dir(0.66811f, 0.486948f, -0.562593f),
+        Color(0.45098f, 0.219608f, 0.141176f),
+        Color(0.909804f, 0.894118f, 0.756863f),
+        "Map_StormFront",
+        mustAssembleFleet = false,
+        canAssembleFleet = false,
+        allianceChangeAllowed = false,
+        randomSeed = 1719328701,
+        bufferSize = 200f
+    )
+
+    val pirateTeamID = "IDGS_TPTEAMNAMES_PRIVATEERS"
+    val procyonTeamID = "IDGS_TPTEAMNAMES_GUARDFLEET_ZETA"
+
+    val pirateTeamIndex = world.addTeam(World.createTeam(pirateTeamID, Faction.PIRATE, true))
+    val procyonTeamIndex = world.addTeam(World.createTeam(procyonTeamID, Faction.PROCYON, true))
+
+    world.addPlayer(
+        "Pirate",
+        pirateTeamIndex,
+        Color.red,
+        Vector(33.878906f, -94.72002f),
+        Vector.east,
+        Faction.PIRATE,
+        Formation.NONE
+    )
+
+    world.addPlayer(
+        "Procyon",
+        procyonTeamIndex,
+        Color(0f, 0.501961f, 0f),
+        Vector(-145.8836f, 1258.7124f),
+        Vector.dir(0.382899f, -0.92379f),
+        Faction.PROCYON,
+        Formation.DIAGONAL_V
+    )
+
+    val stormObjectID = world.addWorldObject("Terrain_Nebula", null, "Storm Group", Vector(-720.774f, 540.88257f))
+
+    fun addPirateShip(type: String, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Pirate_$type",
+        "Pirate",
+        "Pirate Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val pirateSaucyLambObjectID = addPirateShip("Carrack", Vector(188.27606f, 436.27307f), -0.913546f, -0.406737f)
+    val pirateBadDebtObjectID = addPirateShip("Schooner", Vector(100.12312f, 435.0612f), -0.874621f, -0.48481f)
+    val piratePayoffObjectID = addPirateShip("FastAttack", Vector(191.04901f, 530.32007f), -0.819152f, -0.573577f)
+    val pirateSecretCacheObjectID = addPirateShip("Tender", Vector(272.4764f, 290.35193f), -0.874621f, -0.48481f)
+
+    fun addProcyonShip(type: String, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_Procyon_$type",
+        "Procyon",
+        "Procyon Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val procyonBearObjectID = addProcyonShip("Frigate", Vector(-29.622126f, 994.67377f), -0.984809f, -0.173651f)
+    val procyonCubObjectID = addProcyonShip("Cutter", Vector(-60.19205f, 919.98517f), -0.984809f, -0.173647f)
+    val procyonWolverineObjectID = addProcyonShip("Frigate", Vector(-121.93909f, 975.30035f), -0.984809f, -0.173648f)
+
+    fun addIsland(typeID: String, position: Vector, rotation: Matrix = Matrix.identity) {
+        world.addWorldObject(typeID, null, "Island Group", position, rotation)
+    }
+
+    addIsland("Island_Med09", Vector(584.48676f, -1019.26245f))
+    addIsland("Island_Med08", Vector(92.7757f, -709.64056f))
+    addIsland("Island_Med05", Vector(149.99246f, -1017.9137f))
+    addIsland("Island_Med04", Vector(-439.46048f, -811.04346f), Matrix.rotationZ(0.258819f, 0.965926f))
+    addIsland("Island03", Vector(150.52757f, -255.07338f), Matrix.rotationZ(0.5f, -0.866026f))
+    addIsland("Island03", Vector(320.6761f, -577.92975f), Matrix.rotationZ(-0.052336f, 0.99863f))
+    addIsland("Island02", Vector(760.0121f, -673.8702f))
+    addIsland("Island04", Vector(471.5136f, -459.74487f))
+    addIsland("Island08", Vector(96.13432f, -405.50537f))
+    addIsland("Island09", Vector(-242.1813f, -432.31738f))
+    addIsland("Island_Icy_02", Vector(371.27374f, 1263.8392f), Matrix.rotationZ(0.406737f, -0.913546f))
+    addIsland("Island_Icy_03", Vector(161.66382f, 1066.266f))
+    addIsland("Island_Icy_04", Vector(-718.5585f, 1384.5332f))
+    addIsland("Island_Icy_05", Vector(-519.08875f, 1196.6395f))
+    addIsland("Island_Rocky_05", Vector(-803.60565f, 553.5875f))
+    addIsland("Island_Rocky_07", Vector(358.612f, 481.42902f), Matrix(
+        0.011218f, -0.013369f, 0.999848f,
+        -0.766045f, -0.642788f, 0f,
+        0.642691f, -0.765929f, -0.017452f
+    ))
+    addIsland("Island_Rocky_03", Vector(-29.098846f, 226.99219f))
+    addIsland("Island_Rocky_02", Vector(770.8585f, 495.2661f))
+    addIsland("Island_Rocky_07", Vector(1155.3082f, -136.4708f), Matrix(
+        -0.008193f, -0.01541f, 0.999848f,
+        -0.882948f, 0.469472f, 0f,
+        -0.4694f, -0.882814f, -0.017452f
+    ))
+    addIsland("Island07", Vector(161.71114f, -51.878784f))
+    addIsland("Island02", Vector(386.8197f, -10.733765f))
+    addIsland("Island01", Vector(186.1735f, 162.52655f))
+    addIsland("Island05", Vector(585.2361f, -292.45703f))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Storm Path",
+        Vector(-694.9094f, 109.89767f),
+        Vector(-360.592f, 435.21634f, -0.000122f),
+        Vector(868.4917f, 381.45828f, -0.000122f),
+        Vector(1180.6327f, 176.01117f, -0.000122f),
+        Vector(1350.543f, -112.174225f, -0.000122f),
+        Vector(1279.1534f, -739.0027f, -0.000122f),
+        Vector(649.10144f, -1167.1581f),
+        Vector(-239.78372f, -1133.293f),
+        Vector(-702.20715f, -752.4786f),
+        Vector(-732.33215f, -134.16864f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "Storm Polygon",
+        Coord(-365.12756f, 569.05646f),
+        Coord(-532.56586f, 608.2227f),
+        Coord(-696.76245f, 564.9065f),
+        Coord(-818.92725f, 440.77774f),
+        Coord(-870.7406f, 276.02472f),
+        Coord(-824.0992f, 106.2934f),
+        Coord(-696.8761f, -17.135042f),
+        Coord(-514.34375f, -61.09938f),
+        Coord(-355.68826f, -22.32017f),
+        Coord(-236.07735f, 108.24102f),
+        Coord(-193.68423f, 278.9006f),
+        Coord(-235.72902f, 450.731f)
+    ))
+
+    world.addWorldPointSet(World.createWorldPointSet(
+        "Storm Point Set",
+        World.createWorldPoint(330.19998f, Vector(-530.1732f, 274.45404f), 0f, Vector.north)
+    ))
+
+    fun createSetupPirateShipAction(objectID: Int, shipName: String, stance: Stance, primaryShip: Boolean, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        shipName,
+        null,
+        FollowMode.TO_END,
+        stance,
+        "Pirate",
+        primaryShip,
+        Skill.ELITE,
+        true,
+        displayNameID
+    )
+
+    fun createSetupProcyonShipAction(objectID: Int, shipName: String, primaryShip: Boolean, crewSkill: Skill, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        "PSR $shipName",
+        null,
+        FollowMode.TO_END,
+        Stance.DEFAULT,
+        "Procyon",
+        primaryShip,
+        crewSkill,
+        true,
+        displayNameID
+    )
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        World.createSetupSolarStormAction(
+            stormObjectID,
+            "Storm Weather",
+            "Storm Polygon",
+            "Storm Point Set",
+            2f,
+            15f,
+            2f,
+            455f
+        ),
+        createSetupPirateShipAction(pirateSaucyLambObjectID, "The Saucy Lamb", Stance.AGGRESSIVE, true, "IDGS_TPSHIPNAMEPIRATE00_SAUCYMARE"),
+        createSetupPirateShipAction(pirateBadDebtObjectID, "Bad Debt", Stance.AGGRESSIVE, false, "IDGS_TPSHIPNAMEPIRATE00_MONGOOSE"),
+        createSetupPirateShipAction(piratePayoffObjectID, "Payoff", Stance.DEFAULT, false, "IDGS_TPSHIPNAMEPIRATE00_FERRET"),
+        createSetupPirateShipAction(pirateSecretCacheObjectID, "Secret Cache", Stance.DEFAULT, false, "IDGS_TPSHIPNAMEPIRATE00_THELUCKYBREAK"),
+        createSetupProcyonShipAction(procyonBearObjectID, "Bear", true, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_SMOKEEAGLE"),
+        createSetupProcyonShipAction(procyonCubObjectID, "Cub", false, Skill.ELITE, "IDGS_TPSHIPNAMEPROCYON00_FIREWYVERN"),
+        createSetupProcyonShipAction(procyonWolverineObjectID, "Wolverine", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_SNOWBOAR"),
+        World.createGroupFollowPathAction("Storm Group", "Storm Path", FollowMode.LOOP, false),
+        World.createSetGroupSpeedAction("Storm Group", 10),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createPlayMusicAction("BTL_Escape_Full", 0.6f, 2f, 2f, true)
+    ))
+
+    world.addWorldRule(World.createTeamGameCompleteWorldRule("End"))
+
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+
+    world.addMapText(World.createMapText("Islands", "IDGS_TPMAPTEXTITEMS_GENERAL_ISLAND_CARLTON", Vector(150.10748f, -255.39941f)))
+
+    println(world.build())
 }
 
 fun maw() {
