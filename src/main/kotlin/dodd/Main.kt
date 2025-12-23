@@ -279,6 +279,7 @@ fun bayles() {
         Faction.NAVY,
         Formation.NONE
     )
+
     world.addPlayer(
         "Procyon",
         procyonTeamIndex,
@@ -872,7 +873,279 @@ fun storm() {
 }
 
 fun maw() {
+    val world = World.create(
+        game,
+        "The Maw",
+        "IDGS_TPWORLDNAMES_SCEN_THE_MAW",
+        "IDGS_TPWORLDDESCRIPTION_HISTORICAL_SPIRAL_FIGHT",
+        Vector(1150f, 1150f, 1000f),
+        24,
+        Color(0.101961f, 0.101961f, 0.101961f),
+        Vector.dir(0.673678f, -0.506085f, -0.53855f),
+        Color(0.494118f, 0.160784f, 0.145098f),
+        Color(0.909804f, 0.894118f, 0.756863f),
+        "Map_TheMaw",
+        mustAssembleFleet = false,
+        canAssembleFleet = false,
+        allianceChangeAllowed = false,
+        randomSeed = 573775550,
+        bufferSize = 200f
+    )
 
+    val navyTeamID = "IDGS_TPTEAMNAMES_BATTLEFORCE_ALPHA"
+    val pirateTeamID = "IDGS_TPTEAMNAMES_FRASERS_RAIDERS"
+    val procyonTeamID = "IDGS_TPTEAMNAMES_ATTACKFORCE_GAMMA"
+
+    val navyTeamIndex = world.addTeam(World.createTeam(navyTeamID, Faction.NAVY, true))
+    val pirateTeamIndex = world.addTeam(World.createTeam(pirateTeamID, Faction.PIRATE, true))
+    val procyonTeamIndex = world.addTeam(World.createTeam(procyonTeamID, Faction.PROCYON, true))
+
+    world.addPlayer(
+        "Navy",
+        navyTeamIndex,
+        Color.blue,
+        Vector(171.27475f, -15.241333f),
+        Vector.east,
+        Faction.NAVY,
+        Formation.NONE
+    )
+
+    world.addPlayer(
+        "Pirate",
+        pirateTeamIndex,
+        Color.red,
+        Vector(-54.436554f, -208.52913f),
+        Vector.east,
+        Faction.PIRATE,
+        Formation.NONE
+    )
+
+    world.addPlayer(
+        "Procyon",
+        procyonTeamIndex,
+        Color(0f, 0.501961f, 0f),
+        Vector(-155.02231f, 137.2142f),
+        Vector.east,
+        Faction.PROCYON,
+        Formation.NONE
+    )
+
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-280.30908f, -192.3674f)))
+
+    world.addWorldObject("Terrain_BlackHole_Small", null, "Black Hole Group", Vector(-5.167107f, -4.384155f), Matrix.rotationZ(0.669131f, -0.743145f))
+
+    fun addNavyShip(type: String, position: Vector) = world.addWorldObject("Ship_Navy_$type", "Navy", "Navy Group", position, Matrix.rotationZ(0.920505f, 0.390732f))
+
+    val navyFearlessObjectID = addNavyShip("Frigate", Vector(333.56226f, 73.45115f))
+    val navyRalieghObjectID = addNavyShip("Cutter", Vector(311.10785f, 64.62161f))
+
+    fun addPirateShip(type: String, position: Vector) = world.addWorldObject("Ship_Pirate_$type", "Pirate", "Pirate Group", position, Matrix.rotationZ(0.669129f, -0.743146f))
+
+    val pirateMaryObjectID = addPirateShip("Carrack", Vector(-8.398717f, -369.69305f))
+    val pirateBitterEndObjectID = addPirateShip("Barque", Vector(5.820526f, -393.88364f))
+
+    fun addProcyonShip(type: String, position: Vector) = world.addWorldObject("Ship_Procyon_$type", "Procyon", "Procyon Group", position, Matrix.rotationZ(-0.809019f, 0.587782f))
+
+    val procyonVoraciousObjectID = addProcyonShip("Frigate", Vector(-284.5239f, 249.17653f))
+    val procyonHunterObjectID = addProcyonShip("Cutter", Vector(-255.93326f, 241.02425f))
+
+    val asteroidGroupNames = (1..8).map { "Asteroid Group $it" }
+
+    fun addAsteroid(size: String, asteroidIndex: Int, position: Vector, rotation: Matrix = Matrix.identity) {
+        world.addWorldObject("Asteroid_$size", "Asteroids", asteroidGroupNames[asteroidIndex], position, rotation)
+    }
+
+    addAsteroid("Small", 0, Vector(-245.83347f, 18.498962f, 14f))
+    addAsteroid("Small", 0, Vector(-260.6329f, 34.167053f, 14f))
+    addAsteroid("Small", 0, Vector(-225.40244f, 42.91101f))
+    addAsteroid("Med", 0, Vector(-222.66016f, 7.482361f, -16f))
+    addAsteroid("Med", 0, Vector(-260.84296f, 5.296143f, -18f))
+
+    addAsteroid("Small", 1, Vector(-16.639389f, 265.95724f, 5f))
+    addAsteroid("Small", 1, Vector(-31.814865f, 250.84848f, -0.000061f))
+    addAsteroid("Med", 1, Vector(-31.667694f, 228.6904f))
+    addAsteroid("Med", 1, Vector(5.16463f, 228.92274f, 9.999939f))
+    addAsteroid("Med", 1, Vector(13.671982f, 257.71994f, -13f))
+    addAsteroid("Small", 1, Vector(-11.603622f, 211.27335f))
+
+    addAsteroid("Small", 2, Vector(148.09058f, -188.24707f, -12f))
+    addAsteroid("Med", 2, Vector(173.51346f, -198.81921f, -0.000061f))
+    addAsteroid("Med", 2, Vector(133.983f, -229.89432f, 15f))
+    addAsteroid("Med", 2, Vector(123.346954f, -218.17966f))
+
+    addAsteroid("Large", 3, Vector(-68.264175f, -476.3786f))
+    addAsteroid("Large", 3, Vector(-94.351395f, -426.92398f, -0.000061f))
+    addAsteroid("Med", 3, Vector(-43.779804f, -424.32407f))
+    addAsteroid("Med", 3, Vector(-40.998188f, -454.05804f))
+    addAsteroid("Med", 3, Vector(-16.803127f, -446.48486f))
+
+    addAsteroid("Large", 4, Vector(284.29553f, 277.01404f, -17f))
+    addAsteroid("Large", 4, Vector(347.47272f, 205.85333f, 8f))
+    addAsteroid("Large", 4, Vector(349.28305f, 285.7912f, 7.000061f))
+    addAsteroid("Med", 4, Vector(328.2166f, 266.82452f))
+    addAsteroid("Med", 4, Vector(308.8933f, 341.92456f, 16f))
+
+    addAsteroid("Large", 5, Vector(-514.48065f, 231.05406f))
+    addAsteroid("Large", 5, Vector(-486.18954f, 170.99506f, 0.000061f))
+    addAsteroid("Large", 5, Vector(-466.53745f, 204.98016f, 9f))
+    addAsteroid("Med", 5, Vector(-490.51218f, 248.79242f, 30f))
+    addAsteroid("Med", 5, Vector(-532.6308f, 211.93448f, -41.00006f))
+    addAsteroid("Med", 5, Vector(-447.85654f, 146.85602f))
+
+    addAsteroid("Large", 6, Vector(-562.59753f, 531.99835f, 9f), Matrix(
+        0.669131f, 0.457513f, 0.585616f,
+        0f, 0.788024f, -0.615645f,
+        -0.743145f, 0.411947f, 0.527291f
+    ))
+    addAsteroid("Large", 6, Vector(-514.55536f, 504.6472f), Matrix(
+        0.368621f, 0.922627f, 0.11348f,
+        -0.714538f, 0.359314f, -0.600274f,
+        -0.594604f, 0.140188f, 0.791703f
+    ))
+    addAsteroid("Med", 6, Vector(-545.73285f, 465.94443f))
+    addAsteroid("Med", 6, Vector(-522.36285f, 578.9096f))
+    addAsteroid("Med", 6, Vector(-579.106f, 511.83603f))
+    addAsteroid("Small", 6, Vector(-526.8796f, 467.83603f))
+    addAsteroid("Small", 6, Vector(-545.36597f, 529.07f, -0.000061f))
+    addAsteroid("Small", 6, Vector(-542.48804f, 543.39386f))
+
+    addAsteroid("Large", 7, Vector(411.52527f, -335.25256f))
+    addAsteroid("Large", 7, Vector(438.19614f, -390.45206f, -11f))
+    addAsteroid("Large", 7, Vector(406.44214f, -434.36368f, 10f))
+    addAsteroid("Med", 7, Vector(423.09283f, -375.77188f, -49f))
+    addAsteroid("Med", 7, Vector(366.76328f, -388.8425f, 32f))
+    addAsteroid("Med", 7, Vector(400.23248f, -403.7036f))
+    addAsteroid("Small", 7, Vector(446.4912f, -343.7743f))
+    addAsteroid("Small", 7, Vector(382.5547f, -365.8341f))
+    addAsteroid("Small", 7, Vector(374.64612f, -422.72644f))
+
+    val asteroidPathNames = (1..3).map { "Asteroid Path $it" }
+
+    world.addWaypointPath(World.createWaypointPath(
+        asteroidPathNames[0],
+        Vector(-258.0177f, 36.921246f),
+        Vector(-204.77829f, 165.2793f),
+        Vector(-88.29352f, 238.12433f, 0.000061f),
+        Vector(42.48559f, 245.53998f),
+        Vector(149.3934f, 178.8623f),
+        Vector(205.24521f, 68.51184f),
+        Vector(239.69368f, -31.107277f, -0.000061f),
+        Vector(219.60321f, -129.51454f, -0.000061f),
+        Vector(165.60822f, -203.74469f),
+        Vector(83.76335f, -259.50095f),
+        Vector(-6.427283f, -278.59055f),
+        Vector(-99.38919f, -257.13525f),
+        Vector(-181.76872f, -182.55972f),
+        Vector(-236.50719f, -106.59235f),
+        Vector(-261.31628f, -39.18799f, -0.000061f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        asteroidPathNames[1],
+        Vector(32.36419f, -467.65924f),
+        Vector(-151.35712f, -427.39447f, 0.000061f),
+        Vector(-307.77948f, -266.75586f),
+        Vector(-417.69995f, -98.925354f),
+        Vector(-481.76645f, 181.14917f),
+        Vector(-412.10498f, 346.4646f),
+        Vector(-342.5958f, 455.8631f, -0.000061f),
+        Vector(-181.88686f, 518.0739f),
+        Vector(-35.681156f, 518.0739f),
+        Vector(132.20877f, 504.62897f, 0.000061f),
+        Vector(267.73297f, 427.79572f),
+        Vector(336.8289f, 270.75653f, 0.000061f),
+        Vector(398.70505f, 142.94258f),
+        Vector(406.46948f, -2.882034f, -0.000061f),
+        Vector(397.40353f, -117.85406f),
+        Vector(355.81644f, -252.52235f),
+        Vector(290.92233f, -356.90286f),
+        Vector(196.09282f, -433.64438f),
+        Vector(84.516975f, -466.64804f)
+    ))
+
+    world.addWaypointPath(World.createWaypointPath(
+        asteroidPathNames[2],
+        Vector(-393.1424f, 186.15668f),
+        Vector(-186.03502f, -90.92786f, -0.000061f),
+        Vector(-53.043415f, -233.82831f),
+        Vector(63.554543f, -317.25012f),
+        Vector(217.90758f, -411.30475f, -0.000061f),
+        Vector(361.9397f, -441.66904f, -0.000061f),
+        Vector(447.58002f, -368.81595f),
+        Vector(482.13718f, -285.25308f),
+        Vector(431.50693f, -178.73985f),
+        Vector(300.49573f, -68.149605f, -0.000061f),
+        Vector(134.96657f, 65.25079f, 0.000061f),
+        Vector(32.986004f, 145.19965f, -0.000061f),
+        Vector(-116.68325f, 302.69025f),
+        Vector(-293.94763f, 455.51422f, 0.000061f),
+        Vector(-450.87772f, 529.97394f, -0.000061f),
+        Vector(-527.33826f, 542.1608f, 0.000061f),
+        Vector(-554.3815f, 474.66498f),
+        Vector(-529.898f, 378.32916f),
+        Vector(-427.25177f, 231.8891f)
+    ))
+
+    fun createSetupAsteroidBeltAction(
+        asteroidGroupIndex: Int,
+        asteroidPathIndex: Int,
+        findClosestPoint: Boolean,
+        minVelocity: Float,
+        maxVelocity: Float,
+        minAngularVelocity: Float,
+        maxAngularVelocity: Float
+    ) = World.createSetupAsteroidBeltAction(
+        asteroidGroupNames[asteroidGroupIndex],
+        asteroidPathNames[asteroidPathIndex],
+        FollowMode.LOOP,
+        findClosestPoint,
+        minVelocity,
+        maxVelocity,
+        minAngularVelocity,
+        maxAngularVelocity
+    )
+
+    fun createSetupShipAction(objectID: Int, shipName: String, owningPlayerName: String, primaryShip: Boolean, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        shipName,
+        null,
+        FollowMode.TO_END,
+        Stance.AGGRESSIVE,
+        owningPlayerName,
+        primaryShip,
+        Skill.AVERAGE,
+        true,
+        displayNameID
+    )
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        createSetupAsteroidBeltAction(0, 0, true, 8f, 10f, 1f, 2f),
+        createSetupAsteroidBeltAction(1, 0, false, 10f, 10f, 0.2f, 0.5f),
+        createSetupAsteroidBeltAction(2, 0, true, 5f, 7f, 1f, 1.5f),
+        createSetupAsteroidBeltAction(3, 1, true, 13f, 15f, 1f, 3f),
+        createSetupAsteroidBeltAction(4, 1, true, 15f, 16f, 2f, 2f),
+        createSetupAsteroidBeltAction(5, 1, true, 15f, 18f, 0.5f, 1.2f),
+        createSetupAsteroidBeltAction(6, 2, true, 15.5f, 16f, 2f, 3f),
+        createSetupAsteroidBeltAction(7, 2, true, 16f, 16f, 0.5f, 1f),
+        createSetupShipAction(navyFearlessObjectID, "RLS Fearless", "Navy", true, "IDGS_TPSHIPNAMENAVY00_VICTORIOUS"),
+        createSetupShipAction(navyRalieghObjectID, "RLS Raliegh", "Navy", false, "IDGS_TPSHIPNAMENAVY00_ENDEAVOR"),
+        createSetupShipAction(pirateMaryObjectID, "Mary", "Pirate", true, "IDGS_TPSHIPNAMEPIRATE00_HIGHLANDCHIEF"),
+        createSetupShipAction(pirateBitterEndObjectID, "Bitter End", "Pirate", false, "IDGS_TPSHIPNAMEPIRATE00_SNAPDRAGON"),
+        createSetupShipAction(procyonVoraciousObjectID, "PSR Voracious", "Procyon", true, "IDGS_TPSHIPNAMEPROCYON00_DARKPRINCE"),
+        createSetupShipAction(procyonHunterObjectID, "PSR Hunter", "Procyon", false, "IDGS_TPSHIPNAMEPROCYON00_ARCTICFOX"),
+        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createPlayMusicAction("BTL_DeadlyPirate_BedSlow", 0.8f, 2f, 2f, true)
+    ))
+
+    world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
+
+    world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+
+    world.addMapText(World.createMapText("The Maw", "IDGS_TPMAPTEXTITEMS_HIST_SPIRAL_MAW", Vector(-22.287125f, 9.339111f)))
+    world.addMapText(World.createMapText("Asteroids", "IDGS_TPMAPTEXTITEMS_HIST_SPIRAL_BEWARE", Vector(-505.6413f, 234.52563f)))
+
+    println(world.build())
 }
 
 fun border() {
@@ -1837,7 +2110,8 @@ fun convoy() {
             "Asteroid Path",
             FollowMode.LOOP,
             true,
-            9f, 15f,
+            9f,
+            15f,
             0.2f,
             2f
         ),
