@@ -125,7 +125,7 @@ fun ambush() {
     addIsland("Island_Small01", Vector(-260.3556f, -345.9f))
 
     world.addWaypointPath(World.createWaypointPath(
-        "Tender Path",
+        "Mercy Path",
         Vector(-37.601906f, -414.15356f),
         Vector(-38.123005f, -230.88342f),
         Vector(-33.37357f, -30.091064f),
@@ -138,7 +138,7 @@ fun ambush() {
     ))
 
     world.addWorldPolygon(World.createWorldPolygon(
-        "Tender Safety Polygon",
+        "Mercy Safety Polygon",
         Coord(-473.25952f, 1065.8201f),
         Coord(-538.7452f, 1097.8164f),
         Coord(-588.1131f, 1103.9448f),
@@ -196,7 +196,7 @@ fun ambush() {
         createSetupPirateShipAction(pirateAvariceObjectID, "Avarice", Stance.AGGRESSIVE, 1, false, "IDGS_TPSHIPNAMEPIRATE00_NYMPH"),
         createSetupPirateShipAction(pirateLuckyMareObjectID, "The Lucky Mare", Stance.DEFAULT, 2, true, "IDGS_TPCAMPAIGNSHIPNAMES01_THE_CLAW"),
         createSetupPirateShipAction(pirateOlSauceObjectID, "Ol' Sauce", Stance.DEFAULT, 2, false, "IDGS_TPSHIPNAMEPIRATE00_CALSHOTSPIT"),
-        World.createGroupFollowPathAction("RLS Mercy" of "Navy Group", "Tender Path", FollowMode.TO_END, true),
+        World.createGroupFollowPathAction("RLS Mercy" of "Navy Group", "Mercy Path", FollowMode.TO_END, true),
         World.createSetupTeamObjectiveAction(navyTeamID, "Navy Objective Point", "Navy Objective"),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
         World.createPlayMusicAction("BTL_DeadlyPirate_Full02", 0.8f, 2f, 2f, true)
@@ -208,7 +208,7 @@ fun ambush() {
 
     addWorldRule(
         "Navy Win 1",
-        arrayOf(World.createGroupEntersPolygonCondition("RLS Mercy" of "Navy Group", "Tender Safety Polygon")),
+        arrayOf(World.createGroupEntersPolygonCondition("RLS Mercy" of "Navy Group", "Mercy Safety Polygon")),
         World.createTeamWinsAction(navyTeamID),
         World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_AMBUSH_VICTORYMERCYSAFE", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_NAVYDEFEAT", true)
     )
@@ -247,7 +247,7 @@ fun ambush() {
 fun bayles() {
     val world = World.create(
         game,
-        "Bayles Stand",
+        "Bayle`s Stand",
         "IDGS_TPWORLDNAMES_SCEN_BAYLES_STAND",
         "IDGS_TPWORLDDESCRIPTION_HISTORICAL_WAR",
         Vector(1650f, 1650f, 750f),
@@ -665,7 +665,301 @@ fun iron() {
 }
 
 fun locusts() {
+    val world = World.create(
+        game,
+        "Locusts",
+        "IDGS_TPWORLDNAMES_SCEN_LOCUSTS",
+        "IDGS_TPWORLDDESCRIPTION_MP_LOCUSTS",
+        Vector(1750f, 1750f, 500f),
+        21,
+        Color(0.117647f, 0.117647f, 0.117647f),
+        Vector.dir(-0.473883f, 0.509328f, -0.718345f),
+        Color(0.301961f, 0.294118f, 0.141176f),
+        Color(0.988235f, 0.996078f, 0.854902f),
+        "Map_Locusts",
+        mustAssembleFleet = false,
+        canAssembleFleet = false,
+        allianceChangeAllowed = false,
+        randomSeed = 573775550
+    )
 
+    val pirateTeamID = "IDGS_TPTEAMNAMES_FRAKES_PRIVATEERS"
+    val procyonTeamID = "IDGS_TPTEAMNAMES_FENRAS_COMMAND_FLEET"
+
+    val pirateTeamIndex = world.addTeam(World.createTeam(pirateTeamID, Faction.PIRATE, true))
+    val procyonTeamIndex = world.addTeam(World.createTeam(procyonTeamID, Faction.PROCYON, true))
+
+    val pirateAllianceIndices = mutableListOf<Int>()
+    val procyonAllianceIndices = mutableListOf<Int>()
+
+    fun addPiratePlayer(pirateName: String, color: Color, start: Vector, direction: Vector) {
+        pirateAllianceIndices.add(world.addPlayer(pirateName, pirateTeamIndex, color, start, direction, Faction.PIRATE, Formation.SINGLE))
+    }
+
+    addPiratePlayer("Frake", Color.red, Vector(-1214.3069f, -45.43274f), Vector.dir(0.785096f, -0.619374f))
+    addPiratePlayer("Jimbo", Color(0.501961f, 0f, 0f), Vector(-208.16222f, -1076.5964f), Vector.dir(-0.854203f, 0.51994f))
+
+    fun addProcyonPlayer(procyonName: String, color: Color, start: Vector, direction: Vector) {
+        procyonAllianceIndices.add(world.addPlayer(procyonName, procyonTeamIndex, color, start, direction, Faction.PROCYON, Formation.SINGLE))
+    }
+
+    addProcyonPlayer("Command", Color(0f, 0.501961f, 0f), Vector(-822.32715f, -428.1654f), Vector.dir(0.28264f, 0.959226f))
+    addProcyonPlayer("Relief", Color.green, Vector(637.94867f, 632.6037f), Vector.dir(-0.749998f, -0.66144f))
+
+    procyonAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
+        "Procyon Base",
+        Color.white,
+        Vector(797.0733f, 679.06573f)
+    )))
+
+    world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-202.18967f, -836.06775f)))
+
+    world.addWorldObject("Terrain_BlackHole_Med", null, "Black Hole Group", Vector(-180.23343f, -300.80542f))
+
+    val procyonBaseObjectID = world.addWorldObject(
+        "Base_Procyon2",
+        "Procyon Base",
+        "Procyon Base Group",
+        Vector(559.2753f, 475.79395f),
+        Matrix.rotationZ(-0.469472f, 0.882948f)
+    )
+
+    fun addShip(type: String, ownerName: String, position: Vector, xx: Float = 1f, yx: Float = 0f) = world.addWorldObject(
+        "Ship_$type",
+        ownerName,
+        "$ownerName Group",
+        position,
+        Matrix.rotationZ(xx, yx)
+    )
+
+    val pirateFortuneObjectID = addShip("Pirate_Carrack", "Frake", Vector(-1202.9266f, -41.352203f), -0.766046f, -0.642789f)
+    val pirateScornObjectID = addShip("Pirate_Schooner", "Frake", Vector(-1138.125f, -55.02611f), -0.766046f, -0.642789f)
+    val pirateToredorObjectID = addShip("Pirate_Schooner", "Frake", Vector(-1187.1088f, -96.5426f), -0.766046f, -0.642789f)
+    val pirateDeliveranceObjectID = addShip("Pirate_Schooner", "Frake", Vector(-1104.7739f, -14.448645f), -0.766046f, -0.642789f)
+    val pirateWharfRatObjectID = addShip("Pirate_Schooner", "Frake", Vector(-1214.6326f, -117.485374f), -0.766046f, -0.642789f)
+
+    val pirateTormentorObjectID = addShip("Pirate_Assault_Cutter", "Jimbo", Vector(-772.6814f, -1021.2096f), 0.694658f, 0.71934f)
+    val pirateBerserkerObjectID = addShip("Pirate_FastAttack", "Jimbo", Vector(-669.5368f, -876.5072f), 0.559193f, 0.829038f)
+    val pirateHopeGloryObjectID = addShip("Pirate_Tender", "Jimbo", Vector(-562.8122f, -985.60986f))
+    val pirateBountyObjectID = addShip("Pirate_Barque", "Jimbo", Vector(-638.09955f, -969.4444f), 0.453991f, 0.891007f)
+    val pirateStingObjectID = addShip("Pirate_Schooner", "Jimbo", Vector(-726.54675f, -959.4925f), 0.629321f, 0.777146f)
+
+    val procyonStarHunterObjectID = addShip("Procyon_IceFist", "Command", Vector(-822.9389f, -428.5795f), 0.97437f, -0.224951f)
+    val procyonBrightGozarianObjectID = addShip("Procyon_ManOWar", "Command", Vector(-774.3834f, -204.80261f), 0.97437f, -0.224951f)
+    val procyonShatterLynxObjectID = addShip("Procyon_Frigate", "Command", Vector(-951.4425f, -349.7158f), 0.97437f, -0.224951f)
+    val procyonStormLionObjectID = addShip("Procyon_Frigate", "Command", Vector(-689.9388f, -473.5556f), 0.97437f, -0.224951f)
+    val procyonIceWolfObjectID = addShip("Procyon_Frigate", "Command", Vector(-856.6391f, -610.9747f), 0.97437f, -0.224951f)
+
+    val procyonKuunLaanObjectID = addShip("Procyon_Frigate", "Relief", Vector(490.387f, 363.35657f), -0.573577f, 0.819153f)
+    val procyonFarSpeakObjectID = addShip("Procyon_Gunboat", "Relief", Vector(446.19177f, 390.18143f), -0.453991f, 0.891007f)
+    val procyonIceFerretObjectID = addShip("Procyon_Gunboat", "Relief", Vector(464.54913f, 296.491f), -0.453991f, 0.891007f)
+    val procyonSnowMonkeyObjectID = addShip("Procyon_Gunboat", "Relief", Vector(423.1328f, 336.88766f), -0.453991f, 0.891007f)
+
+    fun addIsland(typeID: String, position: Vector, xx: Float = 1f, yx: Float = 0f) {
+        world.addWorldObject(typeID, null, "Island Group", position, Matrix.rotationZ(xx, yx))
+    }
+
+    addIsland("Island_Icy_01", Vector(-815.478f, 668.0355f))
+    addIsland("Island_Icy_02", Vector(-894.5333f, 271.97607f))
+    addIsland("Island_Icy_03", Vector(173.81982f, 483.75055f))
+    addIsland("Island_Icy_04", Vector(-1013.4493f, -104.23293f))
+    addIsland("Island_Icy_05", Vector(-401.51495f, 485.9739f))
+    addIsland("Island_Icy_06", Vector(558.44653f, 63.62037f), -0.573577f, -0.819153f)
+
+    fun addAsteroid(size: String, position: Vector) {
+        world.addWorldObject("Asteroid_$size", "Asteroids", "Asteroid Group", position)
+    }
+
+    addAsteroid("Huge", Vector(-375.48682f, -1046.3475f))
+    addAsteroid("Huge", Vector(-301.42828f, -862.271f))
+    addAsteroid("Huge", Vector(-164.28387f, -906.13586f))
+    addAsteroid("Huge", Vector(-705.4633f, -604.57385f))
+    addAsteroid("Huge", Vector(-608.13354f, -604.3289f))
+    addAsteroid("Huge", Vector(-304.40118f, -783.63586f))
+    addAsteroid("Huge", Vector(-745.1799f, -886.30066f))
+    addAsteroid("Huge", Vector(-358.59326f, -1177.9563f))
+    addAsteroid("Large", Vector(165.31256f, -779.3906f))
+    addAsteroid("Large", Vector(-755.0268f, -997.49457f))
+    addAsteroid("Large", Vector(-527.14606f, -1024.4358f))
+    addAsteroid("Large", Vector(-444.13245f, -1148.3401f))
+    addAsteroid("Large", Vector(-307.77295f, -1124.396f))
+    addAsteroid("Large", Vector(230.13678f, -883.68506f))
+    addAsteroid("Med", Vector(340.26157f, -824.6443f))
+    addAsteroid("Med", Vector(-162.04816f, -1197.637f))
+    addAsteroid("Med", Vector(69.48773f, -1217.1833f))
+    addAsteroid("Med", Vector(289.65765f, -1171.002f))
+    addAsteroid("Med", Vector(507.6049f, -915.74695f))
+    addAsteroid("Med", Vector(384.55573f, -797.3696f))
+    addAsteroid("Med", Vector(-579.8258f, -72.1819f))
+    addAsteroid("Large", Vector(-988.2035f, -639.194f))
+    addAsteroid("Med", Vector(21.153198f, -1121.856f))
+    addAsteroid("Med", Vector(193.00739f, -1133.9048f))
+
+    world.addWaypointPath(World.createWaypointPath(
+        "Command Path",
+        Vector(-946.3852f, -953.5311f),
+        Vector(-855.3477f, -596.2367f),
+        Vector(-818.96045f, -361.41162f),
+        Vector(-750.2396f, -81.585205f),
+        Vector(-607.0144f, 114.835205f),
+        Vector(-385.5141f, 225.83057f),
+        Vector(-174.2013f, 228.44043f),
+        Vector(13.073364f, 220.55005f),
+        Vector(187.15723f, 226.86133f),
+        Vector(334.04974f, 279.18552f),
+        Vector(452.0845f, 373.82758f)
+    ))
+
+    world.addWorldPolygon(World.createWorldPolygon(
+        "StarHunter Safety Polygon",
+        Coord(428.14023f, 548.76587f),
+        Coord(565.78436f, 300.45776f),
+        Coord(395.34634f, 181.80476f),
+        Coord(327.06973f, 382.90283f)
+    ))
+
+    pirateAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+    procyonAllianceIndices.forEachPair { x, y -> world.addPlayerAllianceInfo(World.createPlayerAllianceInfo(x, y)) }
+
+    fun createSetupShipAction(objectID: Int, shipName: String, stance: Stance, ownerName: String, primaryShip: Boolean, skill: Skill, displayNameID: String) = World.createSetupShipAction(
+        objectID,
+        shipName,
+        null,
+        FollowMode.TO_END,
+        stance,
+        ownerName,
+        primaryShip,
+        skill,
+        true,
+        displayNameID
+    )
+
+    fun createCommandShipDamageAction(shipName: String, damageFraction: Float) = World.createGroupDamageAction("PSR $shipName" of "Command Group", damageFraction)
+
+    world.addWorldRule(World.createInitializationWorldRule(
+        "All",
+        World.createSetupAsteroidBeltAction(
+            "Asteroid Group",
+            null,
+            FollowMode.TO_END,
+            false,
+            0f,
+            0f,
+            0.2f,
+            1f
+        ),
+        World.createSetupIslandAction(procyonBaseObjectID, 100, "Procyon Base", Skill.AVERAGE, Stance.AGGRESSIVE),
+        createSetupShipAction(
+            pirateFortuneObjectID, "Frake`s Fortune", Stance.AGGRESSIVE, "Frake", true, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_FLYINGKING"
+        ),
+        createSetupShipAction(
+            pirateScornObjectID, "Scorn", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES01_SCURVY"
+        ),
+        createSetupShipAction(
+            pirateToredorObjectID, "Toredor", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_FERRET"
+        ),
+        createSetupShipAction(
+            pirateDeliveranceObjectID, "Deliverance", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_GORGON"
+        ),
+        createSetupShipAction(
+            pirateWharfRatObjectID, "Wharf Rat", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_MINERVA"
+        ),
+        createSetupShipAction(
+            pirateTormentorObjectID, "Tormentor", Stance.AGGRESSIVE, "Jimbo", true, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_NEMESIS"
+        ),
+        createSetupShipAction(
+            pirateBerserkerObjectID, "Berserker", Stance.AGGRESSIVE, "Jimbo", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPIRATE00_KILLERBEE"
+        ),
+        createSetupShipAction(
+            pirateHopeGloryObjectID, "Hope `n` Glory", Stance.NEUTRAL, "Jimbo", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPIRATE00_THEBIGSCORE"
+        ),
+        createSetupShipAction(
+            pirateBountyObjectID, "Jimbo`s Bounty", Stance.AGGRESSIVE, "Jimbo", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_SAUCYMARY"
+        ),
+        createSetupShipAction(
+            pirateStingObjectID, "Scorpion`s Sting", Stance.AGGRESSIVE, "Jimbo", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_HURLYBURLY"
+        ),
+        createSetupShipAction(
+            procyonStarHunterObjectID, "PSR StarHunter", Stance.PERSISTENT, "Command", true, Skill.ELITE, "IDGS_TPSHIPNAMEPROCYON01_STARHUNTER"
+        ),
+        createSetupShipAction(
+            procyonBrightGozarianObjectID, "PSR Bright Gozarian", Stance.AGGRESSIVE, "Command", false, Skill.ELITE, "IDGS_TPSHIPNAMEPROCYON00_BRIGHTGOZARIAN"
+        ),
+        createSetupShipAction(
+            procyonShatterLynxObjectID, "PSR Shatter Lynx", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_SHATTERLYNX"
+        ),
+        createSetupShipAction(
+            procyonStormLionObjectID, "PSR Storm Lion", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_STORMLION"
+        ),
+        createSetupShipAction(
+            procyonIceWolfObjectID, "PSR Ice Wolf", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_ICEWOLF"
+        ),
+        createSetupShipAction(
+            procyonKuunLaanObjectID, "PSR KuunLaan", Stance.AGGRESSIVE, "Relief", true, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_STORMSHIELD"
+        ),
+        createSetupShipAction(
+            procyonFarSpeakObjectID, "PSR FarSpeak", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_STARFISH"
+        ),
+        createSetupShipAction(
+            procyonIceFerretObjectID, "PSR Ice Ferret", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_ICEFERRET"
+        ),
+        createSetupShipAction(
+            procyonSnowMonkeyObjectID, "PSR Snow Monkey", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_SNOWMONKEY"
+        ),
+        World.createGroupFollowPathAction("Command Group", "Command Path", FollowMode.TO_END, true),
+        World.createSetGroupMaxThrottleAction("Command Group", 0.5f),
+        createCommandShipDamageAction("StarHunter", 0.4f),
+        createCommandShipDamageAction("Bright Gozarian", 0.6f),
+        createCommandShipDamageAction("Shatter Lynx", 0.5f),
+        createCommandShipDamageAction("Storm Lion", 0.4f),
+        createCommandShipDamageAction("Ice Wolf", 0.2f),
+        World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
+        World.createSetupTeamObjectiveAction(procyonTeamID, "Procyon Objective Point", "Procyon Objective 1"),
+        World.createSetupTeamObjectiveAction(procyonTeamID, null, "Procyon Objective 2"),
+        World.createPlayMusicAction("BTL_DeadlyPirate_Full03", 0.9f, 2f, 2f, true)
+    ))
+
+    fun addWorldRule(ruleName: String, condition: ConditionNode, vararg actions: ActionNode) {
+        world.addWorldRule(World.createWorldRule(ruleName, runOnce = true, isActive = true, ConditionListNode(condition), ActionListNode(*actions)))
+    }
+
+    addWorldRule(
+        "Pirate Win",
+        World.createTeamCaptureGroupCondition(pirateTeamID, "PSR StarHunter" of "Command Group"),
+        World.createTeamWinsAction(pirateTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PROCYONFAILURE", "IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PROCYONFAILURE", true)
+    )
+
+    addWorldRule(
+        "Procyon Win 1",
+        World.createGroupEntersPolygonCondition("PSR StarHunter" of "Command Group", "StarHunter Safety Polygon"),
+        World.createTeamWinsAction(procyonTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PIRATEFAILURE", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Procyon Win 2",
+        World.createTeamHasNoShipsCondition(pirateTeamID),
+        World.createTeamWinsAction(procyonTeamID),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PROCYONVICTORY", "IDGS_TPINGAMEMESSAGE_GAME_GENERAL_PROCYONDEFEAT", true)
+    )
+
+    addWorldRule(
+        "Draw",
+        World.createTeamDestroyGroupCondition(pirateTeamID, "PSR StarHunter" of "Command Group"),
+        World.createEndGameAction("IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PIRATEVICTORY", "IDGS_TPINGAMEMESSAGE_GAME_LOCUSTS_PIRATEVICTORY", true)
+    )
+
+    world.addObjectivePoint(World.createObjectivePoint("Procyon Objective Point", Vector(462.49326f, 374.70502f)))
+
+    world.addObjectiveTask(World.createObjectiveTask("Pirate Objective", "IDGS_TPOBJECTIVES2_MP_LOCUSTS_CAPTURE_STORMWATCH"))
+    world.addObjectiveTask(World.createObjectiveTask("Procyon Objective 1", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
+    world.addObjectiveTask(World.createObjectiveTask("Procyon Objective 2", "IDGS_TPOBJECTIVES2_MP_LOCUSTS_PROTECT_STORMWATCH"))
+
+    world.addMapText(World.createMapText("Procyon Base", "IDGS_TPMAPTEXTITEMS_GENERAL_STARKEEP_FENRIS", Vector(548.8137f, 495.95636f)))
+    world.addMapText(World.createMapText("Black Hole", "IDGS_TPMAPTEXTITEMS_M11_THE_CATS_EYE_BLACK_HOLE", Vector(-148.20984f, -286.84723f)))
+
+    println(world.build())
 }
 
 fun storm() {
@@ -2467,7 +2761,7 @@ fun diablo() {
 fun dragon() {
     val world = World.create(
         game,
-        "Dragons Nest",
+        "Dragon`s Nest",
         "IDGS_TPWORLDNAMES_MP_ARENA",
         "IDGS_TPWORLDDESCRIPTION_MP_ARENA_LARGE",
         Vector(1750f, 1750f, 500f),

@@ -602,14 +602,14 @@ class World(private val game: Game, val root: RootNode) {
         fun createSetupIslandAction(
             objectID: Int,
             combatStrength: Int,
-            owningPlayerName: String?,
+            ownerName: String?,
             gunneryLevel: Skill,
             stance: Stance,
         ) = ActionNode(
             "Type" to "*State Init* Setup Island".node,
             "World Object ID" to objectID.node,
             "Combat Strength" to combatStrength.node,
-            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
+            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
             "Gunnery Level" to gunneryLevel.node,
             "AI Stance" to stance.node
         )
@@ -620,7 +620,7 @@ class World(private val game: Game, val root: RootNode) {
             pathName: String?,
             followMode: FollowMode,
             stance: Stance,
-            owningPlayerName: String?,
+            ownerName: String?,
             primaryShip: Boolean,
             crewSkill: Skill,
             boardable: Boolean,
@@ -632,7 +632,7 @@ class World(private val game: Game, val root: RootNode) {
             "Ship Path" to (pathName ?: "NO PATH").node,
             "Follow Mode" to followMode.node,
             "AI Stance" to stance.node,
-            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
+            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
             "Primary Ship" to primaryShip.stringNode(),
             "Crew Skill Level" to crewSkill.node,
             "Boardable" to boardable.stringNode(),
@@ -825,6 +825,12 @@ class World(private val game: Game, val root: RootNode) {
             "Type" to "Set Group/Unit Visibility".node,
             "Group/Unit Name" to groupName.node,
             "Boolean" to isVisible.stringNode()
+        )
+
+        fun createGroupDamageAction(groupName: String, damageFraction: Float) = ActionNode(
+            "Type" to "Damage Group/Unit by X percent".node,
+            "Group Name" to groupName.node,
+            "Percent" to damageFraction.node
         )
 
         fun createSetDragonStanceAction(groupName: String, stance: Stance) = ActionNode(
