@@ -850,61 +850,175 @@ fun locusts() {
         ),
         World.createSetupIslandAction(procyonBaseObjectID, 100, "Procyon Base", Skill.AVERAGE, Stance.AGGRESSIVE),
         createSetupShipAction(
-            pirateFortuneObjectID, "Frake`s Fortune", Stance.AGGRESSIVE, "Frake", true, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_FLYINGKING"
+            pirateFortuneObjectID,
+            "Frake`s Fortune",
+            Stance.AGGRESSIVE,
+            "Frake",
+            true,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_FLYINGKING"
         ),
         createSetupShipAction(
-            pirateScornObjectID, "Scorn", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPCAMPAIGNSHIPNAMES01_SCURVY"
+            pirateScornObjectID,
+            "Scorn",
+            Stance.AGGRESSIVE,
+            "Frake",
+            false,
+            Skill.ELITE,
+            "IDGS_TPCAMPAIGNSHIPNAMES01_SCURVY"
         ),
         createSetupShipAction(
-            pirateToredorObjectID, "Toredor", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_FERRET"
+            pirateToredorObjectID,
+            "Toredor",
+            Stance.AGGRESSIVE,
+            "Frake",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_FERRET"
         ),
         createSetupShipAction(
-            pirateDeliveranceObjectID, "Deliverance", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_GORGON"
+            pirateDeliveranceObjectID,
+            "Deliverance",
+            Stance.AGGRESSIVE,
+            "Frake",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_GORGON"
         ),
         createSetupShipAction(
-            pirateWharfRatObjectID, "Wharf Rat", Stance.AGGRESSIVE, "Frake", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_MINERVA"
+            pirateWharfRatObjectID,
+            "Wharf Rat",
+            Stance.AGGRESSIVE,
+            "Frake",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_MINERVA"
         ),
         createSetupShipAction(
-            pirateTormentorObjectID, "Tormentor", Stance.AGGRESSIVE, "Jimbo", true, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_NEMESIS"
+            pirateTormentorObjectID,
+            "Tormentor",
+            Stance.AGGRESSIVE,
+            "Jimbo",
+            true,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_NEMESIS"
         ),
         createSetupShipAction(
-            pirateBerserkerObjectID, "Berserker", Stance.AGGRESSIVE, "Jimbo", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPIRATE00_KILLERBEE"
+            pirateBerserkerObjectID,
+            "Berserker",
+            Stance.AGGRESSIVE,
+            "Jimbo",
+            false,
+            Skill.AVERAGE,
+            "IDGS_TPSHIPNAMEPIRATE00_KILLERBEE"
         ),
         createSetupShipAction(
-            pirateHopeGloryObjectID, "Hope `n` Glory", Stance.NEUTRAL, "Jimbo", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPIRATE00_THEBIGSCORE"
+            pirateHopeGloryObjectID,
+            "Hope `n` Glory",
+            Stance.NEUTRAL,
+            "Jimbo",
+            false,
+            Skill.AVERAGE,
+            "IDGS_TPSHIPNAMEPIRATE00_THEBIGSCORE"
         ),
         createSetupShipAction(
-            pirateBountyObjectID, "Jimbo`s Bounty", Stance.AGGRESSIVE, "Jimbo", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_SAUCYMARY"
+            pirateBountyObjectID,
+            "Jimbo`s Bounty",
+            Stance.AGGRESSIVE,
+            "Jimbo",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_SAUCYMARY"
         ),
         createSetupShipAction(
-            pirateStingObjectID, "Scorpion`s Sting", Stance.AGGRESSIVE, "Jimbo", false, Skill.ELITE, "IDGS_TPSHIPNAMEPIRATE00_HURLYBURLY"
+            pirateStingObjectID,
+            "Scorpion`s Sting",
+            Stance.AGGRESSIVE,
+            "Jimbo",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPIRATE00_HURLYBURLY"
         ),
         createSetupShipAction(
-            procyonStarHunterObjectID, "PSR StarHunter", Stance.PERSISTENT, "Command", true, Skill.ELITE, "IDGS_TPSHIPNAMEPROCYON01_STARHUNTER"
+            procyonStarHunterObjectID,
+            "PSR StarHunter",
+            Stance.PERSISTENT,
+            "Command",
+            true,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPROCYON01_STARHUNTER"
         ),
         createSetupShipAction(
-            procyonBrightGozarianObjectID, "PSR Bright Gozarian", Stance.AGGRESSIVE, "Command", false, Skill.ELITE, "IDGS_TPSHIPNAMEPROCYON00_BRIGHTGOZARIAN"
+            procyonBrightGozarianObjectID,
+            "PSR Bright Gozarian",
+            Stance.AGGRESSIVE,
+            "Command",
+            false,
+            Skill.ELITE,
+            "IDGS_TPSHIPNAMEPROCYON00_BRIGHTGOZARIAN"
         ),
         createSetupShipAction(
-            procyonShatterLynxObjectID, "PSR Shatter Lynx", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_SHATTERLYNX"
+            procyonShatterLynxObjectID,
+            "PSR Shatter Lynx",
+            Stance.AGGRESSIVE,
+            "Command",
+            false,
+            Skill.AVERAGE,
+            "IDGS_TPSHIPNAMEPROCYON00_SHATTERLYNX"
         ),
         createSetupShipAction(
-            procyonStormLionObjectID, "PSR Storm Lion", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_STORMLION"
+            procyonStormLionObjectID,
+            "PSR Storm Lion",
+            Stance.AGGRESSIVE,
+            "Command",
+            false,
+            Skill.AVERAGE,
+            "IDGS_TPSHIPNAMEPROCYON00_STORMLION"
         ),
         createSetupShipAction(
-            procyonIceWolfObjectID, "PSR Ice Wolf", Stance.AGGRESSIVE, "Command", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_ICEWOLF"
+            procyonIceWolfObjectID,
+            "PSR Ice Wolf",
+            Stance.AGGRESSIVE,
+            "Command",
+            false,
+            Skill.AVERAGE,
+            "IDGS_TPSHIPNAMEPROCYON00_ICEWOLF"
         ),
         createSetupShipAction(
-            procyonKuunLaanObjectID, "PSR KuunLaan", Stance.AGGRESSIVE, "Relief", true, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_STORMSHIELD"
+            procyonKuunLaanObjectID,
+            "PSR KuunLaan",
+            Stance.AGGRESSIVE,
+            "Relief",
+            true,
+            Skill.GREEN,
+            "IDGS_TPSHIPNAMEPROCYON01_STORMSHIELD"
         ),
         createSetupShipAction(
-            procyonFarSpeakObjectID, "PSR FarSpeak", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_STARFISH"
+            procyonFarSpeakObjectID,
+            "PSR FarSpeak",
+            Stance.AGGRESSIVE,
+            "Relief",
+            false,
+            Skill.GREEN,
+            "IDGS_TPSHIPNAMEPROCYON01_STARFISH"
         ),
         createSetupShipAction(
-            procyonIceFerretObjectID, "PSR Ice Ferret", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_ICEFERRET"
+            procyonIceFerretObjectID,
+            "PSR Ice Ferret",
+            Stance.AGGRESSIVE,
+            "Relief",
+            false,
+            Skill.GREEN,
+            "IDGS_TPSHIPNAMEPROCYON01_ICEFERRET"
         ),
         createSetupShipAction(
-            procyonSnowMonkeyObjectID, "PSR Snow Monkey", Stance.AGGRESSIVE, "Relief", false, Skill.GREEN, "IDGS_TPSHIPNAMEPROCYON01_SNOWMONKEY"
+            procyonSnowMonkeyObjectID,
+            "PSR Snow Monkey",
+            Stance.AGGRESSIVE,
+            "Relief",
+            false,
+            Skill.GREEN,
+            "IDGS_TPSHIPNAMEPROCYON01_SNOWMONKEY"
         ),
         World.createGroupFollowPathAction("Command Group", "Command Path", FollowMode.TO_END, true),
         World.createSetGroupMaxThrottleAction("Command Group", 0.5f),
@@ -1233,12 +1347,24 @@ fun maw() {
     val navyFearlessObjectID = addNavyShip("Frigate", Vector(333.56226f, 73.45115f))
     val navyRalieghObjectID = addNavyShip("Cutter", Vector(311.10785f, 64.62161f))
 
-    fun addPirateShip(type: String, position: Vector) = world.addWorldObject("Ship_Pirate_$type", "Pirate", "Pirate Group", position, Matrix.rotationZ(0.669129f, -0.743146f))
+    fun addPirateShip(type: String, position: Vector) = world.addWorldObject(
+        "Ship_Pirate_$type",
+        "Pirate",
+        "Pirate Group",
+        position,
+        Matrix.rotationZ(0.669129f, -0.743146f)
+    )
 
     val pirateMaryObjectID = addPirateShip("Carrack", Vector(-8.398717f, -369.69305f))
     val pirateBitterEndObjectID = addPirateShip("Barque", Vector(5.820526f, -393.88364f))
 
-    fun addProcyonShip(type: String, position: Vector) = world.addWorldObject("Ship_Procyon_$type", "Procyon", "Procyon Group", position, Matrix.rotationZ(-0.809019f, 0.587782f))
+    fun addProcyonShip(type: String, position: Vector) = world.addWorldObject(
+        "Ship_Procyon_$type",
+        "Procyon",
+        "Procyon Group",
+        position,
+        Matrix.rotationZ(-0.809019f, 0.587782f)
+    )
 
     val procyonVoraciousObjectID = addProcyonShip("Frigate", Vector(-284.5239f, 249.17653f))
     val procyonHunterObjectID = addProcyonShip("Cutter", Vector(-255.93326f, 241.02425f))
@@ -4000,7 +4126,7 @@ fun test() {
 fun main() {
     //ambush()
     //bayles()
-    iron()
+    //iron()
     //locusts()
     //storm()
     //maw()
