@@ -4098,29 +4098,7 @@ fun zemyatin() {
 }
 
 fun test() {
-    val world = World(game, "Convoy Raid_Navy")
-
-    val worldInfo = world.root.get<NestedNode>("WorldInfo")
-    val players = worldInfo?.get<FlatNode>("Players")
-
-    val gameNode = world.root.get<NestedNode>("Game")
-    val time = gameNode?.get<NestedNode>("Time")
-
-    val worldNode = world.root.get<NestedNode>("World")
-    val playerList = worldNode?.get<PlayerListNode>("PlayerList")
-    val worldObjects = worldNode?.get<WorldObjectsListNode>("WorldObjects")
-
-    val gameSpecific = worldNode?.get<NestedNode>("GameSpecific")
-    val waypointPathInfo = gameSpecific?.get<ArrayNode>("Waypoint Path Info Vector")
-    val worldPolygonInfo = gameSpecific?.get<ArrayNode>("World Polygons Vectors")
-    val worldPointSetInfo = gameSpecific?.get<ArrayNode>("World Point Sets Vector")
-    val groups = gameSpecific?.get<GroupsListNode>("Num Groups")
-    val worldRules = gameSpecific?.get<NestedNode>("World Rules")
-    val ruleList = worldRules?.get<RuleListNode>("Rule List")
-
-    val gameImpl = world.root.get<NestedNode>("GameImpl")
-
-    println(ruleList)
+    
 }
 
 fun main() {
@@ -4140,5 +4118,5 @@ fun main() {
     //shadow()
     //zemyatin()
 
-    //test()
+    test()
 }
