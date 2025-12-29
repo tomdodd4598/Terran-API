@@ -511,7 +511,7 @@ class World(private val game: Game, val root: RootNode) {
         fun createFlagCondition(flagName: String, boolean: Boolean) = ConditionNode(
             "Type" to "Flag Condition".node,
             "Flag Name" to flagName.node,
-            "Boolean Value" to boolean.node
+            "Boolean Value" to boolean.stringNode()
         )
 
         fun createTimerCondition(timerName: String, equivalence: Equivalence, time: Int) = ConditionNode(
@@ -845,10 +845,28 @@ class World(private val game: Game, val root: RootNode) {
             "Damage Threshold" to damageThreshold.node
         )
 
-        fun createSetObjectiveTaskStateAction(taskName: String, state: Boolean) = ActionNode(
+        fun createSetFlagAction(flagName: String, boolean: Boolean) = ActionNode(
+            "Type" to "Set Flag Action".node,
+            "Flag Name" to flagName.node,
+            "Boolean Value" to boolean.stringNode(),
+        )
+
+        fun createSetObjectiveTaskActiveStateAction(taskName: String, state: Boolean) = ActionNode(
             "Type" to "Set Objective Task Active State".node,
             "Objective Task" to taskName.node,
             "Active State" to state.stringNode()
+        )
+
+        fun createSetObjectiveTaskCompleteStateAction(taskName: String, state: Boolean) = ActionNode(
+            "Type" to "Set Objective Task Complete State".node,
+            "Objective Task" to taskName.node,
+            "Complete State" to state.stringNode()
+        )
+
+        fun createSetObjectiveTaskFailedStateAction(taskName: String, state: Boolean) = ActionNode(
+            "Type" to "Set Objective Task Failed State".node,
+            "Objective Task" to taskName.node,
+            "Failed State" to state.stringNode()
         )
 
         fun createStartTimerAction(timerName: String) = ActionNode(

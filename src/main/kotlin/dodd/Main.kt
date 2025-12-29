@@ -650,7 +650,7 @@ fun iron() {
             "IDGS_TPSHIPNAMEPROCYON01_OBLITERATION"
         ),
         World.createSetEffectEventStateAction("Moonfish Point Set", "MoonFish", true),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Ironclad_FirstEncountr", 0.7f, 2f, 2f, true)
     ))
 
@@ -1267,7 +1267,7 @@ fun storm() {
         createSetupProcyonShipAction(procyonWolverineObjectID, "Wolverine", false, Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_SNOWBOAR"),
         World.createGroupFollowPathAction("Storm Group", "Storm Path", FollowMode.LOOP, false),
         World.createSetGroupSpeedAction("Storm Group", 10),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Escape_Full", 0.6f, 2f, 2f, true)
     ))
 
@@ -1554,7 +1554,7 @@ fun maw() {
         createSetupShipAction(pirateBitterEndObjectID, "Bitter End", "Pirate", false, "IDGS_TPSHIPNAMEPIRATE00_SNAPDRAGON"),
         createSetupShipAction(procyonVoraciousObjectID, "PSR Voracious", "Procyon", true, "IDGS_TPSHIPNAMEPROCYON00_DARKPRINCE"),
         createSetupShipAction(procyonHunterObjectID, "PSR Hunter", "Procyon", false, "IDGS_TPSHIPNAMEPROCYON00_ARCTICFOX"),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_DeadlyPirate_BedSlow", 0.8f, 2f, 2f, true)
     ))
 
@@ -2872,7 +2872,7 @@ fun diablo() {
             0.02f,
             3.02f
         ),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
@@ -3020,7 +3020,7 @@ fun dragon() {
         World.createSetDragonStanceAction("Dragon Group", Stance.AGGRESSIVE),
         World.createSetDragonDamageThresholdAction("Dragon Group", 0.8f),
         World.createSetGroupReturnZoneAction("Dragon Group", "Dragon Flee Point Set"),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
     ))
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
@@ -4024,7 +4024,7 @@ fun shadow() {
         ),
         World.createGroupFollowPathAction("Whale Group", "Whale Path", FollowMode.LOOP, true),
         World.createSetGroupSpeedAction("Whale Group", 8),
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
@@ -4085,7 +4085,7 @@ fun zemyatin() {
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
-        World.createSetObjectiveTaskStateAction("Kill All Objective", true),
+        World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f)
     ))
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
