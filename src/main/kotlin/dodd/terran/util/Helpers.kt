@@ -1,9 +1,7 @@
 package dodd.terran.util
 
 import dodd.terran.Global
-import dodd.terran.World
 import dodd.terran.translation.*
-import dodd.terran.util.Helpers.node
 import dodd.terran.value.*
 import dodd.terran.value.Vector
 import java.io.File
@@ -111,7 +109,20 @@ object Helpers {
 
     val VitalSection.node get() = string.node
 
+    val Banner.node get() = string.node
+
     fun Boolean.stringNode() = toString().uppercase().node
+
+    fun Formation.stringNode() = when (this) {
+        Formation.NONE -> "None"
+        Formation.LINE_ABREAST -> "LineAbreast"
+        Formation.ECHELON_RIGHT -> "EchelonRight"
+        Formation.ECHELON_LEFT -> "EchelonLeft"
+        Formation.COLUMN -> "Column"
+        Formation.DIAMOND -> "Diamond"
+        Formation.CONVOY -> "Convoy"
+        else -> "Custom"
+    }.node
 
     infix fun String.of(groupName: String) = "$groupName,$this"
 }

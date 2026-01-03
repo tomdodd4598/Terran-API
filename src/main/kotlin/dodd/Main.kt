@@ -834,7 +834,7 @@ fun locusts() {
         displayNameID
     )
 
-    fun createCommandShipDamageAction(shipName: String, damageFraction: Float) = World.createGroupDamageAction("PSR $shipName" of "Command Group", damageFraction)
+    fun createCommandShipDamageAction(shipName: String, damageFraction: Float) = World.createDamageGroupAction("PSR $shipName" of "Command Group", damageFraction)
 
     world.addWorldRule(World.createInitializationWorldRule(
         "All",
@@ -1119,7 +1119,7 @@ fun storm() {
         Vector(-145.8836f, 1258.7124f),
         Vector.dir(0.382899f, -0.92379f),
         Faction.PROCYON,
-        Formation.DIAGONAL_V
+        Formation.DIAMOND
     )
 
     val stormObjectID = world.addWorldObject("Terrain_Nebula", null, "Storm Group", Vector(-720.774f, 540.88257f))
@@ -1598,14 +1598,14 @@ fun border() {
         factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, formation))
     }
 
-    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(435.6725f, -837.33856f), Vector.dir(-0.592208f, 0.805785f), Formation.SIDE_BY_SIDE)
-    addPlayer(Faction.PROCYON, 1, Color(0f, 1f, 0f), Vector(-649.6093f, 775.55676f), Vector.dir(0.602041f, -0.798465f), Formation.LINE)
-    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(739.2612f, -641.6178f), Vector.dir(-0.598932f, 0.8008f), Formation.SIDE_BY_SIDE)
-    addPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0f), Vector(-235.88f, 1047.5782f), Vector.dir(0.381282f, -0.924459f), Formation.DIAGONAL_V)
-    addPlayer(Faction.NAVY, 3, Color(0.65098f, 0.792157f, 0.941176f), Vector(416.74933f, -1185.8826f), Vector.dir(-0.211376f, 0.977405f), Formation.SIDE_BY_SIDE)
-    addPlayer(Faction.PROCYON, 3, Color(0.752941f, 0.862745f, 0.752941f), Vector(59.84198f, 1271.3126f), Vector.dir(0.557207f, -0.830374f), Formation.LINE)
-    addPlayer(Faction.NAVY, 4, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.SIDE_BY_SIDE)
-    addPlayer(Faction.PROCYON, 4, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.LINE)
+    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(435.6725f, -837.33856f), Vector.dir(-0.592208f, 0.805785f), Formation.LINE_ABREAST)
+    addPlayer(Faction.PROCYON, 1, Color(0f, 1f, 0f), Vector(-649.6093f, 775.55676f), Vector.dir(0.602041f, -0.798465f), Formation.COLUMN)
+    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(739.2612f, -641.6178f), Vector.dir(-0.598932f, 0.8008f), Formation.LINE_ABREAST)
+    addPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0f), Vector(-235.88f, 1047.5782f), Vector.dir(0.381282f, -0.924459f), Formation.DIAMOND)
+    addPlayer(Faction.NAVY, 3, Color(0.65098f, 0.792157f, 0.941176f), Vector(416.74933f, -1185.8826f), Vector.dir(-0.211376f, 0.977405f), Formation.LINE_ABREAST)
+    addPlayer(Faction.PROCYON, 3, Color(0.752941f, 0.862745f, 0.752941f), Vector(59.84198f, 1271.3126f), Vector.dir(0.557207f, -0.830374f), Formation.COLUMN)
+    addPlayer(Faction.NAVY, 4, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.LINE_ABREAST)
+    addPlayer(Faction.PROCYON, 4, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.COLUMN)
 
     navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
         "Navy Base",
@@ -2012,8 +2012,8 @@ fun border() {
         createShowerGroupFollowPathAction(1),
         World.createSetGroupSpeedAction(showerGroupNames[0], 15),
         World.createSetGroupSpeedAction(showerGroupNames[1], 12),
-        World.createSetGroupOwnerAction("Navy Mine Group", "Navy Base"),
-        World.createSetGroupOwnerAction("Procyon Mine Group", "Procyon Base"),
+        World.createSetGroupOwningPlayerAction("Navy Mine Group", "Navy Base"),
+        World.createSetGroupOwningPlayerAction("Procyon Mine Group", "Procyon Base"),
         World.createSetupTeamObjectiveAction(navyTeamID, "Navy Objective Point", "Navy Objective"),
         World.createSetupTeamObjectiveAction(procyonTeamID, "Procyon Objective Point", "Procyon Objective"),
         World.createPlayMusicAction("BTL_NavyBig_Full02", 0.7f, 2f, 2f)
@@ -2106,7 +2106,7 @@ fun convoy() {
 
     fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
         val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else pirateTeamIndex to pirateAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE))
+        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN))
     }
 
     addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(1070.8525f, -971.36255f), Vector.dir(-0.007847f, 0.999969f))
@@ -2513,9 +2513,9 @@ fun convoy() {
         displayNameID
     )
 
-    fun createSetConvoyGroupVisibilityAction(convoyIndex: Int, isVisible: Boolean) = World.createSetGroupVisibilityAction(convoyGroupNames[convoyIndex], isVisible)
+    fun createSetConvoyGroupVisibilityAction(convoyIndex: Int, isVisible: Boolean) = World.createSetIsGroupVisibleAction(convoyGroupNames[convoyIndex], isVisible)
 
-    fun createSetConvoyGroupHoldPositionAction(convoyIndex: Int, holdPosition: Boolean) = World.createSetGroupHoldPositionAction(convoyGroupNames[convoyIndex], holdPosition)
+    fun createSetConvoyGroupHoldPositionAction(convoyIndex: Int, holdPosition: Boolean) = World.createSetWillGroupHoldPositionAction(convoyGroupNames[convoyIndex], holdPosition)
 
     fun createConvoyGroupFollowPathAction(convoyIndex: Int) = World.createGroupFollowPathAction(convoyGroupNames[convoyIndex], convoyPathNames[convoyIndex], FollowMode.TO_END, true)
 
@@ -2650,7 +2650,7 @@ fun convoy() {
     fun addNavyEscortsConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Navy Escorts Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createGroupMemberFromTeamEntersPolygonCondition(convoyGroupNames[convoyIndex], navyTeamID, "Convoy Safety Polygon"),
+        World.createTeamGroupMemberEntersPolygonCondition(navyTeamID, convoyGroupNames[convoyIndex], "Convoy Safety Polygon"),
         World.createGrantTeamPointsAction(navyTeamID, points)
     )
 
@@ -2661,7 +2661,7 @@ fun convoy() {
     fun addPiratesTakeConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Pirates Take Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createGroupMemberFromTeamEntersPolygonCondition(convoyGroupNames[convoyIndex], pirateTeamID, "Convoy Theft Polygon"),
+        World.createTeamGroupMemberEntersPolygonCondition(pirateTeamID, convoyGroupNames[convoyIndex], "Convoy Theft Polygon"),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
@@ -2675,7 +2675,7 @@ fun convoy() {
             "Pirates Transfer Convoy ${convoyIndex + 1} SS $shipName To Base",
             true,
             World.createGroupEntersPolygonCondition(groupName, "Convoy Theft Polygon"),
-            World.createSetGroupOwnerAction(groupName, "Pirate Base"),
+            World.createSetGroupOwningPlayerAction(groupName, "Pirate Base"),
             World.createSetGroupStanceAction(groupName, Stance.DUMMY)
         )
     }
@@ -2750,7 +2750,7 @@ fun diablo() {
     )
 
     fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
-        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.LINE)
+        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.COLUMN)
     }
 
     addPlayer(1, Color(0f, 0.502f, 0f), Vector(-526.635f, -1121.4581f), Vector.dir(0.995512f, -0.094636f))
@@ -2900,7 +2900,7 @@ fun dragon() {
     )
 
     fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
-        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.SIDE_BY_SIDE)
+        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.LINE_ABREAST)
     }
 
     addPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-810.8588f, 7.178986f), Vector.dir(0.99862f, 0.052516f))
@@ -3060,7 +3060,7 @@ fun mousetrap() {
 
     fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
         val factionPair = if (faction == Faction.PIRATE) pirateTeamIndex to pirateAllianceIndices else procyonTeamIndex to procyonAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE))
+        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN))
     }
 
     addPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(101.075745f, 739.63544f), Vector.dir(-0.061652f, -0.998098f))
@@ -3465,7 +3465,7 @@ fun mousetrap() {
         createSetupProcyonBackupShipAction(procyonFrostKnifeObjectID, "Frost Knife", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON01_FROSTKNIFE"),
         createSetupProcyonBackupShipAction(procyonCrescentBearObjectID, "Crescent Bear", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON00_CRESCENTBEAR"),
         createSetupProcyonBackupShipAction(procyonNovaMaceObjectID, "Nova Mace", Skill.AVERAGE, "IDGS_TPSHIPNAMEPROCYON01_NOVAMACE"),
-        World.createSetGroupHoldPositionAction("Procyon Backup Group", true),
+        World.createSetWillGroupHoldPositionAction("Procyon Backup Group", true),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
         World.createSetupTeamObjectiveAction(procyonTeamID, "Procyon Objective Point", "Procyon Objective"),
         World.createPlayMusicAction("BTL_DeadlyPirate_AltSlow", 0.7f, 2f, 2f)
@@ -3475,14 +3475,14 @@ fun mousetrap() {
         world.addWorldRule(World.createWorldRule(ruleName, runOnce = true, isActive = true, ConditionListNode(condition), ActionListNode(*actions)))
     }
 
-    fun createSetProcyonBackupShipHoldPositionAction(name: String) = World.createSetGroupHoldPositionAction("PSR $name" of "Procyon Backup Group", false)
+    fun createSetProcyonBackupShipAdvancePositionAction(name: String) = World.createSetWillGroupHoldPositionAction("PSR $name" of "Procyon Backup Group", false)
 
     addWorldRule(
         "Pirates Approach Procyon Backup",
         World.createTeamMemberEntersPolygonCondition(pirateTeamID, "Procyon Backup Polygon"),
-        createSetProcyonBackupShipHoldPositionAction("Frost Knife"),
-        createSetProcyonBackupShipHoldPositionAction("Crescent Bear"),
-        createSetProcyonBackupShipHoldPositionAction("Nova Mace"),
+        createSetProcyonBackupShipAdvancePositionAction("Frost Knife"),
+        createSetProcyonBackupShipAdvancePositionAction("Crescent Bear"),
+        createSetProcyonBackupShipAdvancePositionAction("Nova Mace"),
         World.createPlayMusicAction("BTL_Pirate02_SlowVARI", 0.7f, 2f, 2f)
     )
 
@@ -3552,7 +3552,7 @@ fun rover() {
 
     fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
         val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else pirateTeamIndex to pirateAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.SIDE_BY_SIDE))
+        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE_ABREAST))
     }
 
     addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(-383.76883f, -429.0005f), Vector.dir(-0.251591f, 0.967834f))
@@ -3796,8 +3796,8 @@ fun rover() {
         World.createSetupIslandAction(pirateBaseObjectID, 80, "Pirate Base", Skill.ELITE, Stance.AGGRESSIVE),
         World.createGroupFollowPathAction("Storm Group", "Storm Path", FollowMode.LOOP, false),
         World.createSetGroupSpeedAction("Storm Group", 10),
-        World.createSetGroupOwnerAction("Navy Mine Group", "Navy Base"),
-        World.createSetGroupOwnerAction("Pirate Mine Group", "Pirate Base"),
+        World.createSetGroupOwningPlayerAction("Navy Mine Group", "Navy Base"),
+        World.createSetGroupOwningPlayerAction("Pirate Mine Group", "Pirate Base"),
         World.createSetupTeamObjectiveAction(navyTeamID, "Navy Objective Point", "Navy Objective 1"),
         World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective 2"),
         World.createSetupTeamObjectiveAction(pirateTeamID, "Pirate Objective Point", "Pirate Objective 1"),
@@ -3872,7 +3872,7 @@ fun shadow() {
     )
 
     fun addPlayer(id: Int, color: Color, start: Vector) {
-        world.addPlayer("Player $id", -1, color, start, Vector.east, Faction.ANY, Formation.DIAGONAL_V)
+        world.addPlayer("Player $id", -1, color, start, Vector.east, Faction.ANY, Formation.DIAMOND)
     }
 
     addPlayer(1, Color(0f, 0.502f, 0f), Vector(-541.1266f, 630.96155f))
@@ -4053,7 +4053,7 @@ fun zemyatin() {
     )
 
     fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
-        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.SIDE_BY_SIDE)
+        world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.LINE_ABREAST)
     }
 
     addPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-285.8385f, 232.97235f), Vector.dir(0.396998f, -0.91782f))

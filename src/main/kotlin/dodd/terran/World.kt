@@ -211,7 +211,7 @@ class World(private val game: Game, val root: RootNode) {
             return createPlayerListElement(playerName, teamIndex, color, false, start, direction, Faction.ANY, formation)
         }
 
-        fun createFakeFleetElement(playerName: String, color: Color, start: Vector = Vector.zero, direction: Vector = Vector.east, formation: Formation = Formation.NONE): NestedNode {
+        fun createFakeFleetElement(playerName: String, color: Color = Color.none, start: Vector = Vector.zero, direction: Vector = Vector.east, formation: Formation = Formation.NONE): NestedNode {
             return createPlayerListElement(playerName, -1, color, false, start, direction, Faction.ANY, formation)
         }
 
@@ -233,14 +233,14 @@ class World(private val game: Game, val root: RootNode) {
             "AITYPE" to "AIFLEET".node
         )
 
-        fun createWorldObject(objectID: Int, typeID: String, ownerIndex: Int, position: Vector, rotation: Matrix = Matrix.identity) = TupleNode(
+        fun createWorldObject(objectID: Int, typeID: String, owningPlayerIndex: Int, position: Vector, rotation: Matrix = Matrix.identity) = TupleNode(
             "ID" to objectID.node,
             "Type" to typeID.node,
             "State" to NestedNode(
                 "HasState" to false.node,
                 "Position" to position.node,
                 "Orientation" to rotation.node,
-                "PlayerIndex" to ownerIndex.node,
+                "PlayerIndex" to owningPlayerIndex.node,
                 RawNode("# AIEntity").entry,
                 "# AIEntityType" to TupleNode(
                     "Type" to "".node
@@ -439,6 +439,14 @@ class World(private val game: Game, val root: RootNode) {
             "Number Of Captures" to captureCount.node
         )
 
+        fun createPlayerCapturePlayerCondition(capturingPlayerName: String, targetPlayerName: String, equivalence: Equivalence, captureCount: Int) = ConditionNode(
+            "Type" to "Player Vs Player capture count".node,
+            "Player Name A" to capturingPlayerName.node,
+            "Player Name B" to targetPlayerName.node,
+            "Equivalence" to equivalence.node,
+            "Number Of Captures" to captureCount.node
+        )
+
         fun createTeamDestroyGroupCondition(teamID: String, groupName: String, destroyCount: Int = 0) = ConditionNode(
             "Type" to "Team has destroyed a ship from Group/Unit".node,
             "Team Name" to teamID.node,
@@ -450,6 +458,11 @@ class World(private val game: Game, val root: RootNode) {
             "Type" to "Does Group Contain Unit Name".node,
             "Unit Name" to groupName.node,
             "Exists?" to exists.stringNode()
+        )
+
+        fun createGroupUnderAttackCondition(groupName: String) = ConditionNode(
+            "Type" to "Group Under Attack".node,
+            "Group Name" to groupName.node
         )
 
         fun createGroupDamageCondition(groupName: String, equivalence: Equivalence, damageFraction: Float) = ConditionNode(
@@ -478,13 +491,27 @@ class World(private val game: Game, val root: RootNode) {
             "Volume Name" to polygonName.node
         )
 
+        fun createGroupExitsPolygonCondition(groupName: String, polygonName: String) = ConditionNode(
+            "Type" to "Exit Volume".node,
+            "Group Name" to groupName.node,
+            "Volume Name" to polygonName.node
+        )
+
         fun createTeamMemberEntersPolygonCondition(teamID: String, polygonName: String) = ConditionNode(
             "Type" to "Team Member Enters Volume".node,
             "Team Name" to teamID.node,
             "Volume Name" to polygonName.node
         )
 
-        fun createGroupMemberFromTeamEntersPolygonCondition(groupName: String, teamID: String, polygonName: String, pendingCount: Int = 0, enteredCount: Int = 0) = ConditionNode(
+        fun createPlayerGroupEntersPolygonCondition(playerName: String, groupName: String, polygonName: String, enteredCount: Int = 0) = ConditionNode(
+            "Type" to "All Units from Group have entered trigger volume Once".node,
+            "Group Name" to groupName.node,
+            "Volume Name" to polygonName.node,
+            "Player Name" to playerName.node,
+            "Object that have already entered - Size" to enteredCount.node
+        )
+
+        fun createTeamGroupMemberEntersPolygonCondition(teamID: String, groupName: String, polygonName: String, pendingCount: Int = 0, enteredCount: Int = 0) = ConditionNode(
             "Type" to "Unit from Group enters trigger volume ( Once per Unit )".node,
             "Group Name" to groupName.node,
             "Volume Name" to polygonName.node,
@@ -498,6 +525,11 @@ class World(private val game: Game, val root: RootNode) {
             "Group Name" to groupName.node,
             "Volume Name" to polygonName.node,
             "Entire Group" to entireGroup.stringNode()
+        )
+
+        fun createGroupInAnyNebulaCondition(groupName: String) = ConditionNode(
+            "Type" to "Unit is Within any Nebula".node,
+            "Unit Name" to groupName.node
         )
 
         fun createGroupToGroupDistanceCondition(firstGroupName: String, secondGroupName: String, equivalence: Equivalence, separationDistance: Int) = ConditionNode(
@@ -521,14 +553,9 @@ class World(private val game: Game, val root: RootNode) {
             "Time in seconds" to time.node
         )
 
-        fun createSpeechEventPlayedOnceCondition(speechName: String) = ConditionNode(
-            "Type" to "Speech Event Played Once".node,
-            "Speech Event Name" to speechName.node
-        )
-
-        fun createSpeechEventNotYetPlayedCondition(speechName: String) = ConditionNode(
-            "Type" to "Speech Event Not Played Yet".node,
-            "Speech Event Name" to speechName.node
+        fun createMortarExplosionInPolygonCondition(polygonName: String) = ConditionNode(
+            "Type" to "Mission 9 - If Mortar explodes within Area".node,
+            "Volume Name" to polygonName.node
         )
 
         fun createIsGroupAttackingTargetCondition(attackingGroupName: String, targetGroupName: String) = ConditionNode(
@@ -537,10 +564,23 @@ class World(private val game: Game, val root: RootNode) {
             "GroupB Name" to targetGroupName.node
         )
 
-        fun createIsGroupDockedAtTargetCondition(dockedGroupName: String, targetGroupName: String) = ConditionNode(
+        fun createGroupDockedAtTargetCondition(dockedGroupName: String, targetGroupName: String) = ConditionNode(
             "Type" to "Group/Unit Docked".node,
             "Dockers Group/Unit Name" to dockedGroupName.node,
             "Targets Group/Unit Name" to targetGroupName.node
+        )
+
+        fun createGroupCurrentlyDockedAtTargetCondition(dockedGroupName: String, targetGroupName: String) = ConditionNode(
+            "Type" to "Group/Unit Is Docked".node,
+            "Dockers Group/Unit Name" to dockedGroupName.node,
+            "Targets Group/Unit Name" to targetGroupName.node
+        )
+
+        fun createIsGroupTowingTargetCondition(towingGroupName: String, targetGroupName: String, boolean: Boolean) = ConditionNode(
+            "Type" to "Is Ship In Tow".node,
+            "Towing Group" to towingGroupName.node,
+            "Target to Tow" to targetGroupName.node,
+            "Boolean" to boolean.stringNode()
         )
 
         fun createGroupHitCountAtLeastCondition(groupName: String, hitCount: Int) = ConditionNode(
@@ -564,7 +604,28 @@ class World(private val game: Game, val root: RootNode) {
             "Player Name" to attackingPlayerName.node
         )
 
-        fun createGroupFlagTextureCondition(groupName: String, flagTGA: Equivalence, boolean: Boolean) = ConditionNode(
+        fun createGroupShotsFiredCountCondition(groupName: String, equivalence: Equivalence, shotCount: Int) = ConditionNode(
+            "Type" to "Group/Unit Fired X Shots".node,
+            "Group/Unit Name" to groupName.node,
+            "Equivalence" to equivalence.node,
+            "Number Of Rounds Fired" to shotCount.node
+        )
+
+        fun createStarmapOpenCondition() = ConditionNode(
+            "Type" to "Is Starmap Open".node
+        )
+
+        fun createSpeechEventPlayedOnceCondition(speechName: String) = ConditionNode(
+            "Type" to "Speech Event Played Once".node,
+            "Speech Event Name" to speechName.node
+        )
+
+        fun createSpeechEventNotYetPlayedCondition(speechName: String) = ConditionNode(
+            "Type" to "Speech Event Not Played Yet".node,
+            "Speech Event Name" to speechName.node
+        )
+
+        fun createGroupFlagTextureCondition(groupName: String, flagTGA: String, boolean: Boolean) = ConditionNode(
             "Type" to "Unit Flag Texture".node,
             "Unit Name" to groupName.node,
             "Flag Type" to flagTGA.node,
@@ -583,33 +644,33 @@ class World(private val game: Game, val root: RootNode) {
             pathName: String?,
             followMode: FollowMode,
             findClosestPoint: Boolean,
-            minVelocity: Float,
-            maxVelocity: Float,
-            minAngularVelocity: Float,
-            maxAngularVelocity: Float
+            minSpeed: Float,
+            maxSpeed: Float,
+            minAngularSpeed: Float,
+            maxAngularSpeed: Float
         ) = ActionNode(
             "Type" to "Setup Asteroid Belt".node,
             "Group Name" to groupName.node,
             "Path Name" to (pathName ?: "NO PATH").node,
             "Follow Mode" to followMode.node,
             "Find Closest Point" to findClosestPoint.stringNode(),
-            "Velocity Upper m/sec" to maxVelocity.node,
-            "Velocity Lower m/sec" to minVelocity.node,
-            "Tumble Upper Rads/sec" to maxAngularVelocity.node,
-            "Tumble Lower Rads/sec" to minAngularVelocity.node
+            "Velocity Upper m/sec" to maxSpeed.node,
+            "Velocity Lower m/sec" to minSpeed.node,
+            "Tumble Upper Rads/sec" to maxAngularSpeed.node,
+            "Tumble Lower Rads/sec" to minAngularSpeed.node
         )
 
         fun createSetupIslandAction(
             objectID: Int,
             combatStrength: Int,
-            ownerName: String?,
+            owningPlayerName: String?,
             gunneryLevel: Skill,
             stance: Stance,
         ) = ActionNode(
             "Type" to "*State Init* Setup Island".node,
             "World Object ID" to objectID.node,
             "Combat Strength" to combatStrength.node,
-            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
+            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
             "Gunnery Level" to gunneryLevel.node,
             "AI Stance" to stance.node
         )
@@ -620,7 +681,7 @@ class World(private val game: Game, val root: RootNode) {
             pathName: String?,
             followMode: FollowMode,
             stance: Stance,
-            ownerName: String?,
+            owningPlayerName: String?,
             primaryShip: Boolean,
             crewSkill: Skill,
             boardable: Boolean,
@@ -632,18 +693,26 @@ class World(private val game: Game, val root: RootNode) {
             "Ship Path" to (pathName ?: "NO PATH").node,
             "Follow Mode" to followMode.node,
             "AI Stance" to stance.node,
-            "Player/Owner" to (ownerName ?: "NO PLAYER").node,
+            "Player/Owner" to (owningPlayerName ?: "NO PLAYER").node,
             "Primary Ship" to primaryShip.stringNode(),
             "Crew Skill Level" to crewSkill.node,
             "Boardable" to boardable.stringNode(),
             "Localized Ship Name" to (displayNameID ?: "LOCALIZED SHIP NAME").node
         )
 
-        fun createSetupTeamObjectiveAction(teamID: String, objectivePoint: String?, objectiveTask: String) = ActionNode(
-            "Type" to "Setup Team Objective".node,
-            "Team Name" to teamID.node,
-            "Objective Point" to (objectivePoint ?: "NO OBJECTIVE POINT").node,
-            "Objective Task" to objectiveTask.node
+        fun createSetupAnimalFlockAction(
+            groupName: String,
+            pathName: String?,
+            followMode: FollowMode,
+            findClosestPoint: Boolean,
+            speed: Int
+        ) = ActionNode(
+            "Type" to "Setup Space Animal Flock".node,
+            "Group Name" to groupName.node,
+            "Path Name" to (pathName ?: "NO PATH").node,
+            "Follow Mode" to followMode.node,
+            "Find Closest Point" to findClosestPoint.stringNode(),
+            "Velocity" to speed.node
         )
 
         fun createSetupWeatherAction(
@@ -656,7 +725,7 @@ class World(private val game: Game, val root: RootNode) {
             nebulaEnergyDrain: Boolean,
             nebulaOcclusion: Boolean,
             lightningRechargeTime: Float?,
-            stormAngularVelocity: Float,
+            stormAngularSpeed: Float,
             stormDamageRate: Float,
             meteorRechargeTime: Float?,
             maxAmbientSoundDistance: Float,
@@ -678,8 +747,8 @@ class World(private val game: Game, val root: RootNode) {
             "Nebula Cloud Point Set Name" to (nebulaPointSetName ?: "POINT SET").node,
             "Solar Storm Point Set Name" to (solarStormPointSetName ?: "POINT SET").node,
             "Meteor Shower Point Set Name" to (meteorShowerPointSetName ?: "POINT SET").node,
-            "Rotational Winds On/Off" to (stormAngularVelocity != 0f).stringNode(),
-            "Wind Magnitude" to stormAngularVelocity.node,
+            "Rotational Winds On/Off" to (stormAngularSpeed != 0f).stringNode(),
+            "Wind Magnitude" to stormAngularSpeed.node,
             "Nebula Cloud Energy Drain On/Off" to nebulaEnergyDrain.stringNode(),
             "Nebula Occlusion On/Off" to nebulaOcclusion.stringNode(),
             "Solar Storm Wind Damage Frequency" to stormDamageRate.node,
@@ -718,7 +787,7 @@ class World(private val game: Game, val root: RootNode) {
             polygonName: String,
             pointSetName: String,
             lightningRechargeTime: Float?,
-            angularVelocity: Float,
+            angularSpeed: Float,
             damageRate: Float,
             maxAmbientSoundDistance: Float,
             stormEffect: String = "SolarStorm"
@@ -732,7 +801,7 @@ class World(private val game: Game, val root: RootNode) {
             nebulaEnergyDrain = false,
             nebulaOcclusion = false,
             lightningRechargeTime,
-            angularVelocity,
+            angularSpeed,
             damageRate,
             null,
             maxAmbientSoundDistance,
@@ -771,16 +840,72 @@ class World(private val game: Game, val root: RootNode) {
             "Boolean State" to state.stringNode()
         )
 
-        fun createSetGroupOwnerAction(groupName: String, ownerName: String) = ActionNode(
+        fun createSetupTeamObjectiveAction(teamID: String, objectivePoint: String?, objectiveTask: String) = ActionNode(
+            "Type" to "Setup Team Objective".node,
+            "Team Name" to teamID.node,
+            "Objective Point" to (objectivePoint ?: "NO OBJECTIVE POINT").node,
+            "Objective Task" to objectiveTask.node
+        )
+
+        fun createSetGroupOwningPlayerAction(groupName: String, owningPlayerName: String) = ActionNode(
             "Type" to "Set Group/Unit Owner".node,
             "Group/Unit Name" to groupName.node,
-            "New Owner" to ownerName.node
+            "New Owner" to owningPlayerName.node
+        )
+
+        fun createSetGroupPrimaryUnitAction(groupUnitName: String) = ActionNode(
+            "Type" to "Set Fleet Primary Ship".node,
+            "Group/Unit Name" to groupUnitName.node
         )
 
         fun createSetGroupStanceAction(groupName: String, stance: Stance) = ActionNode(
             "Type" to "Set Group/Unit AI Stance".node,
             "Group/Unit Name" to groupName.node,
             "AI Stance" to stance.node
+        )
+
+        fun createSetGroupHumanCaptainAction(groupName: String) = ActionNode(
+            "Type" to "Set Group/Unit AI Captain".node,
+            "Group/Unit Name" to groupName.node,
+            "AI Stance" to "Captain_Human".node
+        )
+
+        fun createSetFleetFormationAction(playerName: String, formation: Formation, holdFormation: Boolean) = ActionNode(
+            "Type" to "Set FleetFormation Type".node,
+            "Player Name" to playerName.node,
+            "Formation Type" to formation.stringNode(),
+            "Hold Formation" to holdFormation.stringNode()
+        )
+
+        fun createSetWillFleetHoldFormationAction(playerName: String, holdFormation: Boolean) = ActionNode(
+            "Type" to "Set Fleet Hold Formation".node,
+            "Player Name" to playerName.node,
+            "Hold Formation" to holdFormation.stringNode()
+        )
+
+        fun createSetIsGroupMissionEssentialAction(groupName: String, isMissionEssential: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Mission Essential".node,
+            "Group Name" to groupName.node,
+            "Boolean" to isMissionEssential.stringNode()
+        )
+
+        fun createSetWillPlayerHoldFireAction(playerName: String, holdingFire: Boolean) = ActionNode(
+            "Type" to "Set Fleet Hold Fire".node,
+            "PLAYER FLEET" to playerName.node,
+            "HOLD FIRE" to holdingFire.stringNode()
+        )
+
+        fun createSetGroupWarningShotModeAction(groupName: String, warningShotMode: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Warning Shot Mode".node,
+            "GroupUnit Name" to groupName.node,
+            "Boolean" to warningShotMode.stringNode()
+        )
+
+        fun createSetGroupCloakStateAction(groupName: String, cloakState: Boolean, canAIOverride: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Cloak State".node,
+            "Group Name" to groupName.node,
+            "Cloak State" to cloakState.stringNode(),
+            "AI Can Override" to canAIOverride.stringNode()
         )
 
         fun createGroupFollowPathAction(groupName: String, pathName: String, followMode: FollowMode, findClosestPoint: Boolean) = ActionNode(
@@ -809,28 +934,162 @@ class World(private val game: Game, val root: RootNode) {
             "Throttle Percent" to maxThrottleFraction.node
         )
 
+        fun createSetGroupMaxSpeedAction(groupName: String, maxSpeedFraction: Float) = ActionNode(
+            "Type" to "Set Ship Top Speed Percentage".node,
+            "Group Name" to groupName.node,
+            "Throttle Speed" to maxSpeedFraction.node
+        )
+
+        fun createSetGroupBorderPolygonAction(groupName: String, polygonName: String) = ActionNode(
+            "Type" to "Set Group/Unit Border Zone".node,
+            "Group/Unit Name" to groupName.node,
+            "Polygon Name" to polygonName.node
+        )
+
+        fun createClearGroupBorderPolygonAction(groupName: String) = ActionNode(
+            "Type" to "Clear Group/Unit Border Zone".node,
+            "Group/Unit Name" to groupName.node
+        )
+
         fun createSetGroupReturnZoneAction(groupName: String, pointSetName: String) = ActionNode(
             "Type" to "Set Group/Unit Border Zone Return Point".node,
             "Group/Unit Name" to groupName.node,
             "Pointset Name" to pointSetName.node
         )
 
-        fun createSetGroupHoldPositionAction(groupName: String, holdPosition: Boolean) = ActionNode(
+        fun createSetWillGroupHoldPositionAction(groupName: String, holdPosition: Boolean) = ActionNode(
             "Type" to "Set Group/Unit Hold Position".node,
             "Group/Unit Name" to groupName.node,
             "Boolean" to holdPosition.stringNode()
         )
 
-        fun createSetGroupVisibilityAction(groupName: String, isVisible: Boolean) = ActionNode(
+        fun createSetIsGroupVisibleAction(groupName: String, isVisible: Boolean) = ActionNode(
             "Type" to "Set Group/Unit Visibility".node,
             "Group/Unit Name" to groupName.node,
             "Boolean" to isVisible.stringNode()
         )
 
-        fun createGroupDamageAction(groupName: String, damageFraction: Float) = ActionNode(
+        fun createSetGroupInvulnerabilityAction(groupName: String, invulnerabilityFraction: Float) = ActionNode(
+            "Type" to "Set Group/Unit Vulnerability".node,
+            "Group Name" to groupName.node,
+            "Invulnerable Percent" to invulnerabilityFraction.node
+        )
+
+        fun createClearGroupAICommandsAction(groupName: String) = ActionNode(
+            "Type" to "Clear all AI commands".node,
+            "Group/Unit Name" to groupName.node
+        )
+
+        fun createResetHitCountAction(groupName: String) = ActionNode(
+            "Type" to "Reset Hit Count".node,
+            "Group/Unit Name" to groupName.node
+        )
+
+        fun createResetShotsFiredCountAction(groupName: String) = ActionNode(
+            "Type" to "Reset Shots Fired Count".node,
+            "Group/Unit Name" to groupName.node
+        )
+
+        fun createDamageGroupAction(groupName: String, damageFraction: Float) = ActionNode(
             "Type" to "Damage Group/Unit by X percent".node,
             "Group Name" to groupName.node,
             "Percent" to damageFraction.node
+        )
+
+        fun createDestroyGroupAction(groupName: String) = ActionNode(
+            "Type" to "Destroy Group/Unit".node,
+            "Group Name" to groupName.node
+        )
+
+        fun createSetGroupDisplayNameAction(groupName: String, displayNameID: String) = ActionNode(
+            "Type" to "Set Ship Name".node,
+            "Group/Unit Name" to groupName.node,
+            "New Ship Name" to displayNameID.node
+        )
+
+        fun createTransferGroupToReceiverAction(transferredGroup: String, receiverGroup: String) = ActionNode(
+            "Type" to "Transfer Group/Unit to Group".node,
+            "Group/Unit to transfer" to transferredGroup.node,
+            "Target Group" to receiverGroup.node
+        )
+
+        fun createSetIsGroupDockableAction(groupName: String, isDockable: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Dockable".node,
+            "Group Name" to groupName.node,
+            "Boolean" to isDockable.stringNode()
+        )
+
+        fun createSetIsGroupBoardableAction(groupName: String, isBoardable: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Boardable".node,
+            "Group Name" to groupName.node,
+            "Boolean" to isBoardable.stringNode()
+        )
+
+        fun createSetIsGroupTowableAction(groupName: String, isTowable: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Towable".node,
+            "Group Name" to groupName.node,
+            "Boolean" to isTowable.stringNode()
+        )
+
+        fun createSetIsGroupMovableAction(groupName: String, isMovable: Boolean) = ActionNode(
+            "Type" to "Set Group/Unit Movable".node,
+            "Group Name" to groupName.node,
+            "Boolean" to isMovable.stringNode()
+        )
+
+        fun createSetIsGroupCollidableAction(groupName: String, isCollidable: Boolean) = ActionNode(
+            "Type" to "SetCollidable".node,
+            "Group/Unit Name" to groupName.node,
+            "Boolean" to isCollidable.stringNode()
+        )
+
+        fun createGroupDockToTargetAction(dockingGroupName: String, targetGroupName: String) = ActionNode(
+            "Type" to "Dock Ships".node,
+            "Docking Group" to dockingGroupName.node,
+            "Target to Dock to" to targetGroupName.node
+        )
+
+        fun createSetDockTimeAction(groupName: String, dockingTime: Float) = ActionNode(
+            "Type" to "Set Dock Time".node,
+            "Docking GroupUnit" to groupName.node,
+            "Dock Time" to dockingTime.node
+        )
+
+        fun createGroupTowTargetAction(towingGroupName: String, targetGroupName: String) = ActionNode(
+            "Type" to "Tow Ship".node,
+            "Docking Group" to towingGroupName.node,
+            "Target to Tow" to targetGroupName.node
+        )
+
+        fun createBreakTowAction(towingGroupName: String, targetGroupName: String) = ActionNode(
+            "Type" to "Break Tow".node,
+            "TowerGroupA" to towingGroupName.node,
+            "TowerGroupB" to targetGroupName.node
+        )
+
+        fun createTeleportGroupToPointSetAction(groupName: String, pointSetName: String) = ActionNode(
+            "Type" to "Teleport Group/Unit".node,
+            "Group/Unit Name" to groupName.node,
+            "Point Set Name" to pointSetName.node
+        )
+
+        fun createGroupToAttackTargetAction(attackingGroupName: String, targetGroupName: String) = ActionNode(
+            "Type" to "GroupA to attack GroupB".node,
+            "Attack Group" to attackingGroupName.node,
+            "Target Group" to targetGroupName.node
+        )
+
+        fun createGroupToRamTargetAction(rammingGroupName: String, targetGroupName: String) = ActionNode(
+            "Type" to "GroupA to Ram GroupB".node,
+            "Group Name" to rammingGroupName.node,
+            "Group Unit Target" to targetGroupName.node
+        )
+
+        fun createSetPlayerAllianceAction(firstPlayerName: String, secondPlayerName: String, allianceState: Boolean) = ActionNode(
+            "Type" to "Set alliance between PlayerA and PlayerB to TRUE/FALSE".node,
+            "PLAYER A" to firstPlayerName.node,
+            "PLAYER B" to secondPlayerName.node,
+            "SET ALLIANCE TO" to allianceState.stringNode()
         )
 
         fun createSetDragonStanceAction(groupName: String, stance: Stance) = ActionNode(
@@ -845,10 +1104,52 @@ class World(private val game: Game, val root: RootNode) {
             "Damage Threshold" to damageThreshold.node
         )
 
+        fun createSetWillNebulaeLockObjectsAction(shouldLock: Boolean) = ActionNode(
+            "Type" to "Set Nebula to Lock Objects".node,
+            "Trap" to shouldLock.stringNode(),
+        )
+
+        fun createSetNebulaeFadeoutDistanceAction(fadeoutDistance: Float) = ActionNode(
+            "Type" to "Set Nebula Fadeout Distance".node,
+            "Fadeout Distance" to fadeoutDistance.node,
+        )
+
         fun createSetFlagAction(flagName: String, boolean: Boolean) = ActionNode(
             "Type" to "Set Flag Action".node,
             "Flag Name" to flagName.node,
             "Boolean Value" to boolean.stringNode(),
+        )
+
+        fun createStartTimerAction(timerName: String) = ActionNode(
+            "Type" to "Start Timer".node,
+            "Timer Name" to timerName.node
+        )
+
+        fun createStopTimerAction(timerName: String) = ActionNode(
+            "Type" to "Stop Timer".node,
+            "Timer Name" to timerName.node
+        )
+
+        fun createDarkMatterExplosionAction(polygonName: String) = ActionNode(
+            "Type" to "Mission 9 - Do Dark Matter Explosion".node,
+            "Affected Area" to polygonName.node
+        )
+
+        fun createTeleportGroupToHumanControlledUnitAction(groupName: String) = ActionNode(
+            "Type" to "Mission 9 - Teleport Longboat".node,
+            "Longboat Group Name" to groupName.node
+        )
+
+        fun createSetWillSpawnLifeboatsAction(groupName: String, boolean: Boolean) = ActionNode(
+            "Type" to "Set Lifeboat Creation State".node,
+            "Group Name" to groupName.node,
+            "Boolean" to boolean.stringNode()
+        )
+
+        fun createSetWillRepairDockedUnitsAction(groupName: String, boolean: Boolean) = ActionNode(
+            "Type" to "Toggle Island Repair When Docked".node,
+            "Group Name" to groupName.node,
+            "Repair when docked" to boolean.stringNode()
         )
 
         fun createSetObjectiveTaskActiveStateAction(taskName: String, state: Boolean) = ActionNode(
@@ -869,9 +1170,35 @@ class World(private val game: Game, val root: RootNode) {
             "Failed State" to state.stringNode()
         )
 
-        fun createStartTimerAction(timerName: String) = ActionNode(
-            "Type" to "Start Timer".node,
-            "Timer Name" to timerName.node
+        fun createSetCurrentObjectivePointAction(objectivePoint: String?) = ActionNode(
+            "Type" to "Set Current Objective Point".node,
+            "Objective Point" to (objectivePoint ?: "NO OBJECTIVE POINT").node
+        )
+
+        fun createSetCurrentObjectivePointToGroupAction(groupName: String) = ActionNode(
+            "Type" to "Set Current Objective Point On Ship".node,
+            "Group Name" to groupName.node
+        )
+
+        fun createSetIsCurrentObjectivePointVisibleOnStarmapAction(isVisible: Boolean) = ActionNode(
+            "Type" to "Set Current Objective Point Visible On Starmap".node,
+            "Visible On Starmap" to isVisible.stringNode()
+        )
+
+        fun createSetIsTextVisibleOnStarmapAction(textName: String, isVisible: Boolean) = ActionNode(
+            "Type" to "Set Map Text Visibility".node,
+            "Map Text Name" to textName.node,
+            "Visible On Starmap" to isVisible.stringNode()
+        )
+
+        fun createSetWillPauseWhenStarmapOpensAction(willPause: Boolean) = ActionNode(
+            "Type" to "TUTORIAL - Pause when starmap opens?".node,
+            "Pause when starmap opens" to willPause.stringNode()
+        )
+
+        fun createSetIsRadarActiveAction(state: Boolean) = ActionNode(
+            "Type" to "Set Radar Active State".node,
+            "Radar Active" to state.stringNode()
         )
 
         fun createPlayMusicAction(musicID: String, volume: Float, fadeInTime: Float = 0f, fadeOutTime: Float = 0f, crossfade: Boolean? = null) = ActionNode(
@@ -889,6 +1216,149 @@ class World(private val game: Game, val root: RootNode) {
             "Points" to points.node
         )
 
+        fun createAddVictoryPointsAction(victoryPoints: Int) = ActionNode(
+            "Type" to "Add Victory Points for SinglePlayer".node,
+            "Victory points to be added" to victoryPoints.node
+        )
+
+        fun createOpenCrewAndArmsScreenAction() = ActionNode(
+            "Type" to "Open Crew and Arms Screens".node
+        )
+
+        fun createSetIsWeaponBarOpenAction(isOpen: Boolean) = ActionNode(
+            "Type" to "Open Weapon Bar".node,
+            "OpenState" to isOpen.stringNode()
+        )
+
+        fun createSetIsCrewSpeechEnabledAction(isEnabled: Boolean) = ActionNode(
+            "Type" to "Crew Speech - Toggle On Off".node,
+            "Crew Speech State State" to isEnabled.stringNode()
+        )
+
+        fun createPlaySpeechEventAction(speechName: String) = ActionNode(
+            "Type" to "Play speech event".node,
+            "Speech Event Name" to speechName.node
+        )
+
+        fun createHelmOffCourseCrewSpeechAction() = ActionNode(
+            "Type" to "Crew Speech - Helm Off Course".node
+        )
+
+        fun createPlaySpecialEffectAction(specialEffectName: String, asDialogue: Boolean) = ActionNode(
+            "Type" to "Play Special Effect".node,
+            "File Name" to specialEffectName.node,
+            "Play As Dialog" to asDialogue.stringNode()
+        )
+
+        fun createFocusCameraOnGroupAction(groupName: String, distance: Float, angleDegrees: Float, useTransition: Boolean) = ActionNode(
+            "Type" to "Focus Camera On Group".node,
+            "GroupUnit Name" to groupName.node,
+            "Distance" to distance.node,
+            "Relative Angle" to angleDegrees.node,
+            "Use Transition" to useTransition.stringNode()
+        )
+
+        fun createSetGroupFlagTextureAction(groupName: String, flagTGA: String) = ActionNode(
+            "Type" to "Set Ships Flag Texture".node,
+            "Group Name" to groupName.node,
+            "Flag Texture" to flagTGA.node
+        )
+
+        fun createSetGroupBannerAction(groupName: String, banner: Banner) = ActionNode(
+            "Type" to "Set Ship Banner Type".node,
+            "Group/Unit Name" to groupName.node,
+            "Banner Type" to banner.node
+        )
+
+        fun createOpenHUDTextureOverlayAction(textureName: String) = ActionNode(
+            "Type" to "Open HUD Texture Overlay".node,
+            "Texture Base Name" to textureName.node
+        )
+
+        fun createCloseHUDTextureOverlayAction() = ActionNode(
+            "Type" to "Close HUD Texture Overlay".node
+        )
+
+        fun createSetIsInCalyanAbyssAction(boolean: Boolean) = ActionNode(
+            "Type" to "Set Is In Calyan Abyss".node,
+            "Boolean Value" to boolean.stringNode()
+        )
+
+        fun createNISStartAction(allObjectsVisible: Boolean, openNISBarsInstantly: Boolean) = ActionNode(
+            "Type" to "NIS Start".node,
+            "All Objects Visible" to allObjectsVisible.stringNode(),
+            "Open NIS bars instantly" to openNISBarsInstantly.stringNode()
+        )
+
+        fun createNISSetAreAllObjectsVisibleAction(allObjectsVisible: Boolean) = ActionNode(
+            "Type" to "NIS Toggle All Objects Visibility".node,
+            "All Objects Visible" to allObjectsVisible.stringNode()
+        )
+
+        fun createNISAttachToGroupAction(groupName: String, distance: Float, angleYZ: Float, angleXY: Float) = ActionNode(
+            "Type" to "NIS Attach Camera".node,
+            "Group/Unit Name" to groupName.node,
+            "Distance" to distance.node,
+            "Angle YZ" to angleYZ.node,
+            "Angle XY" to angleXY.node
+        )
+
+        fun createNISSetPositionRelativeToGroupAction(groupName: String, distance: Float, angleYZ: Float, angleXY: Float, jumpToPoint: Boolean) = ActionNode(
+            "Type" to "NIS Position Camera Relative to Object".node,
+            "Unit Name" to groupName.node,
+            "Distance" to distance.node,
+            "Angle YZ" to angleYZ.node,
+            "Angle XY" to angleXY.node,
+            "Jump to point" to jumpToPoint.stringNode()
+        )
+
+        fun createNISFocusOnGroupAction(groupName: String) = ActionNode(
+            "Type" to "NIS Focus camera on Group/Unit".node,
+            "GroupUnit Name" to groupName.node
+        )
+
+        fun createNISFocusOnPointSetAction(pointSetName: String) = ActionNode(
+            "Type" to "NIS Focus camera on Point".node,
+            "Point Set Name" to pointSetName.node
+        )
+
+        fun createNISFocusOnHumanControlledUnitAction() = ActionNode(
+            "Type" to "NIS Focus on Main Ship".node
+        )
+
+        fun createNISSetPathAction(pathName: String, jumpToStart: Boolean) = ActionNode(
+            "Type" to "NIS Set Camera Path".node,
+            "Path Name" to pathName.node,
+            "Jump to start" to jumpToStart.stringNode()
+        )
+
+        fun createNISSetSpeedAction(acceleration: Float, maxSpeed: Float) = ActionNode(
+            "Type" to "NIS Set Camera Speed".node,
+            "Acceleration" to acceleration.node,
+            "Max Velocity" to maxSpeed.node
+        )
+
+        fun createNISSetTransitionSpeedAction(acceleration: Float, maxSpeed: Float) = ActionNode(
+            "Type" to "NIS Set Transition Camera Speed".node,
+            "Acceleration" to acceleration.node,
+            "Max Velocity" to maxSpeed.node
+        )
+
+        fun createNISZoomAction(fov: Float, speed: Float) = ActionNode(
+            "Type" to "NIS Zoom".node,
+            "FOV" to fov.node,
+            "Speed" to speed.node
+        )
+
+        fun createNISSetGunAccuracyStateAction(state: Boolean) = ActionNode(
+            "Type" to "NIS Toggle NIS mode Gun Accuracy".node,
+            "Use NIS Gun Accuracy" to state.stringNode()
+        )
+
+        fun createNISEndAction() = ActionNode(
+            "Type" to "NIS End".node
+        )
+
         fun createTeamWinsAction(teamID: String) = ActionNode(
             "Type" to "Team X Wins".node,
             "Team Name" to teamID.node
@@ -904,6 +1374,12 @@ class World(private val game: Game, val root: RootNode) {
             "Winner - Custom Message String ID" to (winMessageID ?: "GAME STRING").node,
             "Loser - Custom Message String ID" to (loseMessageID ?: "GAME STRING").node,
             "Show Stats Screen" to showStats.stringNode()
+        )
+
+        fun createGotoNextLevelAction(worldTWT: String, displayLoadingString: Boolean) = ActionNode(
+            "Type" to "Goto Next Level".node,
+            "World" to worldTWT.node,
+            "Display Loading String" to displayLoadingString.stringNode()
         )
 
         fun createObjectivePoint(pointName: String, position: Vector) = NestedNode(
@@ -1251,7 +1727,7 @@ class World(private val game: Game, val root: RootNode) {
         return addPlayerListElement(createPlayerListElement(playerName, teamIndex, color, true, start, direction, faction, formation))
     }
 
-    fun addWorldObject(typeID: String, ownerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.identity): Int {
+    fun addWorldObject(typeID: String, owningPlayerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.identity): Int {
         val world = root.get<NestedNode>("World")!!
         val nextID = world.get<IntNode>("NextID")!!
         val objectID = nextID.value
@@ -1259,8 +1735,8 @@ class World(private val game: Game, val root: RootNode) {
         nextID.value += 1
         root.get<NestedNode>("WorldInfo")!!.get<IntNode>("Object Count")!!.value += 1
 
-        val ownerID = if (ownerName == null) -1 else world.get<PlayerListNode>("PlayerList")!!.indexOf { it is NestedNode && it.get<StringNode>("Name")?.value == ownerName }
-        world.get<WorldObjectsListNode>("WorldObjects")!!.add(createWorldObject(objectID, typeID, ownerID, position, rotation))
+        val owningPlayerID = if (owningPlayerName == null) -1 else world.get<PlayerListNode>("PlayerList")!!.indexOf { it is NestedNode && it.get<StringNode>("Name")?.value == owningPlayerName }
+        world.get<WorldObjectsListNode>("WorldObjects")!!.add(createWorldObject(objectID, typeID, owningPlayerID, position, rotation))
 
         if (groupName != null) {
             val groupsList = world.get<NestedNode>("GameSpecific")!!.get<GroupsListNode>("Num Groups")!!
