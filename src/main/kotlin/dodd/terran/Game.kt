@@ -1,7 +1,6 @@
 package dodd.terran
 
-import dodd.terran.util.Helpers.capitalize
-import dodd.terran.util.Helpers.child
+import dodd.terran.util.child
 import java.io.File
 
 class Game(dir: String, lang: String) {

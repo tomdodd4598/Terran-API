@@ -1,10 +1,11 @@
 package dodd.terran.value
 
-import dodd.terran.util.Helpers.clean
+import dodd.terran.util.clean
+import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
 
-class Matrix(private val internal: Array<FloatArray>) {
+class Matrix(var xx: Float, var yx: Float, var zx: Float, var xy: Float, var yy: Float, var zy: Float, var xz: Float, var yz: Float, var zz: Float) {
 
     companion object {
         val identity get() = Matrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
@@ -32,68 +33,98 @@ class Matrix(private val internal: Array<FloatArray>) {
             return Matrix(
                 c + x * x * d, x * y * d - z * s, x * z * d + y * s,
                 y * x * d + z * s, c + y * y * d, y * z * d - x * s,
-                z * x * d - y * s, z * y * d + x * s, c + z * z * d,
+                z * x * d - y * s, z * y * d + x * s, c + z * z * d
             )
         }
     }
 
-    constructor(x: FloatArray, y: FloatArray, z: FloatArray) : this(arrayOf(x, y, z))
-
-    constructor(xx: Float, yx: Float, zx: Float, xy: Float, yy: Float, zy: Float, xz: Float, yz: Float, zz: Float) : this(floatArrayOf(xx, yx, zx), floatArrayOf(xy, yy, zy), floatArrayOf(xz, yz, zz))
-
     init {
-        for (row in internal) {
-            for (i in row.indices) {
-                row[i] = row[i].clean()
-            }
+        xx = xx.clean()
+        yx = yx.clean()
+        zx = zx.clean()
+        xy = xy.clean()
+        yy = yy.clean()
+        zy = zy.clean()
+        xz = xz.clean()
+        yz = yz.clean()
+        zz = zz.clean()
+    }
+
+    val transpose get() = Matrix(xx, xy, xz, yx, yy, yz, zx, zy, zz)
+
+    operator fun get(rowIndex: Int, colIndex: Int) = when (rowIndex) {
+        0 -> when (colIndex) {
+            0 -> xx
+            1 -> yx
+            else -> zx
+        }
+        1 -> when (colIndex) {
+            0 -> xy
+            1 -> yy
+            else -> zy
+        }
+        else -> when (colIndex) {
+            0 -> xz
+            1 -> yz
+            else -> zz
         }
     }
 
-    val rowCount = internal.size
-    val colCount = internal.firstOrNull()?.size ?: 0
-
-    operator fun get(rowIndex: Int, colIndex: Int) = internal[rowIndex][colIndex]
-
-    operator fun set(rowIndex: Int, colIndex: Int, value: Float) {
-        internal[rowIndex][colIndex] = value
-    }
-
-    operator fun unaryPlus() = Matrix(Array(rowCount) { i -> FloatArray(colCount) { j -> internal[i][j] } })
-
-    operator fun unaryMinus() = Matrix(Array(rowCount) { i -> FloatArray(colCount) { j -> -internal[i][j] } })
-
-    operator fun times(vector: Vector) = Vector(FloatArray(vector.size)).also {
-        for (i in 0..<rowCount) {
-            for (j in 0..<vector.size) {
-                it[i] += internal[i][j] * vector[j]
-            }
+    operator fun set(rowIndex: Int, colIndex: Int, value: Float) = when (rowIndex) {
+        0 -> when (colIndex) {
+            0 -> xx = value
+            1 -> yx = value
+            else -> zx = value
+        }
+        1 -> when (colIndex) {
+            0 -> xy = value
+            1 -> yy = value
+            else -> zy = value
+        }
+        else -> when (colIndex) {
+            0 -> xz = value
+            1 -> yz = value
+            else -> zz = value
         }
     }
 
-    operator fun times(other: Matrix) = Matrix(Array(rowCount) { FloatArray(other.colCount) }).also {
-        for (i in 0..<rowCount) {
-            for (j in 0..<other.colCount) {
-                for (k in 0..<colCount) {
-                    it.internal[i][j] += internal[i][k] * other.internal[k][j]
-                }
-            }
-        }
-    }
+    operator fun unaryPlus() = Matrix(xx, yx, zx, xy, yy, zy, xz, yz, zz)
+
+    operator fun unaryMinus() = Matrix(-xx, -yx, -zx, -xy, -yy, -zy, -xz, -yz, -zz)
+
+    operator fun times(vector: Vector) = Vector(
+        xx * vector.x + yx * vector.y + zx * vector.z,
+        xy * vector.x + yy * vector.y + zy * vector.z,
+        xz * vector.x + yz * vector.y + zz * vector.z
+    )
+
+    operator fun times(other: Matrix) = Matrix(
+        xx * other.xx + yx * other.xy + zx * other.xz, xx * other.yx + yx * other.yy + zx * other.yz, xx * other.zx + yx * other.zy + zx * other.zz,
+        xy * other.xx + yy * other.xy + zy * other.xz, xy * other.yx + yy * other.yy + zy * other.yz, xy * other.zx + yy * other.zy + zy * other.zz,
+        xz * other.xx + yz * other.xy + zz * other.xz, xz * other.yx + yz * other.yy + zz * other.yz, xz * other.zx + yz * other.zy + zz * other.zz
+    )
 
     operator fun timesAssign(other: Matrix) {
         val result = this * other
-        for (i in 0..<rowCount) {
-            for (j in 0..<colCount) {
-                internal[i][j] = result.internal[i][j]
-            }
-        }
+        xx = result.xx
+        yx = result.yx
+        zx = result.zx
+        xy = result.xy
+        yy = result.yy
+        zy = result.zy
+        xz = result.xz
+        yz = result.yz
+        zz = result.zz
     }
 
-    fun asSequence() = internal.asSequence()
+    fun asSequence() = sequenceOf(xx, yx, zx, xy, yy, zy, xz, yz, zz)
 
-    override fun equals(other: Any?) = other is Matrix && internal.contentDeepEquals(other.internal)
+    override fun equals(other: Any?) = other is Matrix
+            && xx == other.xx && yx == other.yx && zx == other.zx
+            && xy == other.xy && yy == other.yy && zy == other.zy
+            && xz == other.xz && yz == other.yz && zz == other.zz
 
-    override fun hashCode() = internal.contentDeepHashCode()
+    override fun hashCode() = Objects.hash(xx, yx, zx, xy, yy, zy, xz, yz, zz)
 
-    override fun toString() = internal.joinToString(prefix = "[", postfix = "]") { arr -> arr.joinToString(prefix = "[", postfix = "]") { "${it}f" } }
+    override fun toString() = "[[${xx}f, ${yx}f, ${zx}f], [${xy}f, ${yy}f, ${zy}f], [${xz}f, ${yz}f, ${zz}f]]"
 }

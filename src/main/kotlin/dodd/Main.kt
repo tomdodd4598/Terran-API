@@ -1,11 +1,8 @@
 package dodd
 
-import dodd.terran.Game
-import dodd.terran.World
+import dodd.terran.*
 import dodd.terran.translation.*
-import dodd.terran.util.Helpers.forEachPair
-import dodd.terran.util.Helpers.of
-import dodd.terran.util.Helpers.titlecase
+import dodd.terran.util.*
 import dodd.terran.value.*
 
 val game = Game("C:/Program Files (x86)/Steam/steamapps/common/Treasure Planet Battle at Procyon", "English")

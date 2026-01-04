@@ -1,6 +1,7 @@
 package dodd.terran.value
 
-import dodd.terran.util.Helpers.clean
+import dodd.terran.util.clean
+import java.util.*
 
 data class Color(var red: Float, var green: Float, var blue: Float, var alpha: Float = 1f) {
 
@@ -76,6 +77,10 @@ data class Color(var red: Float, var green: Float, var blue: Float, var alpha: F
     }
 
     fun asSequence() = sequenceOf(red, green, blue, alpha)
+
+    override fun equals(other: Any?) = other is Color && red == other.red && green == other.green && blue == other.blue && alpha == other.alpha
+
+    override fun hashCode() = Objects.hash(red, green, blue, alpha)
 
     override fun toString() = "Color($red, $green, $blue, $alpha)"
 }

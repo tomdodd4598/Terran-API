@@ -1,9 +1,10 @@
 package dodd.terran.value
 
-import dodd.terran.util.Helpers.clean
+import dodd.terran.util.clean
+import java.util.*
 import kotlin.math.sqrt
 
-class Vector(private val internal: FloatArray) {
+class Vector(var x: Float, var y: Float, var z: Float = 0f) {
 
     companion object {
         val zero get() = Vector(0f, 0f)
@@ -17,29 +18,13 @@ class Vector(private val internal: FloatArray) {
         fun dir(x: Float, y: Float, z: Float = 0f) = Vector(x, y, z).normalized()
     }
 
-    constructor(x: Float, y: Float, z: Float = 0f) : this(floatArrayOf(x, y, z))
-
     init {
-        for (i in internal.indices) {
-            internal[i] = internal[i].clean()
-        }
+        x = x.clean()
+        y = y.clean()
+        z = z.clean()
     }
 
-    val size get() = internal.size
-
-    val x get() = this[0]
-
-    val y get() = this[1]
-
-    val z get() = this[2]
-
-    fun norm(): Float {
-        var square = 0f
-        for (element in internal) {
-            square += element * element
-        }
-        return sqrt(square)
-    }
+    fun norm() = sqrt(x * x + y * y + z * z)
 
     fun normalized(): Vector {
         val norm = norm()
@@ -50,62 +35,74 @@ class Vector(private val internal: FloatArray) {
         }
     }
 
-    fun cross(other: Vector) = Vector(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+    fun cross(other: Vector) = Vector(
+        y * other.z - z * other.y,
+        z * other.x - x * other.z,
+        x * other.y - y * other.x
+    )
 
-    operator fun get(index: Int) = internal[index]
-
-    operator fun set(index: Int, value: Float) {
-        internal[index] = value
+    operator fun get(index: Int) = when (index) {
+        0 -> x
+        1 -> y
+        else -> z
     }
 
-    operator fun unaryPlus() = Vector(FloatArray(size) { internal[it] })
+    operator fun set(index: Int, value: Float) = when (index) {
+        0 -> x = value
+        1 -> y = value
+        else -> z = value
+    }
 
-    operator fun unaryMinus() = Vector(FloatArray(size) { -internal[it] })
+    operator fun unaryPlus() = Vector(x, y, z)
 
-    operator fun plus(other: Vector) = Vector(FloatArray(size) { internal[it] + other.internal[it] })
+    operator fun unaryMinus() = Vector(-x, -y, -z)
 
-    operator fun minus(other: Vector) = Vector(FloatArray(size) { internal[it] - other.internal[it] })
+    operator fun plus(other: Vector) = Vector(x + other.x, y + other.y, z + other.z)
 
-    operator fun times(scalar: Float) = Vector(FloatArray(size) { internal[it] * scalar })
+    operator fun minus(other: Vector) = Vector(x - other.x, y - other.y, z - other.z)
 
-    operator fun div(scalar: Float) = Vector(FloatArray(size) { internal[it] / scalar })
+    operator fun times(scalar: Float) = Vector(x * scalar, y * scalar, z * scalar)
+
+    operator fun div(scalar: Float) = Vector(x / scalar, y / scalar, z / scalar)
 
     operator fun plusAssign(other: Vector) {
-        for (i in internal.indices) {
-            internal[i] += other.internal[i]
-        }
+        x += other.x
+        y += other.y
+        z += other.z
     }
 
     operator fun minusAssign(other: Vector) {
-        for (i in internal.indices) {
-            internal[i] -= other.internal[i]
-        }
+        x -= other.x
+        y -= other.y
+        z -= other.z
     }
 
     operator fun timesAssign(scalar: Float) {
-        for (i in internal.indices) {
-            internal[i] *= scalar
-        }
+        x *= scalar
+        y *= scalar
+        z *= scalar
     }
 
     operator fun timesAssign(matrix: Matrix) {
         val result = matrix * this
-        for (i in internal.indices) {
-            internal[i] = result.internal[i]
-        }
+        x = result.x
+        y = result.y
+        z = result.z
     }
 
     operator fun divAssign(scalar: Float) {
-        for (i in internal.indices) {
-            internal[i] /= scalar
-        }
+        x /= scalar
+        y /= scalar
+        z /= scalar
     }
 
-    fun asSequence() = internal.asSequence()
+    fun toCoord() = Coord(x, y)
 
-    override fun equals(other: Any?) = other is Vector && internal.contentEquals(other.internal)
+    fun asSequence() = sequenceOf(x, y, z)
 
-    override fun hashCode() = internal.contentHashCode()
+    override fun equals(other: Any?) = other is Vector && x == other.x && y == other.y && z == other.z
 
-    override fun toString() = internal.joinToString(prefix = "[", postfix = "]") { "${it}f" }
+    override fun hashCode() = Objects.hash(x, y, z)
+
+    override fun toString() = "[${x}f, ${y}f, ${z}f]"
 }

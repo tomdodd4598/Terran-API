@@ -1,8 +1,8 @@
 package dodd.terran.translation
 
-import dodd.terran.util.Helpers.clean
 import dodd.terran.value.Matrix
-import dodd.terran.util.Helpers.definitionString
+import dodd.terran.util.clean
+import dodd.terran.util.definitionString
 import dodd.terran.value.Color
 import dodd.terran.value.Coord
 import dodd.terran.value.Vector
@@ -46,9 +46,11 @@ class IntNode(var value: Int) : Node() {
     override fun toString() = value.toString()
 }
 
-class FloatNode(value: Float) : Node() {
+class FloatNode(var value: Float) : Node() {
 
-    var value = value.clean()
+    init {
+        value = value.clean()
+    }
 
     override fun write(db: DefinitionBuilder, name: String) {
         db.append("$name Float ${value.definitionString()}")
@@ -61,9 +63,11 @@ class FloatNode(value: Float) : Node() {
     override fun toString() = "${value}f"
 }
 
-class DoubleNode(value: Double) : Node() {
+class DoubleNode(var value: Double) : Node() {
 
-    var value = value.clean()
+    init {
+        value = value.clean()
+    }
 
     override fun write(db: DefinitionBuilder, name: String) {
         db.append("$name Double ${value.definitionString()}")
@@ -118,7 +122,7 @@ class ColorNode(var value: Color) : Node() {
 class MatrixNode(var value: Matrix) : Node() {
 
     override fun write(db: DefinitionBuilder, name: String) {
-        db.append("$name ${value.asSequence().flatMap { it.asSequence() }.definitionString("Matrix33")}")
+        db.append("$name ${value.asSequence().definitionString("Matrix33")}")
     }
 
     override fun equals(other: Any?) = other is MatrixNode && value == other.value

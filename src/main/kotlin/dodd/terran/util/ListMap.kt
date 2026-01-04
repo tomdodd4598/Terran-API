@@ -1,18 +1,21 @@
 package dodd.terran.util
 
-class ListMap<K, V>(vararg pairs: Pair<K, V>) {
+import java.util.*
+
+class ListMap<K, V>(list: List<Pair<K, V>>) {
 
     private val list = mutableListOf<Pair<K, V>>()
     private val map = mutableMapOf<K, Pair<Int, V>>()
 
-    val size get() = list.size
-
     init {
-        pairs.forEachIndexed { index, pair ->
-            list.add(pair)
-            map[pair.first] = index to pair.second
+        for ((key, value) in list) {
+            this[key] = value
         }
     }
+
+    constructor(vararg pairs: Pair<K, V>) : this(mutableListOf(*pairs))
+
+    val size get() = list.size
 
     operator fun get(key: K) = map[key]?.second
 
@@ -35,6 +38,10 @@ class ListMap<K, V>(vararg pairs: Pair<K, V>) {
     operator fun iterator() = list.iterator()
 
     fun asSequence() = list.asSequence()
+
+    override fun hashCode() = Objects.hash(list, map)
+
+    override fun equals(other: Any?) = other is ListMap<*, *> && list == other.list && map == other.map
 
     override fun toString() = list.toString()
 }

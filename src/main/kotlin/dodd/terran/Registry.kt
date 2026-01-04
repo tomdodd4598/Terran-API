@@ -1,7 +1,7 @@
 package dodd.terran
 
-import dodd.terran.util.Helpers.child
-import dodd.terran.util.Helpers.splitByWhitespace
+import dodd.terran.util.child
+import dodd.terran.util.splitByWhitespace
 import java.io.File
 
 class Registry(dir: File) {

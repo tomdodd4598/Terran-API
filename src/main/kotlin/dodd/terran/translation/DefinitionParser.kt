@@ -1,12 +1,7 @@
 package dodd.terran.translation
 
+import dodd.terran.util.*
 import dodd.terran.value.Matrix
-import dodd.terran.util.Helpers.filterNotEmpty
-import dodd.terran.util.Helpers.node
-import dodd.terran.util.Helpers.peek
-import dodd.terran.util.Helpers.pop
-import dodd.terran.util.Helpers.push
-import dodd.terran.util.Helpers.splitByWhitespace
 import dodd.terran.value.Color
 import dodd.terran.value.Coord
 import dodd.terran.value.Vector
@@ -172,7 +167,7 @@ class DefinitionParser(private val lines: Iterable<String>) {
                         pairList.add(nestName to nested)
                     }
 
-                    elem[name] = TupleNode(*pairList.toTypedArray())
+                    elem[name] = TupleNode(pairList)
                 }
             }
 
@@ -237,7 +232,8 @@ class DefinitionParser(private val lines: Iterable<String>) {
             // ... Matrix33( ..., ..., ..., ..., ..., ..., ..., ..., ... )
             else if (line.contains("Matrix33")) {
                 val (name, floats) = floatTupleSplit(line, "Matrix33")
-                elem[name] = Matrix(floats.chunked(3).map { it.toFloatArray() }.toList().toTypedArray()).node
+                val values = floats.toList()
+                elem[name] = Matrix(values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8]).node
             }
 
             // ... Colour( ..., ..., ..., ... )
@@ -249,7 +245,8 @@ class DefinitionParser(private val lines: Iterable<String>) {
             // ... Vector3( ..., ..., ... )
             else if (line.contains("Vector3")) {
                 val (name, floats) = floatTupleSplit(line, "Vector3")
-                elem[name] = Vector(floats.toList().toFloatArray()).node
+                val (x, y, z) = floats.toList()
+                elem[name] = Vector(x, y, z).node
             }
 
             // ... Coord( ..., ... )

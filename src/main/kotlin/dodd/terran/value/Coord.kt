@@ -1,6 +1,7 @@
 package dodd.terran.value
 
-import dodd.terran.util.Helpers.clean
+import dodd.terran.util.clean
+import java.util.*
 
 data class Coord(var u: Float, var v: Float) {
 
@@ -41,7 +42,13 @@ data class Coord(var u: Float, var v: Float) {
         v /= scalar
     }
 
+    fun toVector() = Vector(u, v)
+
     fun asSequence() = sequenceOf(u, v)
+
+    override fun equals(other: Any?) = other is Coord && u == other.u && v == other.v
+
+    override fun hashCode() = Objects.hash(u, v)
 
     override fun toString() = "Coord($u, $v)"
 }

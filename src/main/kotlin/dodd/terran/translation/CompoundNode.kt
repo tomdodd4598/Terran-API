@@ -3,17 +3,11 @@ package dodd.terran.translation
 import dodd.terran.util.ListMap
 import kotlin.math.max
 
-abstract class CompoundNode(vararg pairs: Pair<String, Node>) : Node() {
+abstract class CompoundNode(list: List<Pair<String, Node>>) : Node() {
 
-    val internal = ListMap<String, Node>()
+    val internal = ListMap(list)
 
     val size get() = internal.size
-
-    init {
-        for ((x, y) in pairs) {
-            internal[x] = y
-        }
-    }
 
     inline operator fun <reified T: Node> get(key: String): T? {
         val value = internal[key]
@@ -68,7 +62,9 @@ abstract class CompoundNode(vararg pairs: Pair<String, Node>) : Node() {
     }
 }
 
-class TupleNode(vararg pairs: Pair<String, Node>) : CompoundNode(*pairs) {
+class TupleNode(list: List<Pair<String, Node>>) : CompoundNode(list) {
+
+    constructor(vararg pairs: Pair<String, Node>) : this(listOf(*pairs))
 
     override fun write(db: DefinitionBuilder, name: String) {
         for ((key, value) in internal) {
@@ -77,7 +73,9 @@ class TupleNode(vararg pairs: Pair<String, Node>) : CompoundNode(*pairs) {
     }
 }
 
-open class NestedNode(vararg pairs: Pair<String, Node>) : CompoundNode(*pairs), StackElement {
+open class NestedNode(list: List<Pair<String, Node>>) : CompoundNode(list), StackElement {
+
+    constructor(vararg pairs: Pair<String, Node>) : this(listOf(*pairs))
 
     private var rawPrevious: RawNode? = null
 
@@ -122,11 +120,19 @@ class RootNode : NestedNode() {
     }
 }
 
-class ConditionNode(vararg pairs: Pair<String, Node>) : NestedNode(*pairs)
+class ConditionNode(list: List<Pair<String, Node>>) : NestedNode(list) {
 
-class ActionNode(vararg pairs: Pair<String, Node>) : NestedNode(*pairs)
+    constructor(vararg pairs: Pair<String, Node>) : this(listOf(*pairs))
+}
 
-class MixNode(vararg pairs: Pair<String, Node>) : NestedNode(*pairs) {
+class ActionNode(list: List<Pair<String, Node>>) : NestedNode(list) {
+
+    constructor(vararg pairs: Pair<String, Node>) : this(listOf(*pairs))
+}
+
+class MixNode(list: List<Pair<String, Node>>) : NestedNode(list) {
+
+    constructor(vararg pairs: Pair<String, Node>) : this(listOf(*pairs))
 
     private var index = 0
 

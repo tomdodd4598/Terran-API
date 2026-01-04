@@ -1,8 +1,7 @@
 package dodd.terran
 
 import dodd.terran.translation.*
-import dodd.terran.util.Helpers.node
-import dodd.terran.util.Helpers.stringNode
+import dodd.terran.util.*
 import dodd.terran.value.*
 
 class World(private val game: Game, val root: RootNode) {
