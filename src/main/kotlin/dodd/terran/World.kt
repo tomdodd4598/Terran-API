@@ -76,7 +76,7 @@ class World(private val game: Game, val root: RootNode) {
                 RawNode("# Player List").entry,
                 "PlayerList" to PlayerListNode(
                 ),
-                "NextID" to 0.node,
+                "NextID" to (-1).node,
                 RawNode("# World Object List").entry,
                 "WorldObjects" to WorldObjectsListNode(
                 ),
@@ -407,11 +407,11 @@ class World(private val game: Game, val root: RootNode) {
             "Group Name" to groupName.node
         )
 
-        fun createGroupMemberCountCondition(groupName: String, equivalence: Equivalence, memberCount: Int) = ConditionNode(
+        fun createGroupUnitCountCondition(groupName: String, equivalence: Equivalence, unitCount: Int) = ConditionNode(
             "Type" to "Group has X members".node,
             "Group Name" to groupName.node,
             "Equivalence" to equivalence.node,
-            "number" to memberCount.node
+            "number" to unitCount.node
         )
 
         fun createPlayerHasNoLifeboatsCondition(playerName: String) = ConditionNode(
@@ -510,7 +510,7 @@ class World(private val game: Game, val root: RootNode) {
             "Object that have already entered - Size" to enteredCount.node
         )
 
-        fun createTeamGroupMemberEntersPolygonCondition(teamID: String, groupName: String, polygonName: String, pendingCount: Int = 0, enteredCount: Int = 0) = ConditionNode(
+        fun createTeamGroupUnitEntersPolygonCondition(teamID: String, groupName: String, polygonName: String, pendingCount: Int = 0, enteredCount: Int = 0) = ConditionNode(
             "Type" to "Unit from Group enters trigger volume ( Once per Unit )".node,
             "Group Name" to groupName.node,
             "Volume Name" to polygonName.node,
@@ -1729,9 +1729,8 @@ class World(private val game: Game, val root: RootNode) {
     fun addWorldObject(typeID: String, owningPlayerName: String?, groupName: String?, position: Vector, rotation: Matrix = Matrix.identity): Int {
         val world = root.get<NestedNode>("World")!!
         val nextID = world.get<IntNode>("NextID")!!
-        val objectID = nextID.value
+        val objectID = ++nextID.value
 
-        nextID.value += 1
         root.get<NestedNode>("WorldInfo")!!.get<IntNode>("Object Count")!!.value += 1
 
         val owningPlayerID = if (owningPlayerName == null) -1 else world.get<PlayerListNode>("PlayerList")!!.indexOf { it is NestedNode && it.get<StringNode>("Name")?.value == owningPlayerName }

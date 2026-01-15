@@ -2647,7 +2647,7 @@ fun convoy() {
     fun addNavyEscortsConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Navy Escorts Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createTeamGroupMemberEntersPolygonCondition(navyTeamID, convoyGroupNames[convoyIndex], "Convoy Safety Polygon"),
+        World.createTeamGroupUnitEntersPolygonCondition(navyTeamID, convoyGroupNames[convoyIndex], "Convoy Safety Polygon"),
         World.createGrantTeamPointsAction(navyTeamID, points)
     )
 
@@ -2658,7 +2658,7 @@ fun convoy() {
     fun addPiratesTakeConvoyShipWorldRule(convoyIndex: Int, points: Int) = addWorldRule(
         "Pirates Take Convoy ${convoyIndex + 1} Ship",
         false,
-        World.createTeamGroupMemberEntersPolygonCondition(pirateTeamID, convoyGroupNames[convoyIndex], "Convoy Theft Polygon"),
+        World.createTeamGroupUnitEntersPolygonCondition(pirateTeamID, convoyGroupNames[convoyIndex], "Convoy Theft Polygon"),
         World.createGrantTeamPointsAction(pirateTeamID, points)
     )
 
@@ -4094,10 +4094,6 @@ fun zemyatin() {
     println(world.build())
 }
 
-fun test() {
-
-}
-
 fun main() {
     //ambush()
     //bayles()
@@ -4114,6 +4110,4 @@ fun main() {
     //rover()
     //shadow()
     //zemyatin()
-
-    test()
 }
