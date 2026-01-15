@@ -1,6 +1,5 @@
 package dodd.terran.util
 
-import dodd.terran.Global
 import dodd.terran.translation.*
 import dodd.terran.value.*
 import dodd.terran.value.Vector
@@ -8,6 +7,12 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayDeque
 import kotlin.math.*
+
+const val HUMAN_CONTROLLED_GROUP = "Player0 Group"
+
+const val HUMAN_CONTROLLED_SHIP = "HUMAN CONTROLLED COMMAND SHIP"
+
+val whitespaceRegex = Regex("\\s+")
 
 fun <T> ArrayDeque<T>.push(elem: T) = addLast(elem)
 
@@ -21,7 +26,7 @@ fun Sequence<Float>.definitionString(type: String) = joinToString(", ", "$type( 
 
 fun File.child(path: String) = File("$absolutePath/$path")
 
-fun String.splitByWhitespace() = split(Global.whitespaceRegex)
+fun String.splitByWhitespace() = split(whitespaceRegex)
 
 fun String.capitalize() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
