@@ -1597,13 +1597,13 @@ fun border(firstPlayerIndex: Int) {
 
     val addPlayer = arrayOf(
         getAddPlayer(Faction.NAVY, Color(0f, 0f, 1f), Vector(435.6725f, -837.33856f), Vector.dir(-0.592208f, 0.805785f), Formation.LINE_ABREAST),
-        getAddPlayer(Faction.PROCYON, Color(0f, 1f, 0f), Vector(-649.6093f, 775.55676f), Vector.dir(0.602041f, -0.798465f), Formation.COLUMN),
+        getAddPlayer(Faction.PROCYON, Color(0f, 1f, 0f), Vector(-549.842f, 741.3126f), Vector.dir(0.618312f, -0.785933f), Formation.LINE_ABREAST),
         getAddPlayer(Faction.NAVY, Color(0f, 1f, 1f), Vector(739.2612f, -641.6178f), Vector.dir(-0.598932f, 0.8008f), Formation.LINE_ABREAST),
-        getAddPlayer(Faction.PROCYON, Color(0f, 0.501961f, 0f), Vector(-235.88f, 1047.5782f), Vector.dir(0.381282f, -0.924459f), Formation.DIAMOND),
+        getAddPlayer(Faction.PROCYON, Color(0f, 0.501961f, 0f), Vector(-687.3093f, 917.55676f), Vector.dir(0.10545f, -0.994425f), Formation.COLUMN),
         getAddPlayer(Faction.NAVY, Color(0.65098f, 0.792157f, 0.941176f), Vector(416.74933f, -1185.8826f), Vector.dir(-0.211376f, 0.977405f), Formation.LINE_ABREAST),
-        getAddPlayer(Faction.PROCYON, Color(0.752941f, 0.862745f, 0.752941f), Vector(59.84198f, 1271.3126f), Vector.dir(0.557207f, -0.830374f), Formation.COLUMN),
+        getAddPlayer(Faction.PROCYON, Color(0.752941f, 0.862745f, 0.752941f), Vector(-733.88f, 903.5782f), Vector.dir(0.251591f, -0.967834f), Formation.COLUMN),
         getAddPlayer(Faction.NAVY, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.LINE_ABREAST),
-        getAddPlayer(Faction.PROCYON, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.COLUMN)
+        getAddPlayer(Faction.PROCYON, Color(0.043137f, 0.392157f, 0.094118f), Vector(-826.3277f, 873.3523f), Vector.dir(0.4438f, -0.896126f), Formation.COLUMN)
     )
 
     for (i in addPlayer.indices) {
