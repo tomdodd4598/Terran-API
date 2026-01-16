@@ -1565,7 +1565,7 @@ fun maw() {
     println(world.build())
 }
 
-fun border() {
+fun border(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Border_Dispute",
@@ -1590,25 +1590,32 @@ fun border() {
     val navyAllianceIndices = mutableListOf<Int>()
     val procyonAllianceIndices = mutableListOf<Int>()
 
-    fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector, formation: Formation) {
+    fun getAddPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector, formation: Formation): () -> Unit {
         val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else procyonTeamIndex to procyonAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, formation))
+        return { factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, formation)) }
     }
 
-    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(435.6725f, -837.33856f), Vector.dir(-0.592208f, 0.805785f), Formation.LINE_ABREAST)
-    addPlayer(Faction.PROCYON, 1, Color(0f, 1f, 0f), Vector(-649.6093f, 775.55676f), Vector.dir(0.602041f, -0.798465f), Formation.COLUMN)
-    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(739.2612f, -641.6178f), Vector.dir(-0.598932f, 0.8008f), Formation.LINE_ABREAST)
-    addPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0f), Vector(-235.88f, 1047.5782f), Vector.dir(0.381282f, -0.924459f), Formation.DIAMOND)
-    addPlayer(Faction.NAVY, 3, Color(0.65098f, 0.792157f, 0.941176f), Vector(416.74933f, -1185.8826f), Vector.dir(-0.211376f, 0.977405f), Formation.LINE_ABREAST)
-    addPlayer(Faction.PROCYON, 3, Color(0.752941f, 0.862745f, 0.752941f), Vector(59.84198f, 1271.3126f), Vector.dir(0.557207f, -0.830374f), Formation.COLUMN)
-    addPlayer(Faction.NAVY, 4, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.LINE_ABREAST)
-    addPlayer(Faction.PROCYON, 4, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.COLUMN)
+    val addPlayer = arrayOf(
+        getAddPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(435.6725f, -837.33856f), Vector.dir(-0.592208f, 0.805785f), Formation.LINE_ABREAST),
+        getAddPlayer(Faction.PROCYON, 1, Color(0f, 1f, 0f), Vector(-649.6093f, 775.55676f), Vector.dir(0.602041f, -0.798465f), Formation.COLUMN),
+        getAddPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(739.2612f, -641.6178f), Vector.dir(-0.598932f, 0.8008f), Formation.LINE_ABREAST),
+        getAddPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0f), Vector(-235.88f, 1047.5782f), Vector.dir(0.381282f, -0.924459f), Formation.DIAMOND),
+        getAddPlayer(Faction.NAVY, 3, Color(0.65098f, 0.792157f, 0.941176f), Vector(416.74933f, -1185.8826f), Vector.dir(-0.211376f, 0.977405f), Formation.LINE_ABREAST),
+        getAddPlayer(Faction.PROCYON, 3, Color(0.752941f, 0.862745f, 0.752941f), Vector(59.84198f, 1271.3126f), Vector.dir(0.557207f, -0.830374f), Formation.COLUMN),
+        getAddPlayer(Faction.NAVY, 4, Color(0.25098f, 0f, 0.501961f), Vector(1122.5618f, -745.0312f), Vector.dir(-0.593589f, 0.804768f), Formation.LINE_ABREAST),
+        getAddPlayer(Faction.PROCYON, 4, Color(0.043137f, 0.392157f, 0.094118f), Vector(-1033.7277f, 1103.3523f), Vector.dir(0.505127f, -0.863045f), Formation.COLUMN)
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
         "Navy Base",
         Color.blue,
         Vector(924.07874f, -1053.405f)
     )))
+
     procyonAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
         "Procyon Base",
         Color(0.043137f, 0.392157f, 0.094118f),
@@ -1622,6 +1629,7 @@ fun border() {
         Vector(746.5273f, -835.4745f),
         Matrix.rotationZ(0.829038f, 0.559193f)
     )
+
     val procyonBaseObjectID = world.addWorldObject(
         "Base_Procyon1",
         "Procyon Base",
@@ -2074,7 +2082,7 @@ fun border() {
     println(world.build())
 }
 
-fun convoy() {
+fun convoy(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Convoy Raid",
@@ -2101,19 +2109,25 @@ fun convoy() {
     val navyAllianceIndices = mutableListOf<Int>()
     val pirateAllianceIndices = mutableListOf<Int>()
 
-    fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector): () -> Unit {
         val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else pirateTeamIndex to pirateAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN))
+        return { factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN)) }
     }
 
-    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(1070.8525f, -971.36255f), Vector.dir(-0.007847f, 0.999969f))
-    addPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(1628.3295f, 830.49884f), Vector.dir(-0.086672f, -0.996237f))
-    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(1138.813f, -1257.1587f), Vector.dir(0.099995f, 0.994988f))
-    addPlayer(Faction.PIRATE, 2, Color(0.501961f, 0f, 0f), Vector(329.9577f, 759.6592f), Vector.dir(0.4438f, -0.896126f))
-    addPlayer(Faction.NAVY, 3, Color(0f, 0f, 0.501961f), Vector(1366.5822f, -1044.3699f), Vector.dir(-0.369247f, 0.929331f))
-    addPlayer(Faction.PIRATE, 3, Color(1f, 0f, 1f), Vector(-68.60469f, 869.2412f), Vector.dir(0.538336f, -0.84273f))
-    addPlayer(Faction.NAVY, 4, Color(0f, 0.501961f, 0.501961f), Vector(931.2105f, -1127.0912f), Vector.dir(0.12174f, 0.992562f))
-    addPlayer(Faction.PIRATE, 4, Color(0.87451f, 0.372549f, 0.12549f), Vector(-460.15494f, 644.50604f), Vector.dir(0.541563f, -0.84066f))
+    val addPlayer = arrayOf(
+        getAddPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(1070.8525f, -971.36255f), Vector.dir(-0.007847f, 0.999969f)),
+        getAddPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(1628.3295f, 830.49884f), Vector.dir(-0.086672f, -0.996237f)),
+        getAddPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(1138.813f, -1257.1587f), Vector.dir(0.099995f, 0.994988f)),
+        getAddPlayer(Faction.PIRATE, 2, Color(0.501961f, 0f, 0f), Vector(329.9577f, 759.6592f), Vector.dir(0.4438f, -0.896126f)),
+        getAddPlayer(Faction.NAVY, 3, Color(0f, 0f, 0.501961f), Vector(1366.5822f, -1044.3699f), Vector.dir(-0.369247f, 0.929331f)),
+        getAddPlayer(Faction.PIRATE, 3, Color(1f, 0f, 1f), Vector(-68.60469f, 869.2412f), Vector.dir(0.538336f, -0.84273f)),
+        getAddPlayer(Faction.NAVY, 4, Color(0f, 0.501961f, 0.501961f), Vector(931.2105f, -1127.0912f), Vector.dir(0.12174f, 0.992562f)),
+        getAddPlayer(Faction.PIRATE, 4, Color(0.87451f, 0.372549f, 0.12549f), Vector(-460.15494f, 644.50604f), Vector.dir(0.541563f, -0.84066f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     val convoyPlayerIndex = world.addPlayerListElement(World.createAIFleetElement("Convoy", -1, Color.white, Vector(1351.6436f, -1222.8716f), Vector.east, Formation.NONE))
 
@@ -2144,6 +2158,7 @@ fun convoy() {
         Vector(-1051.8273f, 927.063f),
         Matrix.rotationZ(-0.707107f, -0.707107f)
     )
+
     val pirateStockadeObjectID = world.addWorldObject(
         "Base_PirateStockade",
         "Pirate Base",
@@ -2730,7 +2745,7 @@ fun convoy() {
     println(world.build())
 }
 
-fun diablo() {
+fun diablo(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Diablo Straight",
@@ -2746,18 +2761,24 @@ fun diablo() {
         bufferSize = 200f
     )
 
-    fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(id: Int, color: Color, start: Vector, direction: Vector): () -> Unit = {
         world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.COLUMN)
     }
 
-    addPlayer(1, Color(0f, 0.502f, 0f), Vector(-526.635f, -1121.4581f), Vector.dir(0.995512f, -0.094636f))
-    addPlayer(2, Color(0f, 0f, 0.502f), Vector(334.347f, -1133.6992f), Vector.dir(-0.999918f, 0.012794f))
-    addPlayer(3, Color(0f, 0.502f, 0.502f), Vector(-554.614f, -393.513f), Vector.dir(0.997393f, 0.072156f))
-    addPlayer(4, Color(0.651f, 0.7922f, 0.9412f), Vector(204.96829f, -446.43756f), Vector.dir(-0.999524f, -0.030856f))
-    addPlayer(5, Color(1f, 0f, 0f), Vector(-612.34406f, 293.23584f), Vector.dir(0.963208f, -0.268756f))
-    addPlayer(6, Color(1f, 1f, 0f), Vector(207.9324f, 378.60486f), Vector.dir(-0.952522f, 0.30447f))
-    addPlayer(7, Color(0f, 0f, 1f), Vector(-378.004f, 961.7678f), Vector.dir(0.999634f, -0.027063f))
-    addPlayer(8, Color(0.9059f, 0.5373f, 0.0392f), Vector(362.05246f, 1006.83997f), Vector.dir(-0.98992f, 0.141626f))
+    val addPlayer = arrayOf(
+        getAddPlayer(1, Color(0f, 0.502f, 0f), Vector(-526.635f, -1121.4581f), Vector.dir(0.995512f, -0.094636f)),
+        getAddPlayer(2, Color(0f, 0f, 0.502f), Vector(334.347f, -1133.6992f), Vector.dir(-0.999918f, 0.012794f)),
+        getAddPlayer(3, Color(0f, 0.502f, 0.502f), Vector(-554.614f, -393.513f), Vector.dir(0.997393f, 0.072156f)),
+        getAddPlayer(4, Color(0.651f, 0.7922f, 0.9412f), Vector(204.96829f, -446.43756f), Vector.dir(-0.999524f, -0.030856f)),
+        getAddPlayer(5, Color(1f, 0f, 0f), Vector(-612.34406f, 293.23584f), Vector.dir(0.963208f, -0.268756f)),
+        getAddPlayer(6, Color(1f, 1f, 0f), Vector(207.9324f, 378.60486f), Vector.dir(-0.952522f, 0.30447f)),
+        getAddPlayer(7, Color(0f, 0f, 1f), Vector(-378.004f, 961.7678f), Vector.dir(0.999634f, -0.027063f)),
+        getAddPlayer(8, Color(0.9059f, 0.5373f, 0.0392f), Vector(362.05246f, 1006.83997f), Vector.dir(-0.98992f, 0.141626f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-1352.0924f, 265.17676f)))
 
@@ -2872,6 +2893,7 @@ fun diablo() {
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_AbyssGoo", 1f, 2f, 2f)
     ))
+
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
@@ -2881,7 +2903,7 @@ fun diablo() {
     println(world.build())
 }
 
-fun dragon() {
+fun dragon(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Dragon`s Nest",
@@ -2896,18 +2918,24 @@ fun dragon() {
         "Map_DragonsNest"
     )
 
-    fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(id: Int, color: Color, start: Vector, direction: Vector): () -> Unit = {
         world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.LINE_ABREAST)
     }
 
-    addPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-810.8588f, 7.178986f), Vector.dir(0.99862f, 0.052516f))
-    addPlayer(2, Color(0.502f, 0.502f, 0f), Vector(-0.446236f, 749.6373f), Vector.dir(-0.059969f, -0.9982f))
-    addPlayer(3, Color(0.651f, 0.7922f, 0.9412f), Vector(6.476181f, -684.0395f), Vector.dir(0.028614f, 0.999591f))
-    addPlayer(4, Color(1f, 0f, 0f), Vector(-587.4156f, 510.82135f), Vector.dir(0.722116f, -0.691772f))
-    addPlayer(5, Color(1f, 0f, 1f), Vector(578.3267f, -486.13425f), Vector.dir(-0.787641f, 0.616134f))
-    addPlayer(6, Color(0.7529f, 0.8627f, 0.7529f), Vector(614.0336f, 498.55988f), Vector.dir(-0.838852f, -0.54436f))
-    addPlayer(7, Color(0.502f, 0f, 0f), Vector(-552.6162f, -524.29443f), Vector.dir(0.616675f, 0.787218f))
-    addPlayer(8, Color(0f, 0f, 1f), Vector(739.2843f, 4.082199f), Vector.dir(-0.998379f, -0.056907f))
+    val addPlayer = arrayOf(
+        getAddPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-810.8588f, 7.178986f), Vector.dir(0.99862f, 0.052516f)),
+        getAddPlayer(2, Color(0.502f, 0.502f, 0f), Vector(-0.446236f, 749.6373f), Vector.dir(-0.059969f, -0.9982f)),
+        getAddPlayer(3, Color(0.651f, 0.7922f, 0.9412f), Vector(6.476181f, -684.0395f), Vector.dir(0.028614f, 0.999591f)),
+        getAddPlayer(4, Color(1f, 0f, 0f), Vector(-587.4156f, 510.82135f), Vector.dir(0.722116f, -0.691772f)),
+        getAddPlayer(5, Color(1f, 0f, 1f), Vector(578.3267f, -486.13425f), Vector.dir(-0.787641f, 0.616134f)),
+        getAddPlayer(6, Color(0.7529f, 0.8627f, 0.7529f), Vector(614.0336f, 498.55988f), Vector.dir(-0.838852f, -0.54436f)),
+        getAddPlayer(7, Color(0.502f, 0f, 0f), Vector(-552.6162f, -524.29443f), Vector.dir(0.616675f, 0.787218f)),
+        getAddPlayer(8, Color(0f, 0f, 1f), Vector(739.2843f, 4.082199f), Vector.dir(-0.998379f, -0.056907f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     val asteroidPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-189.3843f, -391.80975f)))
     val dragonPlayerIndex = world.addPlayerListElement(World.createFakeFleetElement("Dragons", Color.white, Vector(73.16046f, 97.105835f), Vector.dir(0.377298f, -0.926092f)))
@@ -3020,6 +3048,7 @@ fun dragon() {
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
     ))
+
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
@@ -3029,7 +3058,7 @@ fun dragon() {
     println(world.build())
 }
 
-fun mousetrap() {
+fun mousetrap(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Mousetrap",
@@ -3055,19 +3084,25 @@ fun mousetrap() {
     val pirateAllianceIndices = mutableListOf<Int>()
     val procyonAllianceIndices = mutableListOf<Int>()
 
-    fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector): () -> Unit {
         val factionPair = if (faction == Faction.PIRATE) pirateTeamIndex to pirateAllianceIndices else procyonTeamIndex to procyonAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN))
+        return { factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.COLUMN)) }
     }
 
-    addPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(101.075745f, 739.63544f), Vector.dir(-0.061652f, -0.998098f))
-    addPlayer(Faction.PROCYON, 1, Color(0f, 0.501961f, 0f), Vector(-334.47076f, -325.06653f), Vector.dir(0.10545f, 0.994425f))
-    addPlayer(Faction.PIRATE, 2, Color(1f, 0f, 1f), Vector(-119.999084f, 664.41284f), Vector.dir(0.063015f, -0.998013f))
-    addPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0.501961f), Vector(-103.3332f, -353.976f), Vector.dir(0.005383f, 0.999986f))
-    addPlayer(Faction.PIRATE, 3, Color(0.701961f, 0.023529f, 0.278431f), Vector(-21.555115f, 518.6657f), Vector.dir(0.02612f, -0.999659f))
-    addPlayer(Faction.PROCYON, 3, Color(0.039216f, 0.721569f, 0.447059f), Vector(73.63226f, -361.6137f), Vector.dir(-0.165934f, 0.986137f))
-    addPlayer(Faction.PIRATE, 4, Color(0.509804f, 0.039216f, 0.023529f), Vector(258.27625f, 557.71155f), Vector.dir(-0.03774f, -0.999288f))
-    addPlayer(Faction.PROCYON, 4, Color(0.109804f, 0.4f, 0.101961f), Vector(198.13431f, -367.82397f), Vector.dir(-0.265867f, 0.96401f))
+    val addPlayer = arrayOf(
+        getAddPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(101.075745f, 739.63544f), Vector.dir(-0.061652f, -0.998098f)),
+        getAddPlayer(Faction.PROCYON, 1, Color(0f, 0.501961f, 0f), Vector(-334.47076f, -325.06653f), Vector.dir(0.10545f, 0.994425f)),
+        getAddPlayer(Faction.PIRATE, 2, Color(1f, 0f, 1f), Vector(-119.999084f, 664.41284f), Vector.dir(0.063015f, -0.998013f)),
+        getAddPlayer(Faction.PROCYON, 2, Color(0f, 0.501961f, 0.501961f), Vector(-103.3332f, -353.976f), Vector.dir(0.005383f, 0.999986f)),
+        getAddPlayer(Faction.PIRATE, 3, Color(0.701961f, 0.023529f, 0.278431f), Vector(-21.555115f, 518.6657f), Vector.dir(0.02612f, -0.999659f)),
+        getAddPlayer(Faction.PROCYON, 3, Color(0.039216f, 0.721569f, 0.447059f), Vector(73.63226f, -361.6137f), Vector.dir(-0.165934f, 0.986137f)),
+        getAddPlayer(Faction.PIRATE, 4, Color(0.509804f, 0.039216f, 0.023529f), Vector(258.27625f, 557.71155f), Vector.dir(-0.03774f, -0.999288f)),
+        getAddPlayer(Faction.PROCYON, 4, Color(0.109804f, 0.4f, 0.101961f), Vector(198.13431f, -367.82397f), Vector.dir(-0.265867f, 0.96401f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     procyonAllianceIndices.add(world.addPlayerListElement(World.createAIFleetElement(
         "Procyon Backup",
@@ -3077,6 +3112,7 @@ fun mousetrap() {
         Vector.dir(0.067777f, 0.9977f),
         Formation.NONE
     )))
+
     pirateAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement(
         "Pirate Base",
         Color.white,
@@ -3522,7 +3558,7 @@ fun mousetrap() {
     println(world.build())
 }
 
-fun rover() {
+fun rover(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Red Rover",
@@ -3547,19 +3583,25 @@ fun rover() {
     val navyAllianceIndices = mutableListOf<Int>()
     val pirateAllianceIndices = mutableListOf<Int>()
 
-    fun addPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(faction: Faction, id: Int, color: Color, start: Vector, direction: Vector): () -> Unit {
         val factionPair = if (faction == Faction.NAVY) navyTeamIndex to navyAllianceIndices else pirateTeamIndex to pirateAllianceIndices
-        factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE_ABREAST))
+        return { factionPair.second.add(world.addPlayer("${faction.name.titlecase()} $id", factionPair.first, color, start, direction, faction, Formation.LINE_ABREAST)) }
     }
 
-    addPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(-383.76883f, -429.0005f), Vector.dir(-0.251591f, 0.967834f))
-    addPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(-420.6589f, 328.1404f), Vector.dir(-0.013906f, -0.999903f))
-    addPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(-129.49927f, -354.1483f), Vector.dir(-0.115964f, 0.993253f))
-    addPlayer(Faction.PIRATE, 2, Color(1f, 0f, 1f), Vector(-150.57951f, 370.4875f), Vector.dir(0.075158f, -0.997172f))
-    addPlayer(Faction.NAVY, 3, Color(0f, 0f, 0.501961f), Vector(270.40744f, -395.27737f), Vector.dir(0.007071f, 0.999975f))
-    addPlayer(Faction.PIRATE, 3, Color(0.501961f, 0f, 0f), Vector(221.83421f, 361.33368f), Vector.dir(-0.028636f, -0.99959f))
-    addPlayer(Faction.NAVY, 4, Color(0.65098f, 0.792157f, 0.941176f), Vector(612.3666f, -332.14923f), Vector.dir(-0.01444f, 0.999896f))
-    addPlayer(Faction.PIRATE, 4, Color(0.501961f, 0f, 0.501961f), Vector(572.2812f, 371.9907f), Vector.dir(0.00491f, -0.999988f))
+    val addPlayer = arrayOf(
+        getAddPlayer(Faction.NAVY, 1, Color(0f, 0f, 1f), Vector(-383.76883f, -429.0005f), Vector.dir(-0.251591f, 0.967834f)),
+        getAddPlayer(Faction.PIRATE, 1, Color(1f, 0f, 0f), Vector(-420.6589f, 328.1404f), Vector.dir(-0.013906f, -0.999903f)),
+        getAddPlayer(Faction.NAVY, 2, Color(0f, 1f, 1f), Vector(-129.49927f, -354.1483f), Vector.dir(-0.115964f, 0.993253f)),
+        getAddPlayer(Faction.PIRATE, 2, Color(1f, 0f, 1f), Vector(-150.57951f, 370.4875f), Vector.dir(0.075158f, -0.997172f)),
+        getAddPlayer(Faction.NAVY, 3, Color(0f, 0f, 0.501961f), Vector(270.40744f, -395.27737f), Vector.dir(0.007071f, 0.999975f)),
+        getAddPlayer(Faction.PIRATE, 3, Color(0.501961f, 0f, 0f), Vector(221.83421f, 361.33368f), Vector.dir(-0.028636f, -0.99959f)),
+        getAddPlayer(Faction.NAVY, 4, Color(0.65098f, 0.792157f, 0.941176f), Vector(612.3666f, -332.14923f), Vector.dir(-0.01444f, 0.999896f)),
+        getAddPlayer(Faction.PIRATE, 4, Color(0.501961f, 0f, 0.501961f), Vector(572.2812f, 371.9907f), Vector.dir(0.00491f, -0.999988f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     navyAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Navy Base", Color.blue, Vector(-43.37744f, -970.33057f))))
     pirateAllianceIndices.add(world.addPlayerListElement(World.createFakeFleetElement("Pirate Base", Color.red, Vector(10.601166f, 799.95386f))))
@@ -3851,7 +3893,7 @@ fun rover() {
     println(world.build())
 }
 
-fun shadow() {
+fun shadow(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Shadow Dance",
@@ -3868,18 +3910,24 @@ fun shadow() {
         bufferSize = 200f
     )
 
-    fun addPlayer(id: Int, color: Color, start: Vector) {
+    fun getAddPlayer(id: Int, color: Color, start: Vector): () -> Unit = {
         world.addPlayer("Player $id", -1, color, start, Vector.east, Faction.ANY, Formation.DIAMOND)
     }
 
-    addPlayer(1, Color(0f, 0.502f, 0f), Vector(-541.1266f, 630.96155f))
-    addPlayer(2, Color(0f, 0f, 0.502f), Vector(622.7023f, 592.0886f))
-    addPlayer(3, Color(0f, 0.502f, 0.502f), Vector(6.498825f, 882.9153f))
-    addPlayer(4, Color(0.651f, 0.7922f, 0.9412f), Vector(799.8519f, -26.944336f))
-    addPlayer(5, Color(0.9059f, 0.5373f, 0.0392f), Vector(18.560791f, -810.7614f))
-    addPlayer(6, Color(1f, 0f, 0f), Vector(603.85004f, -508.37128f))
-    addPlayer(7, Color(0f, 0f, 1f), Vector(-720.58923f, 176.86047f))
-    addPlayer(8, Color(1f, 1f, 0f), Vector(-475.92407f, -529.2828f))
+    val addPlayer = arrayOf(
+        getAddPlayer(1, Color(0f, 0.502f, 0f), Vector(-541.1266f, 630.96155f)),
+        getAddPlayer(2, Color(0f, 0f, 0.502f), Vector(622.7023f, 592.0886f)),
+        getAddPlayer(3, Color(0f, 0.502f, 0.502f), Vector(6.498825f, 882.9153f)),
+        getAddPlayer(4, Color(0.651f, 0.7922f, 0.9412f), Vector(799.8519f, -26.944336f)),
+        getAddPlayer(5, Color(0.9059f, 0.5373f, 0.0392f), Vector(18.560791f, -810.7614f)),
+        getAddPlayer(6, Color(1f, 0f, 0f), Vector(603.85004f, -508.37128f)),
+        getAddPlayer(7, Color(0f, 0f, 1f), Vector(-720.58923f, 176.86047f)),
+        getAddPlayer(8, Color(1f, 1f, 0f), Vector(-475.92407f, -529.2828f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     val nebulaObjectID = world.addWorldObject("Terrain_Nebula", null, null, Vector(34.784943f, 47.516388f))
 
@@ -4024,6 +4072,7 @@ fun shadow() {
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
     ))
+
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
@@ -4034,7 +4083,7 @@ fun shadow() {
     println(world.build())
 }
 
-fun zemyatin() {
+fun zemyatin(firstPlayerIndex: Int) {
     val world = World.create(
         game,
         "Zemyatin",
@@ -4049,14 +4098,20 @@ fun zemyatin() {
         "Map_Zemyatin"
     )
 
-    fun addPlayer(id: Int, color: Color, start: Vector, direction: Vector) {
+    fun getAddPlayer(id: Int, color: Color, start: Vector, direction: Vector): () -> Unit = {
         world.addPlayer("Player $id", -1, color, start, direction, Faction.ANY, Formation.LINE_ABREAST)
     }
 
-    addPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-285.8385f, 232.97235f), Vector.dir(0.396998f, -0.91782f))
-    addPlayer(2, Color(0f, 0f, 1f), Vector(304.95032f, 289.50983f), Vector.dir(-0.793376f, -0.608732f))
-    addPlayer(3, Color(0.502f, 0.502f, 0f), Vector(284.3098f, -284.89603f), Vector.dir(-0.755651f, 0.654975f))
-    addPlayer(4, Color(1f, 1f, 0f), Vector(-281.1714f, -377.8817f), Vector.dir(0.753918f, 0.656969f))
+    val addPlayer = arrayOf(
+        getAddPlayer(1, Color(0f, 0.502f, 0.502f), Vector(-285.8385f, 232.97235f), Vector.dir(0.396998f, -0.91782f)),
+        getAddPlayer(2, Color(0f, 0f, 1f), Vector(304.95032f, 289.50983f), Vector.dir(-0.793376f, -0.608732f)),
+        getAddPlayer(3, Color(0.502f, 0.502f, 0f), Vector(284.3098f, -284.89603f), Vector.dir(-0.755651f, 0.654975f)),
+        getAddPlayer(4, Color(1f, 1f, 0f), Vector(-281.1714f, -377.8817f), Vector.dir(0.753918f, 0.656969f))
+    )
+
+    for (i in addPlayer.indices) {
+        addPlayer[(i + firstPlayerIndex).mod(addPlayer.size)]()
+    }
 
     world.addPlayerListElement(World.createFakeFleetElement("Asteroids", Color.none, Vector(-145.1806f, -362.53516f)))
 
@@ -4085,6 +4140,7 @@ fun zemyatin() {
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
         World.createPlayMusicAction("BTL_NavyBig_BassnDrums", 0.7f, 2f, 2f)
     ))
+
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
 
     world.addObjectiveTask(World.createObjectiveTask("Kill All Objective", "IDGS_TPOBJECTIVES2_MP_DESTROYENEMYSHIPS"))
@@ -4102,12 +4158,12 @@ fun main() {
     //storm()
     //maw()
 
-    //border()
-    //convoy()
-    //diablo()
-    //dragon()
-    //mousetrap()
-    //rover()
-    //shadow()
-    //zemyatin()
+    //border(0)
+    //convoy(0)
+    //diablo(0)
+    //dragon(0)
+    //mousetrap(0)
+    //rover(0)
+    //shadow(0)
+    //zemyatin(0)
 }
