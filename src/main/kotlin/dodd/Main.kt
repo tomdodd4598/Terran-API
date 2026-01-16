@@ -2021,7 +2021,7 @@ fun border(firstPlayerIndex: Int) {
         World.createSetGroupOwningPlayerAction("Procyon Mine Group", "Procyon Base"),
         World.createSetupTeamObjectiveAction(navyTeamID, "Navy Objective Point", "Navy Objective"),
         World.createSetupTeamObjectiveAction(procyonTeamID, "Procyon Objective Point", "Procyon Objective"),
-        World.createPlayMusicAction("BTL_NavyBig_Full02", 0.7f, 2f, 2f)
+        World.createPlayMusicAction("BTL_PrepareForBattle", 0.7f, 2f, 2f)
     ))
 
     fun addWorldRule(ruleName: String, condition: ConditionNode, vararg actions: ActionNode) {
@@ -2606,7 +2606,7 @@ fun convoy(firstPlayerIndex: Int) {
         createSetConvoyGroupMaxThrottleAction(0, 0.6f),
         World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective"),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective"),
-        World.createPlayMusicAction("BTL_DeadlyPirate_Full01", 0.8f, 2f, 2f)
+        World.createPlayMusicAction("BTL_DeadlyPirate_Full03", 0.8f, 2f, 2f)
     ))
 
     fun addWorldRule(ruleName: String, runOnce: Boolean, condition: ConditionNode, vararg actions: ActionNode) {
@@ -3046,7 +3046,7 @@ fun dragon(firstPlayerIndex: Int) {
         World.createSetDragonDamageThresholdAction("Dragon Group", 0.8f),
         World.createSetGroupReturnZoneAction("Dragon Group", "Dragon Flee Point Set"),
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
-        World.createPlayMusicAction("BTL_Dragon02_FullFast", 1f, 2f, 2f, false)
+        World.createPlayMusicAction("BTL_Dragon03_FullSlow", 1f, 2f, 2f, false)
     ))
 
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
@@ -3516,7 +3516,7 @@ fun mousetrap(firstPlayerIndex: Int) {
         createSetProcyonBackupShipAdvancePositionAction("Frost Knife"),
         createSetProcyonBackupShipAdvancePositionAction("Crescent Bear"),
         createSetProcyonBackupShipAdvancePositionAction("Nova Mace"),
-        World.createPlayMusicAction("BTL_Pirate02_SlowVARI", 0.7f, 2f, 2f)
+        World.createPlayMusicAction("BTL_ProcWarDrums_Slow", 0.7f, 2f, 2f)
     )
 
     addWorldRule(
@@ -3841,7 +3841,7 @@ fun rover(firstPlayerIndex: Int) {
         World.createSetupTeamObjectiveAction(navyTeamID, null, "Navy Objective 2"),
         World.createSetupTeamObjectiveAction(pirateTeamID, "Pirate Objective Point", "Pirate Objective 1"),
         World.createSetupTeamObjectiveAction(pirateTeamID, null, "Pirate Objective 2"),
-        World.createPlayMusicAction("BTL_Escape_Full", 0.8f, 2f, 2f)
+        World.createPlayMusicAction("BTL_NavyBig_Full02", 0.8f, 2f, 2f)
     ))
 
     fun addWorldRule(ruleName: String, condition: ConditionNode, vararg actions: ActionNode) {
@@ -4070,7 +4070,7 @@ fun shadow(firstPlayerIndex: Int) {
         World.createGroupFollowPathAction("Whale Group", "Whale Path", FollowMode.LOOP, true),
         World.createSetGroupSpeedAction("Whale Group", 8),
         World.createSetObjectiveTaskActiveStateAction("Kill All Objective", true),
-        World.createPlayMusicAction("NEUTRL_DragonGoo", 0.7f, 2f, 2f)
+        World.createPlayMusicAction("BTL_PrepareForBattle_Erie", 0.7f, 2f, 2f)
     ))
 
     world.addWorldRule(World.createSkirmishGameCompleteWorldRule("End"))
